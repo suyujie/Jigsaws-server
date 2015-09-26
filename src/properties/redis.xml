@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root tag="cache">
+
+	<redises>
+
+		<redis tag="1">
+			<host>127.0.0.1</host>
+			<port>6379</port>
+			<maxTotal>1024</maxTotal>
+			<maxIdle>200</maxIdle>
+			<maxWaitMillis>1000</maxWaitMillis>
+			<testOnBorrow>true</testOnBorrow>
+			<testOnReturn>true</testOnReturn>
+			<auth></auth>
+		</redis>
+
+	</redises>
+
+
+</root>
+
+

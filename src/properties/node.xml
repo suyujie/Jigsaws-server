@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node tag="1">
+
+	<!-- 逻辑服务器基本配置 -->
+
+	<nodeDomain>http://herobot-test.chinacloudapp.cn</nodeDomain>
+
+	<server>
+		<!-- 工作 -->
+		<work-port>9010</work-port>
+		<work-queue-size>5000</work-queue-size>
+		<!-- 支付 -->
+		<pay-port>80</pay-port>
+		<pay-queue-size>1000</pay-queue-size>
+		<!-- 管理 -->
+		<mgmt-port>9011</mgmt-port>
+		<mgmt-queue-size>100</mgmt-queue-size>
+
+	</server>
+
+	<!-- 性能参数配置 -->
+	<performances>
+		<!-- 任务中心最大并发任务数 -->
+		<max-tasks>200</max-tasks>
+		<!-- 滑动窗 TPS (每秒任务数) -->
+		<window-tps>2</window-tps>
+	</performances>
+
+	<!-- 管理服务器的地址 -->
+	<managerServer>
+		<!-- 1号是主管理服务器 -->
+		<manager tag="1">127.0.0.1:8010</manager>
+	</managerServer>
+
+	<!-- 集群对端列表 -->
+	<nodes>
+		<node tag="1">127.0.0.1:9011</node>
+	</nodes>
+
+
+</node>
+
+

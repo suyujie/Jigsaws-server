@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<storage>
+
+	<dataPath>herobot_data/robot_xml/</dataPath>
+
+	<!-- storage -->
+	<storages>
+		<!-- 
+		
+		<platfrom tag="aws">
+			<storage tag="1">
+				<cdnUrl>http://d2oasfbmdznf7u.cloudfront.net</cdnUrl>
+				<bucketName>herobotfile</bucketName>
+				<accessUrl>https://s3-ap-southeast-1.amazonaws.com/herobotfile
+				</accessUrl>
+				<accessId>AKIAIJSHKBJFILDMHLGA</accessId>
+				<accessKey>4eTe3xFhFHkwLGAcZi86FwmX4DtQrMDajEZiEJTp</accessKey>
+			</storage>
+		</platfrom>
+		
+		 -->
+		<platfrom tag="azure">
+			<storage tag="1">
+				<storageAccount>herobotstoragetest</storageAccount>
+				<storageAccountKey>SFkVggbu6X/6gOZFbF3v6sMHFpuvwNSZ8XftLmE6qQahw6ZZTqQKoTU4El2dhSLE7h9DaMqMuVOlKRtiBtN7kw==
+				</storageAccountKey>
+				<storageConnectionUri>http://herobotstoragetest.blob.core.chinacloudapi.cn
+				</storageConnectionUri>
+			</storage>
+		</platfrom>
+	</storages>
+
+</storage>
+
+
