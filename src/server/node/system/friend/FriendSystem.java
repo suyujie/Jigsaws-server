@@ -1,7 +1,5 @@
 package server.node.system.friend;
 
-import gamecore.cache.redis.RedisHelperJson;
-import gamecore.db.DaoFactory;
 import gamecore.serialize.SerializerJson;
 import gamecore.system.AbstractSystem;
 
@@ -9,7 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import server.node.dao.DaoFactory;
 import server.node.dao.FriendDao;
+import server.node.system.RedisHelperJson;
 import server.node.system.Root;
 import server.node.system.account.Account;
 import server.node.system.player.Player;

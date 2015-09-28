@@ -1,6 +1,5 @@
 package server.node.system.feedback;
 
-import gamecore.db.DaoFactory;
 import gamecore.system.AbstractSystem;
 import gamecore.system.SystemResult;
 import gamecore.util.Utils;
@@ -8,6 +7,7 @@ import gamecore.util.Utils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import server.node.dao.DaoFactory;
 import server.node.dao.FeedbackDao;
 import server.node.system.player.Player;
 

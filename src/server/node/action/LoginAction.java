@@ -14,7 +14,7 @@ import com.alibaba.fastjson.JSONObject;
 @ActionPathSpec("101")
 public class LoginAction extends AbstractAction {
 
-	private static final long serialVersionUID = -3465929255066885958L;
+	private static final long serialVersionUID = -8285918742136898103L;
 	private static final Logger logger = LogManager.getLogger(LoginAction.class);
 
 	@Override

@@ -10,7 +10,7 @@ public class GiftWear {
 	public Long giverId;
 	public int num;
 	public long giveTime;
-	public GiftStatus status;//1有,可以领取,2领完
+	public GiftStatus status;// 1有,可以领取,2领完
 
 	public GiftWear() {
 	}
@@ -64,9 +64,8 @@ public class GiftWear {
 	}
 
 	public void accept(Player player) {
-		if (status == GiftStatus.Wait) {//还没有领取,可以领了
+		if (status == GiftStatus.Wait) {// 还没有领取,可以领了
 			status = GiftStatus.Accept;
-			Root.robotSystem.repairRobotAll(player, null, num);
 		}
 	}
 

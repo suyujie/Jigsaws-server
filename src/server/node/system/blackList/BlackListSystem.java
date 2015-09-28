@@ -22,7 +22,7 @@ import com.alibaba.fastjson.JSONObject;
 public final class BlackListSystem extends AbstractSystem {
 
 	private static Logger logger = LogManager.getLogger(BlackListSystem.class.getName());
-	//黑名单 玩家,时间
+	// 黑名单 玩家,时间
 	private List<Long> blackList = new ArrayList<Long>();
 
 	@Override
@@ -41,12 +41,12 @@ public final class BlackListSystem extends AbstractSystem {
 	public void shutdown() {
 	}
 
-	//验证是否是黑名单玩家
+	// 验证是否是黑名单玩家
 	public boolean checkBlackList(Player player) {
 		return blackList.contains(player.getId());
 	}
 
-	//有新的黑名单
+	// 有新的黑名单
 	public boolean addBlackList(List<Long> addIds) {
 
 		for (Long id : addIds) {
@@ -58,7 +58,7 @@ public final class BlackListSystem extends AbstractSystem {
 		return true;
 	}
 
-	//删除黑名单
+	// 删除黑名单
 	public boolean removeBlackList(List<Long> delIds) {
 		for (Long id : delIds) {
 			if (blackList.contains(id)) {
@@ -68,10 +68,11 @@ public final class BlackListSystem extends AbstractSystem {
 		return true;
 	}
 
-	//读取黑名单
+	// 读取黑名单
 	public boolean flushBlackList() {
 
-		String url = new StringBuffer("http://").append(ConfigManager.getInstance().managerAccessUrl).append("/robot_web/forNode/blacklist").toString();
+		String url = new StringBuffer("http://").append(ConfigManager.getInstance().managerAccessUrl)
+				.append("/robot_web/forNode/blacklist").toString();
 
 		String result = NetAccessTool.accessServer(url, null, HttpMethod.GET);
 

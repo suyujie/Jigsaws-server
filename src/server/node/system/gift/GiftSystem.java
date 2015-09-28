@@ -1,7 +1,5 @@
 package server.node.system.gift;
 
-import gamecore.cache.redis.RedisHelperJson;
-import gamecore.db.DaoFactory;
 import gamecore.serialize.SerializerJson;
 import gamecore.system.AbstractSystem;
 import gamecore.system.SystemResult;
@@ -20,8 +18,10 @@ import org.apache.logging.log4j.Logger;
 
 import com.alibaba.fastjson.TypeReference;
 
+import server.node.dao.DaoFactory;
 import server.node.dao.GiftDao;
 import server.node.system.Content;
+import server.node.system.RedisHelperJson;
 import server.node.system.Root;
 import server.node.system.gift.gift.GiftWear;
 import server.node.system.player.Player;

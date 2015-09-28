@@ -1,7 +1,5 @@
 package server.node.system.handbook;
 
-import gamecore.cache.redis.RedisHelperJson;
-import gamecore.db.DaoFactory;
 import gamecore.serialize.SerializerJson;
 import gamecore.system.AbstractSystem;
 import gamecore.system.ErrorCode;
@@ -12,7 +10,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import server.node.dao.DaoFactory;
 import server.node.dao.HandbookDao;
+import server.node.system.RedisHelperJson;
 import server.node.system.Root;
 import server.node.system.player.GoldType;
 import server.node.system.player.Player;

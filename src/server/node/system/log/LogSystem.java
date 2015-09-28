@@ -1,12 +1,12 @@
 package server.node.system.log;
 
-import gamecore.db.DaoFactory;
 import gamecore.system.AbstractSystem;
 import gamecore.util.Clock;
 import gamecore.util.Utils;
 
 import java.util.List;
 
+import server.node.dao.DaoFactory;
 import server.node.dao.LogDao;
 import server.node.system.Root;
 import server.node.system.battle.PveBattle;

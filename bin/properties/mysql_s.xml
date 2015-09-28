@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root tag="s">
+	<mysqls>
+
+		<mysql tag="1">
+			<driver>com.mysql.jdbc.Driver</driver>
+			<url>jdbc:mysql://127.0.0.1:3306/herobot_db_1?autoReconnect=true&amp;jdbcCompliantTruncation=false&amp;characterEncoding=UTF-8
+			</url>
+			<user>robot_db</user>
+			<password>rulesgame_robot_19870125</password>
+			<minPoolSize>1</minPoolSize>
+			<maxPoolSize>5</maxPoolSize>
+			<initialPoolSize>1</initialPoolSize>
+			<maxIdleTime>2500</maxIdleTime>
+			<acquireIncrement>10</acquireIncrement>
+			<acquireRetryAttempts>10</acquireRetryAttempts>
+			<acquireRetryDelay>1000</acquireRetryDelay>
+			<testConnectionOnCheckin>true</testConnectionOnCheckin>
+			<testConnectionOnCheckout>true</testConnectionOnCheckout>
+			<automaticTestTable>c3p0_test_table</automaticTestTable>
+			<idleTestPeriod>18000</idleTestPeriod>
+			<checkoutTimeout>5000</checkoutTimeout>
+		</mysql>
+
+	</mysqls>
+
+</root>
+
+

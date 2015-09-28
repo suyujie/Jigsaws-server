@@ -1,16 +1,14 @@
 package server.node.system.friend;
 
-import gamecore.entity.AbstractEntity;
-import gamecore.io.ByteArrayGameOutput;
-import gamecore.serialize.SerializerJson;
-
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import gamecore.entity.AbstractEntity;
+import gamecore.io.ByteArrayGameOutput;
+import gamecore.serialize.SerializerJson;
 import server.node.system.Root;
-import server.node.system.gameEvents.chipDeathWheel.DeathWheelSystem;
 import server.node.system.player.Player;
 
 /**

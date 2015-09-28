@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="OFF">
+	<appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+		</Console>
+		<RollingFile name="ErrorFile" fileName="logs/node_error.log"
+			filePattern="logs/node_error-%d{MM-dd-yyyy}-%i.log.gz">
+			<PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level %class{70} - %msg%n" />
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+				<SizeBasedTriggeringPolicy size="10 MB" />
+			</Policies>
+		</RollingFile>
+		<RollingFile name="InfoFile" fileName="logs/node_info.log"
+			filePattern="logs/node_info-%d{MM-dd-yyyy}-%i.log.gz">
+			<PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level %class{70} - %msg%n" />
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+				<SizeBasedTriggeringPolicy size="100 MB" />
+			</Policies>
+		</RollingFile>
+	</appenders>
+
+	<loggers>
+	
+		<root level="error">
+			<appender-ref ref="Console" />
+			<appender-ref ref="ErrorFile" />
+		</root>
+
+		<root level="info">
+			<appender-ref ref="InfoFile" />
+		</root>
+
+		<root level="debug">
+			<appender-ref ref="Console" />
+		</root>
+
+	</loggers>
+
+</configuration>

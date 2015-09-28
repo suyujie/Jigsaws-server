@@ -41,7 +41,7 @@ public abstract class AbstractAction extends AbstractHttpServlet implements IAct
 
 		Session session = getSession(gameRequest);
 		if (session != null && session.getPlayerId() != null) {
-			//更新session
+			// 更新session
 			Root.sessionSystem.updateOrSaveSession(session);
 			try {
 				return Root.playerSystem.getPlayer(session.getPlayerId());
@@ -57,7 +57,7 @@ public abstract class AbstractAction extends AbstractHttpServlet implements IAct
 
 		Session session = getSession(mobileId, 0);
 		if (session != null && session.getPlayerId() != null) {
-			//更新session
+			// 更新session
 			Root.sessionSystem.updateOrSaveSession(session);
 			try {
 				return Root.playerSystem.getPlayer(session.getPlayerId());
