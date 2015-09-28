@@ -74,12 +74,13 @@ public final class SessionSystem extends AbstractSystem {
 		}
 	}
 
-	//更新保存session
+	// 更新保存session
 	public void updateOrSaveSession(Player player) {
 		if (player != null) {
 			Session session = getSession(player.getAccount().getMobileId());
 			if (session == null) {
-				session = new Session(ConfigManager.getInstance().tag, player.getAccount().getMobileId(), player.getId(), Clock.currentTimeSecond());
+				session = new Session(ConfigManager.getInstance().tag, player.getAccount().getMobileId(),
+						player.getId(), Clock.currentTimeSecond());
 			} else {
 				session.setActiveT(Clock.currentTimeSecond());
 			}
@@ -87,7 +88,7 @@ public final class SessionSystem extends AbstractSystem {
 		}
 	}
 
-	//更新保存session
+	// 更新保存session
 	public void updateOrSaveSession(Session session) {
 		if (session != null) {
 			session.setActiveT(Clock.currentTimeSecond());
@@ -95,12 +96,12 @@ public final class SessionSystem extends AbstractSystem {
 		}
 	}
 
-	//删除session
+	// 删除session
 	public void removeSession(String mobileId) {
 		RedisHelperJson.removeSession(mobileId);
 	}
 
-	//有玩家登录了
+	// 有玩家登录了
 	public void saveOnlinePlayerList(Player player) {
 		if (player != null) {
 			saveOnlinePlayerList(player.getId());
@@ -123,15 +124,10 @@ public final class SessionSystem extends AbstractSystem {
 	public void signIn(Player player) {
 
 		player.setOnLine(1);
-		//	player.setLastSignT(Clock.currentTimeSecond());
 		player.synchronize();
-
-		PlayerDao playerDao = DaoFactory.getInstance().borrowPlayerDao();
-		playerDao.updateOnline(player);
-		DaoFactory.getInstance().returnPlayerDao(playerDao);
 	}
 
-	//玩家掉线
+	// 玩家掉线
 	public void signOut(Player player, Long playerId) {
 		if (player == null) {
 			player = Root.playerSystem.getPlayerFromCache(playerId);
@@ -144,10 +140,6 @@ public final class SessionSystem extends AbstractSystem {
 				player.setLastSignT(null);
 			}
 
-			PlayerDao playerDao = DaoFactory.getInstance().borrowPlayerDao();
-			playerDao.updateOnline(player);
-			DaoFactory.getInstance().returnPlayerDao(playerDao);
-
 			player.synchronize();
 
 			SessionMessage sessionMessage = new SessionMessage(SessionMessage.SignOut, player);
@@ -157,8 +149,7 @@ public final class SessionSystem extends AbstractSystem {
 	}
 
 	/**
-	 * 守护任务。
-	 * 内部线程类,过滤玩家
+	 * 守护任务。 内部线程类,过滤玩家
 	 */
 	protected class CheckSignOut implements Runnable {
 
@@ -175,15 +166,15 @@ public final class SessionSystem extends AbstractSystem {
 					Long pid = onLinePlayer.removeFirst();
 					if (pid != null) {
 						Player player = Root.playerSystem.getPlayerFromCache(pid);
-						if (player == null || !player.checkOnLine()) {//已经不在缓存里了,或者的确掉线,说明已经掉线
-							signOut(player, pid);//掉线处理
+						if (player == null || !player.checkOnLine()) {// 已经不在缓存里了,或者的确掉线,说明已经掉线
+							signOut(player, pid);// 掉线处理
 						} else {
-							//没掉线,放入临时set
+							// 没掉线,放入临时set
 							tempOnlineId.add(pid);
 						}
 					}
 				}
-				//没掉线,放入临时set,放入队尾
+				// 没掉线,放入临时set,放入队尾
 				for (Long id : tempOnlineId) {
 					if (!onLinePlayer.contains(id)) {
 						onLinePlayer.addLast(id);

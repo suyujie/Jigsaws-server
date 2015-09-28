@@ -30,18 +30,9 @@ public class TriggerSystem extends AbstractSystem {
 
 		triggers.add(new SessionTrigger());
 		triggers.add(new LogTrigger());
-		triggers.add(new MissionPointTrigger());
-		triggers.add(new RobotTrigger());
-		triggers.add(new OpponentTrigger());
-		triggers.add(new ProtectTrigger());
-		triggers.add(new RecordTrigger());
-		triggers.add(new TaskTrigger());
-		triggers.add(new DailyJobTrigger());
 		triggers.add(new ToturialTrigger());
 		triggers.add(new NoticeTrigger());
 		triggers.add(new PushTrigger());
-		triggers.add(new HandbookTrigger());
-		triggers.add(new RankingTrigger());
 
 		for (Trigger t : triggers) {
 			t.start();

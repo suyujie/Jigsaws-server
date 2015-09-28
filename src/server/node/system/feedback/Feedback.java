@@ -1,6 +1,5 @@
 package server.node.system.feedback;
 
-
 public class Feedback {
 
 	private long id;

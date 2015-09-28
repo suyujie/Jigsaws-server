@@ -1,7 +1,7 @@
 package server.node.system.player;
 
-/** 
- * cash 获取  消耗  
+/**
+ * cash 获取 消耗
  */
 public enum MoneyType {
 

@@ -11,8 +11,8 @@ import server.node.dao.DaoFactory;
 import server.node.dao.FeedbackDao;
 import server.node.system.player.Player;
 
-/** 
- * 抽奖系统。
+/**
+ * 反馈系统
  */
 public final class FeedbackSystem extends AbstractSystem {
 

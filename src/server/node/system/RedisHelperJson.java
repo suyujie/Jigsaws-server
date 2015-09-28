@@ -5,7 +5,6 @@ import java.util.List;
 import gamecore.cache.redis.JedisUtilJson;
 import server.node.system.friend.FriendBag;
 import server.node.system.gift.GiftBag;
-import server.node.system.handbook.HandbookBag;
 import server.node.system.notice.NoticeBag;
 import server.node.system.player.Player;
 import server.node.system.player.PlayerChangeBean;
@@ -123,10 +122,6 @@ public final class RedisHelperJson {
 
 	public static void removePlayerChangeBean(Long playerId) {
 		JedisUtilJson.getInstance().del(PlayerChangeBean.generateCacheKey(playerId));
-	}
-
-	public static HandbookBag getHandbookBag(Long id) {
-		return (HandbookBag) JedisUtilJson.getInstance().get(HandbookBag.generateCacheKey(id), HandbookBag.class);
 	}
 
 }
