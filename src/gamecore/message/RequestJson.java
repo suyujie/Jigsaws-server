@@ -8,10 +8,12 @@ import com.alibaba.fastjson.JSONObject;
 public class RequestJson {
 
 	private String commandId;
+	private String sessionId;
 	private JSONObject body;
 
-	public RequestJson(String commandId, JSONObject body) {
+	public RequestJson(String commandId, String sessionId, JSONObject body) {
 		this.commandId = commandId;
+		this.sessionId = sessionId;
 		this.body = body;
 	}
 
@@ -21,6 +23,14 @@ public class RequestJson {
 
 	public void setCommandId(String commandId) {
 		this.commandId = commandId;
+	}
+
+	public String getSessionId() {
+		return sessionId;
+	}
+
+	public void setSessionId(String sessionId) {
+		this.sessionId = sessionId;
 	}
 
 	public JSONObject getBody() {

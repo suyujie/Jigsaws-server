@@ -22,7 +22,7 @@ import server.node.system.Root;
 
 import com.alibaba.fastjson.JSONObject;
 
-@WebServlet("/ttl")
+@WebServlet("/tts")
 public class TellTheSecretServlet extends AbstractHttpServlet {
 
 	private static final long serialVersionUID = 5764052240012555875L;
@@ -35,6 +35,7 @@ public class TellTheSecretServlet extends AbstractHttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		System.out.println("test");
 		this.doPost(req, resp);
 	}
 
@@ -54,6 +55,10 @@ public class TellTheSecretServlet extends AbstractHttpServlet {
 
 		commandId = rj.getCommandId();
 
+		if (commandId == null) {
+			logger.error("commandId is null");
+		}
+
 		try {
 			respJson = encode(execAction(rj));
 		} catch (Exception e) {
@@ -61,8 +66,9 @@ public class TellTheSecretServlet extends AbstractHttpServlet {
 		}
 
 		long te = System.currentTimeMillis();
-		logger.info(new StringBuffer("run ").append(Root.getInstance().isRun()).append(" comandId[").append(commandId).append("]").append(" bodyLength[")
-				.append(respJson.toString().length()).append("]").append(" time[").append(tb + "->" + te + "=" + (te - tb)).append("]").toString());
+		logger.info(new StringBuffer("run ").append(Root.getInstance().isRun()).append(" comandId[").append(commandId)
+				.append("]").append(" bodyLength[").append(respJson.toString().length()).append("]").append(" time[")
+				.append(tb + "->" + te + "=" + (te - tb)).append("]").toString());
 
 		out.write(respJson.toString().getBytes());
 		out.flush();
@@ -106,7 +112,7 @@ public class TellTheSecretServlet extends AbstractHttpServlet {
 		String sessionId = data.getString("sessionId");
 		data.remove("sessionId");
 
-		RequestJson req = new RequestJson(commandId, data);
+		RequestJson req = new RequestJson(commandId, sessionId, data);
 
 		return req;
 

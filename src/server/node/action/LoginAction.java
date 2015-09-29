@@ -6,6 +6,7 @@ import gamecore.message.ResponseJson;
 
 import java.util.UUID;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -24,26 +25,17 @@ public class LoginAction extends AbstractAction {
 
 		JSONObject jsonObject = requestJson.getBody();
 
-		String mobileId = jsonObject.getString("mobileId");
+		String deviceId = jsonObject.getString("deviceId");
 
-		logger.debug("login mobileId:" + mobileId);
+		logger.debug("login deviceId:" + deviceId);
 
-		if (mobileId == null || mobileId.equals("") || mobileId.equals("null")) {
-			mobileId = UUID.randomUUID().toString();
-		}
-
-		if (null != mobileId && mobileId.length() > 0) {
-
-			System.out.println("register");
+		if (StringUtils.isNotBlank(deviceId)) {
 
 			JSONObject json = new JSONObject();
 			json.put("sessionId", UUID.randomUUID().toString());
 
 			responseJson.setBody(json);
-
 		}
-
-		responseJson.setSuccess(true);
 
 		return responseJson;
 	}

@@ -17,7 +17,7 @@ public class ActionFactory {
 
 	// 单例
 	private static ActionFactory instance = new ActionFactory();
-	private FastMap<Integer, IAction> actionMap = new FastMap<Integer, IAction>();
+	private FastMap<String, IAction> actionMap = new FastMap<String, IAction>();
 	private FastMap<String, IAction> managerActionMap = new FastMap<String, IAction>();
 
 	public static ActionFactory getInstance() {
@@ -38,7 +38,7 @@ public class ActionFactory {
 					try {
 						IAction action = (IAction) cls.newInstance();
 						ActionPathSpec path = (ActionPathSpec) ann;
-						Integer key = Integer.parseInt(path.value());
+						String key = path.value();
 
 						this.actionMap.put(key, action);
 
@@ -83,7 +83,7 @@ public class ActionFactory {
 		return managerActionMap.size();
 	}
 
-	public IAction getAction(Integer commandId) {
+	public IAction getAction(String commandId) {
 		return actionMap.get(commandId);
 	}
 
