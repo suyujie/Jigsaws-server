@@ -4,13 +4,9 @@ import java.io.Serializable;
 
 public class Account implements Serializable {
 
-	private static final long serialVersionUID = -866368867961824615L;
-
-	private String mobileId;
-	private int enable;
-	private String plat;
-	private String idInPlat;
-	private String nameInPlat;
+	private static final long serialVersionUID = -418852006093836118L;
+	private String deviceId;
+	private String name;
 	private Long playerId;
 	private String channel;
 	private String device;
@@ -18,67 +14,28 @@ public class Account implements Serializable {
 	public Account() {
 	}
 
-	public Account(String mobileId, int enable, String plat, String idInPlat, String nameInPlat, Long playerId, String channel, String device) {
-		this.mobileId = mobileId;
-		this.enable = enable;
-		this.nameInPlat = nameInPlat;
-		this.idInPlat = idInPlat;
-		this.plat = plat;
+	public Account(String deviceId, String name, Long playerId, String channel, String device) {
+		this.deviceId = deviceId;
+		this.name = name;
 		this.playerId = playerId;
 		this.channel = channel;
 		this.device = device;
 	}
 
-	public void setPlatAdnIdInPlat(String plat, String idInPlat, String nameInPlat) {
-		this.plat = plat;
-		this.idInPlat = idInPlat;
-		this.nameInPlat = nameInPlat;
+	public String getDeviceId() {
+		return deviceId;
 	}
 
-	public void resetPlatAdnIdInPlat() {
-		this.plat = null;
-		this.idInPlat = null;
-		this.nameInPlat = null;
+	public void setDeviceId(String deviceId) {
+		this.deviceId = deviceId;
 	}
 
-	public String getMobileId() {
-		return mobileId;
+	public String getName() {
+		return name;
 	}
 
-	public int getEnable() {
-		return enable;
-	}
-
-	public void setEnable(int enable) {
-		this.enable = enable;
-	}
-
-	public void setMobileId(String mobileId) {
-		this.mobileId = mobileId;
-	}
-
-	public String getNameInPlat() {
-		return nameInPlat;
-	}
-
-	public void setNameInPlat(String nameInPlat) {
-		this.nameInPlat = nameInPlat;
-	}
-
-	public String getIdInPlat() {
-		return idInPlat;
-	}
-
-	public void setIdInPlat(String idInPlat) {
-		this.idInPlat = idInPlat;
-	}
-
-	public String getPlat() {
-		return plat;
-	}
-
-	public void setPlat(String plat) {
-		this.plat = plat;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public Long getPlayerId() {
@@ -103,10 +60,6 @@ public class Account implements Serializable {
 
 	public void setDevice(String device) {
 		this.device = device;
-	}
-
-	public String readArea() {
-		return device.substring(device.lastIndexOf("|") + 1);
 	}
 
 }

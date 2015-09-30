@@ -17,35 +17,6 @@ import server.node.system.player.Player;
 
 public class PlayerDao {
 
-	/**
-	 * 保存account player
-	 */
-	public void saveAccountPlayer(Account account, Player player) {
-
-		List<String> sqls = new ArrayList<>();
-		List<Object[]> args = new ArrayList<>();
-
-		sqls.add("insert into t_account(mobile_id,plat,id_in_plat,name_in_plat,player_id,t) values (?,?,?,?,?,?)");
-
-		sqls.add(
-				"insert into t_player(id,level,exp,gold,cash,cup_num,protect_end_time, pvp_attack_win_count, pvp_defence_win_count, pvp_beat_robot_count,let_count,online,online_time,t) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-
-		Object[] args_account = { account.getMobileId(), account.getPlat(), account.getIdInPlat(),
-				account.getNameInPlat(), account.getPlayerId(), Clock.currentTimeSecond() };
-		Object[] args_player = { player.getId(), player.getLevel(), player.getExp(), player.getGold(), player.getCash(),
-				player.getPlayerStatistics().getCupNum(), player.getProtectEndTime(),
-				player.getPlayerStatistics().getPvpAttackWinCount(),
-				player.getPlayerStatistics().getPvpDefenceWinCount(),
-				player.getPlayerStatistics().getPvpBeatRobotCount(), player.getPlayerStatistics().getLetCount(),
-				player.getOnLine(), player.getOnLineTime(), Clock.currentTimeSecond() };
-
-		args.add(args_account);
-		args.add(args_player);
-
-		TaskCenter.getInstance()
-				.executeWithSlidingWindow(new AsyncDBTransactionTask(DBOperator.Write, player.getId(), sqls, args));
-	}
-
 	// 单独保存player
 	public void savePlayer(Player player) {
 

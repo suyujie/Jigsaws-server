@@ -3,17 +3,17 @@ package server.node.system.player;
 import gamecore.trigger.TopicMessage;
 
 /**
- * 人物消息。
+ * 玩家消息。
  */
 public final class PlayerMessage extends TopicMessage {
 
-	//升级
+	// 升级
 	public static final String LEVEL_UP = "player_levelUp";
-	//注册
+	// 注册
 	public static final String NewPlayer = "player_newPlayer";
-	//刚登录
+	// 刚登录
 	public static final String SignIn = "player_signIn";
-	//有访问
+	// 有访问
 	public static final String PlayerActive = "player_active";
 
 	private Player player;

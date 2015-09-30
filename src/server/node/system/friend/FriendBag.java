@@ -61,22 +61,4 @@ public class FriendBag extends AbstractEntity {
 		return SerializerJson.serialize(playerIds);
 	}
 
-	public byte[] toByteArray() {
-		ByteArrayGameOutput bago = new ByteArrayGameOutput();
-		try {
-			bago.putInt(playerIds.size());
-			for (Long playerId : playerIds) {
-				Player player = Root.playerSystem.getPlayer(playerId);
-				bago.putString(player.getAccount().getIdInPlat());
-				bago.putLong(playerId);
-				bago.putString(player.getAccount().getNameInPlat());
-				bago.putInt(player.getPlayerStatistics().getCupNum());
-				bago.putInt(player.getLevel());
-			}
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-		}
-		return bago.toByteArray();
-	}
-
 }

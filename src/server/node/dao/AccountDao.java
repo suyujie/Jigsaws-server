@@ -36,20 +36,22 @@ public class AccountDao {
 	 * 保存account
 	 */
 	public void saveAccount(Account account) {
-		String sql = "insert into t_account(mobile_id,enable,plat,id_in_plat,name_in_plat,player_id,t,channel,device) values (?,?,?,?,?,?,?,?,?)";
-		Object[] args = { account.getMobileId(), account.getEnable(), account.getPlat(), account.getIdInPlat(), account.getNameInPlat(), account.getPlayerId(),
-				Clock.currentTimeSecond(), account.getChannel(), account.getDevice() };
-		TaskCenter.getInstance().executeWithSlidingWindow(new AsyncDBTask(DBOperator.Write, new Long(Utils.hashCode(account.getMobileId())), sql, args));
+		String sql = "insert into t_account(mobile_id,name,player_id,t,channel,device) values (?,?,?,?,?,?)";
+		Object[] args = { account.getDeviceId(), account.getName(), account.getPlayerId(), Clock.currentTimeSecond(),
+				account.getChannel(), account.getDevice() };
+		TaskCenter.getInstance()
+				.execute(new AsyncDBTask(DBOperator.Write, new Long(Utils.hashCode(account.getDeviceId())), sql, args));
 	}
 
 	/**
 	 * 更新 account
 	 */
 	public void updateAccount(Account account) {
-		String sql = "update t_account set plat = ? , id_in_plat = ? , name_in_plat = ? , enable = ? , player_id = ?,channel=?,device=? where mobile_id = ?";
-		Object[] args = { account.getPlat(), account.getIdInPlat(), account.getNameInPlat(), account.getEnable(), account.getPlayerId(), account.getChannel(), account.getDevice(),
-				account.getMobileId() };
-		TaskCenter.getInstance().executeWithSlidingWindow(new AsyncDBTask(DBOperator.Write, new Long(Utils.hashCode(account.getMobileId())), sql, args));
+		String sql = "update t_account set  name = ? , player_id = ?,channel=?,device=? where mobile_id = ?";
+		Object[] args = { account.getName(), account.getPlayerId(), account.getChannel(), account.getDevice(),
+				account.getDeviceId() };
+		TaskCenter.getInstance().executeWithSlidingWindow(
+				new AsyncDBTask(DBOperator.Write, new Long(Utils.hashCode(account.getDeviceId())), sql, args));
 	}
 
 }

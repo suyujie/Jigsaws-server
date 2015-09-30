@@ -7,7 +7,6 @@ import server.node.system.friend.FriendBag;
 import server.node.system.gift.GiftBag;
 import server.node.system.notice.NoticeBag;
 import server.node.system.player.Player;
-import server.node.system.player.PlayerChangeBean;
 import server.node.system.session.Session;
 import server.node.system.toturial.Toturial;
 
@@ -113,15 +112,6 @@ public final class RedisHelperJson {
 
 	public static List<Long> getRankingCup(String area, int num) {
 		return JedisUtilJson.getInstance().sortedSetGet("rank_cup_" + area, 0, num, false, Long.class);
-	}
-
-	public static PlayerChangeBean getPlayerChangeBean(Long playerId) {
-		return (PlayerChangeBean) JedisUtilJson.getInstance().get(PlayerChangeBean.generateCacheKey(playerId),
-				PlayerChangeBean.class);
-	}
-
-	public static void removePlayerChangeBean(Long playerId) {
-		JedisUtilJson.getInstance().del(PlayerChangeBean.generateCacheKey(playerId));
 	}
 
 }

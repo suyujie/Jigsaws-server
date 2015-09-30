@@ -33,11 +33,9 @@ public final class PlayerSystem extends AbstractSystem {
 	public boolean startup() {
 		System.out.println("PlayerSystem start....");
 		// 读取制作数据
-		boolean b = PlayerLoadData.getInstance().readMakingData();
-
 		System.out.println("PlayerSystem start....OK");
 
-		return b;
+		return true;
 	}
 
 	@Override
@@ -68,15 +66,15 @@ public final class PlayerSystem extends AbstractSystem {
 	/**
 	 * 注册玩家
 	 */
-	public Player register(String mobileId, String channel, String device, boolean syncPlayer) {
+	public Player register(String deviceId, String channel, String device, boolean syncPlayer) {
 
-		Long id = Root.idsSystem.takePlayerId();
+		Long playerId = Root.idsSystem.takePlayerId();
 
 		// id 截取后8位 暂时做name
-		Account account = new Account(mobileId, 1, "local", null, (id % 100000000) + "", id, channel, device);
+		Account account = new Account(deviceId, "", playerId, channel, device);
 		Root.accountSystem.saveAccount(account);
 
-		Player player = new Player(id, 0, 0, 0, 1, 0, null, 1, 0, 0, LangType.en_US,
+		Player player = new Player(playerId, 0, 0, 0, 1, 0, null, 1, 0, 0, LangType.en_US,
 				new PlayerStatistics(Content.DefaultCup, 0, 0, 0, 0));
 		player.setAccount(account);
 
@@ -133,9 +131,9 @@ public final class PlayerSystem extends AbstractSystem {
 			}
 		} else {
 			// 从缓存中得到player,查看account是否一致,不一致的话,说明两部手机同事登陆了,踢掉之前的.
-			if (player.getAccount() != null && !player.getAccount().getMobileId().equals(account.getMobileId())) {
+			if (player.getAccount() != null && !player.getAccount().getDeviceId().equals(account.getDeviceId())) {
 				// 踢掉以前的
-				Root.sessionSystem.removeSession(player.getAccount().getMobileId());
+				Root.sessionSystem.removeSession(player.getAccount().getDeviceId());
 			}
 			player.setAccount(account);
 		}
@@ -144,7 +142,7 @@ public final class PlayerSystem extends AbstractSystem {
 
 			player.synchronize();
 
-			logger.debug("login  " + player.getAccount().getMobileId());
+			logger.debug("login  " + player.getAccount().getDeviceId());
 
 			// 发布登陆消息
 			this.publish(new PlayerMessage(PlayerMessage.SignIn, player));
@@ -310,49 +308,6 @@ public final class PlayerSystem extends AbstractSystem {
 
 		return result;
 
-	}
-
-	/**
-	 * 玩家增加经验,可能导致升级
-	 */
-	public SystemResult addExp(Player player, int exp, boolean sync) {
-
-		SystemResult result = new SystemResult();
-
-		// 可以用来升级的经验,经验是累加的,而不是下一级需要
-		player.setExp(player.getExp() + exp);
-
-		// 升级需要的经验,考虑一次升多级的情况
-		while (true) {
-			Integer nextLevelNeedExp = PlayerLoadData.getInstance().getNeedExp(player.getLevel());
-			if (nextLevelNeedExp != null) {
-				if (player.getExp() >= nextLevelNeedExp) {// 可以升级
-					player.setLevel(player.getLevel() + 1);// 升级
-
-					// 发送升级消息
-					PlayerMessage playerMessage = new PlayerMessage(PlayerMessage.LEVEL_UP, player,
-							player.getLevel() - 1, player.getLevel());
-					this.publish(playerMessage);
-
-				} else {// 不够升级的
-					break;
-				}
-			} else {// 满级了,级别不再上升
-				break;
-			}
-
-		}
-
-		if (sync) {
-			player.synchronize();
-		}
-
-		// 同步入数据库
-		PlayerDao playerDao = DaoFactory.getInstance().borrowPlayerDao();
-		playerDao.updatePlayerLevelExp(player);
-		DaoFactory.getInstance().returnPlayerDao(playerDao);
-
-		return result;
 	}
 
 	/**

@@ -25,15 +25,15 @@ public class Player extends AbstractEntity {
 	private long cash;
 	private int exp;
 	private int level;
-	private long protectEndTime;//护盾失效时间
-	private String pushUri;//推送地址
-	private int onLine;//1在线,0不在线
-	private Long onLineTime;//在线时长
-	private Long lastSignT;//登陆时间
-	private Long signLogId;//登陆日志的id
-	private byte[] security;//密码
-	private int haveImg;//是否有头像
-	private LangType lang;//语言
+	private long protectEndTime;// 护盾失效时间
+	private String pushUri;// 推送地址
+	private int onLine;// 1在线,0不在线
+	private Long onLineTime;// 在线时长
+	private Long lastSignT;// 登陆时间
+	private Long signLogId;// 登陆日志的id
+	private byte[] security;// 密码
+	private int haveImg;// 是否有头像
+	private LangType lang;// 语言
 
 	private PlayerStatistics playerStatistics;
 
@@ -54,8 +54,8 @@ public class Player extends AbstractEntity {
 		this.exp = exp;
 	}
 
-	public Player(Long id, int gold, long cash, int exp, int level, long protectEndTime, String pushUri, int onLine, long onLineTime, int haveImg, LangType lang,
-			PlayerStatistics playerStatistics) {
+	public Player(Long id, int gold, long cash, int exp, int level, long protectEndTime, String pushUri, int onLine,
+			long onLineTime, int haveImg, LangType lang, PlayerStatistics playerStatistics) {
 		super(Player.generateCacheKey(id));
 		this.id = id;
 		this.gold = gold;
@@ -220,9 +220,10 @@ public class Player extends AbstractEntity {
 	}
 
 	public boolean checkOnLine() {
-		Session session = RedisHelperJson.getSession(account.getMobileId());
+		Session session = RedisHelperJson.getSession(account.getDeviceId());
 		if (session != null) {
-			return Clock.currentTimeSecond() - session.getActiveT() < Content.HeartBeatOffLine * Content.HeartBeatTimePeriod;
+			return Clock.currentTimeSecond() - session.getActiveT() < Content.HeartBeatOffLine
+					* Content.HeartBeatTimePeriod;
 		}
 		return false;
 	}

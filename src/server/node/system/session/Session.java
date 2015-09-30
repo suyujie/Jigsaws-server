@@ -4,9 +4,8 @@ import gamecore.cache.redis.JedisUtilJson;
 import gamecore.entity.AbstractEntity;
 import server.node.system.Content;
 
-/** 
- * 可序列化 Session
- * 控制玩家在线
+/**
+ * 可序列化 Session 控制玩家在线
  */
 public class Session extends AbstractEntity {
 
@@ -16,18 +15,18 @@ public class Session extends AbstractEntity {
 
 	private static final StringBuilder ckBuf = new StringBuilder();
 
-	private Integer nodeTag;//节点id
-	private String mobileId;
+	private Integer nodeTag;// 节点id
+	private String deviceId;
 	private Long playerId;
-	private Long activeT;//秒
+	private Long activeT;// 秒
 
 	public Session() {
 	}
 
-	public Session(Integer nodeTag, String mobileId, Long playerId, long activeT) {
-		super(generateCacheKey(mobileId));
+	public Session(Integer nodeTag, String deviceId, Long playerId, long activeT) {
+		super(generateCacheKey(deviceId));
 		this.nodeTag = nodeTag;
-		this.mobileId = mobileId;
+		this.deviceId = deviceId;
 		this.playerId = playerId;
 		this.activeT = activeT;
 	}
@@ -40,12 +39,12 @@ public class Session extends AbstractEntity {
 		this.nodeTag = nodeTag;
 	}
 
-	public String getMobileId() {
-		return mobileId;
+	public String getDeviceId() {
+		return deviceId;
 	}
 
-	public void setMobileId(String mobileId) {
-		this.mobileId = mobileId;
+	public void setDeviceId(String deviceId) {
+		this.deviceId = deviceId;
 	}
 
 	public Long getPlayerId() {
@@ -66,7 +65,8 @@ public class Session extends AbstractEntity {
 
 	public void synchronize() {
 		synchronized (this) {
-			JedisUtilJson.getInstance().setForSec(getCacheKey(), this, Content.HeartBeatOffLine * Content.HeartBeatTimePeriod);
+			JedisUtilJson.getInstance().setForSec(getCacheKey(), this,
+					Content.HeartBeatOffLine * Content.HeartBeatTimePeriod);
 		}
 	}
 

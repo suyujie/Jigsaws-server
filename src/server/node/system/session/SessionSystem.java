@@ -77,9 +77,9 @@ public final class SessionSystem extends AbstractSystem {
 	// 更新保存session
 	public void updateOrSaveSession(Player player) {
 		if (player != null) {
-			Session session = getSession(player.getAccount().getMobileId());
+			Session session = getSession(player.getAccount().getDeviceId());
 			if (session == null) {
-				session = new Session(ConfigManager.getInstance().tag, player.getAccount().getMobileId(),
+				session = new Session(ConfigManager.getInstance().tag, player.getAccount().getDeviceId(),
 						player.getId(), Clock.currentTimeSecond());
 			} else {
 				session.setActiveT(Clock.currentTimeSecond());

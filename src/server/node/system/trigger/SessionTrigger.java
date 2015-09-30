@@ -37,20 +37,19 @@ public final class SessionTrigger implements Trigger, TopicSubscriber {
 	@Override
 	public void onMessage(TopicPublisher publisher, TopicMessage message) {
 
-		//用户系统发来的消息，
+		// 用户系统发来的消息，
 		if (publisher instanceof PlayerSystem) {
 			if (message instanceof PlayerMessage) {
 				PlayerMessage playerMsg = (PlayerMessage) message;
 				Player player = playerMsg.getPlayer();
 				if (player != null) {
-					//新注册,创建session,加入在线列表
+					// 新注册,创建session,加入在线列表
 					if (message.getName() == PlayerMessage.NewPlayer) {
 						Root.sessionSystem.updateOrSaveSession(player);
 						Root.sessionSystem.saveOnlinePlayerList(player);
 					}
-					//刚登录,创建session 加入在线列表
+					// 刚登录,创建session 加入在线列表
 					if (message.getName() == PlayerMessage.SignIn) {
-						logger.debug(player.getAccount().getMobileId());
 						Root.sessionSystem.updateOrSaveSession(player);
 						Root.sessionSystem.saveOnlinePlayerList(player);
 					}
