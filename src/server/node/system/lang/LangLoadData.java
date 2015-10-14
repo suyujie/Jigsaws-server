@@ -52,7 +52,7 @@ public final class LangLoadData extends AbstractLoadData {
 
 		Properties pps = new Properties();
 		try {
-			pps.load(new FileInputStream(getNewXmlName("languageServerChinese")));
+			pps.load(new FileInputStream(("languageServerChinese")));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;

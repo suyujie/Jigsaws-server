@@ -30,7 +30,7 @@ public final class BlackListSystem extends AbstractSystem {
 
 		System.out.println("BlackListSystem start..");
 
-		flushBlackList();
+		//flushBlackList();
 
 		System.out.println("BlackListSystem start..ok");
 

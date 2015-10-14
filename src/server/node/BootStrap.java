@@ -55,18 +55,18 @@ public class BootStrap {
 		// System.out.println("**init mysql OK");
 		// }
 
-		// try {
-		// System.out.println("child system start...");
-		// boolean b = Root.getInstance().initAndStartSystem();
-		// if (!b) {
-		// System.out.println("!!!!!child system start failed");
-		// System.exit(1);
-		// throw new Exception();
-		// }
-		// } catch (Exception e) {
-		// System.out.println("!!!!! child system start error");
-		// e.printStackTrace();
-		// }
+		try {
+			System.out.println("child system start...");
+			boolean b = Root.getInstance().initAndStartSystem();
+			if (!b) {
+				System.out.println("!!!!!child system start failed");
+				System.exit(1);
+				throw new Exception();
+			}
+		} catch (Exception e) {
+			System.out.println("!!!!! child system start error");
+			e.printStackTrace();
+		}
 		System.out.println("**child system start success");
 
 		int actionNum = ActionFactory.getInstance().registerActions("server.node.action");

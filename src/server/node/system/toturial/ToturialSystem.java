@@ -28,9 +28,9 @@ public final class ToturialSystem extends AbstractSystem {
 	@Override
 	public boolean startup() {
 		System.out.println("ToturialSystem start....");
-		boolean b = ToturialLoadData.getInstance().readData();
+		// boolean b = ToturialLoadData.getInstance().readData();
 		System.out.println("ToturialSystem start....OK");
-		return b;
+		return true;
 	}
 
 	@Override
@@ -73,7 +73,8 @@ public final class ToturialSystem extends AbstractSystem {
 					}
 				}
 			}
-			toturial = new Toturial(player, currentId, buttonId, rewardedIds, isPvpWinOne, btn_str, gradeStatus, gradeTime, addOneHead);
+			toturial = new Toturial(player, currentId, buttonId, rewardedIds, isPvpWinOne, btn_str, gradeStatus,
+					gradeTime, addOneHead);
 
 			toturial.synchronize();
 
@@ -84,7 +85,7 @@ public final class ToturialSystem extends AbstractSystem {
 		return toturial;
 	}
 
-	//初始化Toturial
+	// 初始化Toturial
 	private Toturial initToturial(Player player) {
 
 		// currentPointId从0开始
@@ -97,7 +98,7 @@ public final class ToturialSystem extends AbstractSystem {
 		return toturial;
 	}
 
-	//update,以客户端为准的更新
+	// update,以客户端为准的更新
 	public Toturial updateToturialByClient(Player player, Integer currentId, Integer buttonId) throws SQLException {
 
 		Toturial toturial = getToturial(player);
@@ -109,7 +110,7 @@ public final class ToturialSystem extends AbstractSystem {
 			change = true;
 		}
 
-		//奖励
+		// 奖励
 		change = change | checkAndReward(player, toturial);
 
 		if (buttonId != null && buttonId != toturial.getButtonId()) {
@@ -125,7 +126,7 @@ public final class ToturialSystem extends AbstractSystem {
 
 	}
 
-	//请求进度的时候，如果 currentId不一致,以大的为准
+	// 请求进度的时候，如果 currentId不一致,以大的为准
 	public Toturial updateToturialWhenRequest(Player player, Integer currentId) throws SQLException {
 
 		Toturial toturial = getToturial(player);
@@ -137,7 +138,7 @@ public final class ToturialSystem extends AbstractSystem {
 			change = true;
 		}
 
-		//奖励
+		// 奖励
 		change = change | checkAndReward(player, toturial);
 
 		if (change) {
@@ -148,7 +149,7 @@ public final class ToturialSystem extends AbstractSystem {
 
 	}
 
-	//赢过一场pvp
+	// 赢过一场pvp
 	public void updatePvpWinOne(Player player) throws SQLException {
 
 		Toturial toturial = getToturial(player);
@@ -161,7 +162,7 @@ public final class ToturialSystem extends AbstractSystem {
 
 	}
 
-	//点击过的按钮
+	// 点击过的按钮
 	public void updateClickBtnStr(Player player, String btnStr) throws SQLException {
 
 		Toturial toturial = getToturial(player);
@@ -175,10 +176,11 @@ public final class ToturialSystem extends AbstractSystem {
 
 		boolean updateToturial = false;
 
-		/**从xml中查看有没有奖励   ,并且查看之前的所有带奖励的id,是否给了奖励 **/
+		/** 从xml中查看有没有奖励 ,并且查看之前的所有带奖励的id,是否给了奖励 **/
 
 		for (Integer id : ToturialLoadData.getInstance().getToturialMakingIdsWithReward()) {
-			if (toturial.getCurrentId() >= id && ToturialLoadData.getInstance().checkHaveReward(id) && !toturial.getRewardedIds().contains(id)) {//有奖励
+			if (toturial.getCurrentId() >= id && ToturialLoadData.getInstance().checkHaveReward(id)
+					&& !toturial.getRewardedIds().contains(id)) {// 有奖励
 				updateToturial = reward(player, toturial, id) | updateToturial;
 			}
 		}
@@ -207,22 +209,22 @@ public final class ToturialSystem extends AbstractSystem {
 		return needUpdate;
 	}
 
-	//评价状态更新
+	// 评价状态更新
 	public void updateGrade(Player player, int gradeStatus) throws SQLException {
 		Toturial toturial = getToturial(player);
 
-		//-1:永不评价,2已经评价
+		// -1:永不评价,2已经评价
 		if (gradeStatus == -1 || gradeStatus == 2) {
 			toturial.setGradeStatus(gradeStatus);
 			toturial.setGradeTime((int) Clock.currentTimeSecond() / 3600);
 		}
-		//0:未评价(default),1 稍后评价,
-		if (gradeStatus == 1) {//稍后评价
-			if (toturial.getGradeStatus() == 0) {//第1次稍后评价,5代表首次稍后评价,6代表二次稍后评价
+		// 0:未评价(default),1 稍后评价,
+		if (gradeStatus == 1) {// 稍后评价
+			if (toturial.getGradeStatus() == 0) {// 第1次稍后评价,5代表首次稍后评价,6代表二次稍后评价
 				toturial.setGradeStatus(5);
 				toturial.setGradeTime((int) Clock.currentTimeSecond() / 3600);
 			}
-			if (toturial.getGradeStatus() == 5) {//第2次稍后评价,6代表二次稍后评价
+			if (toturial.getGradeStatus() == 5) {// 第2次稍后评价,6代表二次稍后评价
 				toturial.setGradeStatus(6);
 				toturial.setGradeTime((int) Clock.currentTimeSecond() / 3600);
 			}

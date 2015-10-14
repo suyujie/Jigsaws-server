@@ -14,12 +14,12 @@ public final class LangSystem extends AbstractSystem {
 
 		System.out.println("LangSystem start..");
 
-		//读取公共信息,去web读取json信息来获得
-		boolean b = LangLoadData.getInstance().readData();
+		// 读取公共信息,去web读取json信息来获得
+		// boolean b = LangLoadData.getInstance().readData();
 
 		System.out.println("LangSystem start..ok");
 
-		return b;
+		return true;
 	}
 
 	@Override

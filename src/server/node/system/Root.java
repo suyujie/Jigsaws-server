@@ -18,7 +18,6 @@ import server.node.system.push.PushSystem;
 import server.node.system.session.SessionSystem;
 import server.node.system.toturial.ToturialSystem;
 import server.node.system.trigger.TriggerSystem;
-import server.node.system.version.VersionSystem;
 
 /**
  * 系统根，所有子系统引导类。
@@ -31,7 +30,6 @@ public final class Root {
 
 	private boolean run = true;
 
-	public static VersionSystem versionSystem = null;
 	public static IdsSystem idsSystem = null;
 	public static LangSystem langSystem = null;
 	public static BlackListSystem blackListSystem = null;
@@ -66,8 +64,6 @@ public final class Root {
 	public boolean initAndStartSystem() {
 
 		System.out.println("all child system startup ....");
-		// 初始化子系统
-		versionSystem = new VersionSystem();
 		idsSystem = new IdsSystem();
 		langSystem = new LangSystem();
 		blackListSystem = new BlackListSystem();
@@ -84,10 +80,6 @@ public final class Root {
 		noticeSystem = new NoticeSystem();
 
 		// 启动子系统
-		if (!versionSystem.startup()) {
-			logger.error("versionSystem startup failed");
-			return false;
-		}
 		if (!idsSystem.startup()) {
 			logger.error("idsSystem startup failed");
 			return false;
@@ -152,9 +144,6 @@ public final class Root {
 
 	public void shutdown() {
 
-		if (null != versionSystem) {
-			versionSystem.shutdown();
-		}
 		if (null != langSystem) {
 			langSystem.shutdown();
 		}

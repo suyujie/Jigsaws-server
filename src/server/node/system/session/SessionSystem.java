@@ -41,10 +41,10 @@ public final class SessionSystem extends AbstractSystem {
 
 		System.out.println("SessionSystem start....");
 
-		onLinePlayer = new LinkedList<Long>();
-		initOnlinePlayer();
-		logger.info("      online player num : " + onLinePlayer.size());
-		TaskCenter.getInstance().scheduleAtFixedRate(new CheckSignOut(), Utils.randomInt(1, 60), 10, TimeUnit.SECONDS);
+		//onLinePlayer = new LinkedList<Long>();
+		//initOnlinePlayer();
+		//logger.info("      online player num : " + onLinePlayer.size());
+		//TaskCenter.getInstance().scheduleAtFixedRate(new CheckSignOut(), Utils.randomInt(1, 60), 10, TimeUnit.SECONDS);
 
 		System.out.println("SessionSystem start....OK");
 

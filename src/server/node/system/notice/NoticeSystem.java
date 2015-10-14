@@ -43,11 +43,11 @@ public final class NoticeSystem extends AbstractSystem {
 		System.out.println("NoticeSystem start....");
 
 		//读取公共信息,去web读取json信息来获得
-		boolean b = readPublicNotices();
+		//boolean b = readPublicNotices();
 
 		System.out.println("NoticeSystem start....OK");
 
-		return b;
+		return true;
 	}
 
 	@Override
