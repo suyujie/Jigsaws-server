@@ -110,9 +110,6 @@ public final class ToturialSystem extends AbstractSystem {
 			change = true;
 		}
 
-		// 奖励
-		change = change | checkAndReward(player, toturial);
-
 		if (buttonId != null && buttonId != toturial.getButtonId()) {
 			toturial.setButtonId(buttonId);
 			change = true;
@@ -126,42 +123,6 @@ public final class ToturialSystem extends AbstractSystem {
 
 	}
 
-	// 请求进度的时候，如果 currentId不一致,以大的为准
-	public Toturial updateToturialWhenRequest(Player player, Integer currentId) throws SQLException {
-
-		Toturial toturial = getToturial(player);
-
-		boolean change = false;
-
-		if (currentId > toturial.getCurrentId()) {
-			toturial.setCurrentId(currentId);
-			change = true;
-		}
-
-		// 奖励
-		change = change | checkAndReward(player, toturial);
-
-		if (change) {
-			updateCacheAndDb(player, toturial);
-		}
-
-		return toturial;
-
-	}
-
-	// 赢过一场pvp
-	public void updatePvpWinOne(Player player) throws SQLException {
-
-		Toturial toturial = getToturial(player);
-		if (toturial.getIsPvpWinOne() == 0) {
-			toturial.setIsPvpWinOne(1);
-
-			updateCacheAndDb(player, toturial);
-
-		}
-
-	}
-
 	// 点击过的按钮
 	public void updateClickBtnStr(Player player, String btnStr) throws SQLException {
 
@@ -170,67 +131,6 @@ public final class ToturialSystem extends AbstractSystem {
 
 		updateCacheAndDb(player, toturial);
 
-	}
-
-	private boolean checkAndReward(Player player, Toturial toturial) {
-
-		boolean updateToturial = false;
-
-		/** 从xml中查看有没有奖励 ,并且查看之前的所有带奖励的id,是否给了奖励 **/
-
-		for (Integer id : ToturialLoadData.getInstance().getToturialMakingIdsWithReward()) {
-			if (toturial.getCurrentId() >= id && ToturialLoadData.getInstance().checkHaveReward(id)
-					&& !toturial.getRewardedIds().contains(id)) {// 有奖励
-				updateToturial = reward(player, toturial, id) | updateToturial;
-			}
-		}
-
-		return updateToturial;
-	}
-
-	private boolean reward(Player player, Toturial toturial, Integer id) {
-
-		boolean needUpdate = false;
-
-		ToturialMaking toturialMaking = ToturialLoadData.getInstance().getToturialMaking(id);
-
-		if (toturialMaking != null && toturialMaking.getMoneyType() != null) {
-			if (toturialMaking.getMoneyType() == MoneyType.GOLD) {
-				Root.playerSystem.changeGold(player, toturialMaking.getRewardNum(), GoldType.TOTURIAL_GET, true);
-			} else {
-				Root.playerSystem.changeCash(player, toturialMaking.getRewardNum(), CashType.TOTURIAL_GET, true);
-			}
-
-			toturial.addRewardedId(id);
-
-			needUpdate = true;
-		}
-
-		return needUpdate;
-	}
-
-	// 评价状态更新
-	public void updateGrade(Player player, int gradeStatus) throws SQLException {
-		Toturial toturial = getToturial(player);
-
-		// -1:永不评价,2已经评价
-		if (gradeStatus == -1 || gradeStatus == 2) {
-			toturial.setGradeStatus(gradeStatus);
-			toturial.setGradeTime((int) Clock.currentTimeSecond() / 3600);
-		}
-		// 0:未评价(default),1 稍后评价,
-		if (gradeStatus == 1) {// 稍后评价
-			if (toturial.getGradeStatus() == 0) {// 第1次稍后评价,5代表首次稍后评价,6代表二次稍后评价
-				toturial.setGradeStatus(5);
-				toturial.setGradeTime((int) Clock.currentTimeSecond() / 3600);
-			}
-			if (toturial.getGradeStatus() == 5) {// 第2次稍后评价,6代表二次稍后评价
-				toturial.setGradeStatus(6);
-				toturial.setGradeTime((int) Clock.currentTimeSecond() / 3600);
-			}
-		}
-
-		updateCacheAndDb(player, toturial);
 	}
 
 	public void updateCacheAndDb(Player player, Toturial toturial) {
