@@ -13,9 +13,6 @@ public final class DaoFactory {
 	private FastTable<AccountDao> accountDaos;
 	private FastTable<PlayerDao> playerDaos;
 	private FastTable<ToturialDao> toturialDaos;
-	private FastTable<FriendDao> friendDaos;
-	private FastTable<GiftDao> giftDaos;
-	private FastTable<FeedbackDao> feedbackDaos;
 	private FastTable<NoticeDao> noticeDaos;
 
 	private DaoFactory() {
@@ -23,9 +20,6 @@ public final class DaoFactory {
 		this.accountDaos = new FastTable<AccountDao>();
 		this.playerDaos = new FastTable<PlayerDao>();
 		this.toturialDaos = new FastTable<ToturialDao>();
-		this.friendDaos = new FastTable<FriendDao>();
-		this.giftDaos = new FastTable<GiftDao>();
-		this.feedbackDaos = new FastTable<FeedbackDao>();
 		this.noticeDaos = new FastTable<NoticeDao>();
 	}
 
@@ -94,54 +88,6 @@ public final class DaoFactory {
 	public void returnToturialDao(ToturialDao toturialDao) {
 		synchronized (this.toturialDaos) {
 			this.toturialDaos.add(toturialDao);
-		}
-	}
-
-	public FriendDao borrowFriendDao() {
-		synchronized (this.friendDaos) {
-			if (friendDaos.isEmpty()) {
-				return new FriendDao();
-			} else {
-				return friendDaos.removeFirst();
-			}
-		}
-	}
-
-	public void returnFriendDao(FriendDao friendDao) {
-		synchronized (this.friendDaos) {
-			this.friendDaos.add(friendDao);
-		}
-	}
-
-	public GiftDao borrowGiftDao() {
-		synchronized (this.giftDaos) {
-			if (giftDaos.isEmpty()) {
-				return new GiftDao();
-			} else {
-				return giftDaos.removeFirst();
-			}
-		}
-	}
-
-	public void returnGiftDao(GiftDao giftDao) {
-		synchronized (this.giftDaos) {
-			this.giftDaos.add(giftDao);
-		}
-	}
-
-	public FeedbackDao borrowFeedbackDao() {
-		synchronized (this.feedbackDaos) {
-			if (feedbackDaos.isEmpty()) {
-				return new FeedbackDao();
-			} else {
-				return feedbackDaos.removeFirst();
-			}
-		}
-	}
-
-	public void returnFeedbackDao(FeedbackDao feedbackDao) {
-		synchronized (this.feedbackDaos) {
-			this.feedbackDaos.add(feedbackDao);
 		}
 	}
 

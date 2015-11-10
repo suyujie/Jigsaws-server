@@ -3,8 +3,6 @@ package server.node.system;
 import java.util.List;
 
 import gamecore.cache.redis.JedisUtilJson;
-import server.node.system.friend.FriendBag;
-import server.node.system.gift.GiftBag;
 import server.node.system.notice.NoticeBag;
 import server.node.system.player.Player;
 import server.node.system.session.Session;
@@ -52,14 +50,6 @@ public final class RedisHelperJson {
 
 	public static void removePlayer(Long id) {
 		JedisUtilJson.getInstance().del(Player.generateCacheKey(id));
-	}
-
-	public static FriendBag getFriendBag(Long id) {
-		return (FriendBag) JedisUtilJson.getInstance().get(FriendBag.generateCacheKey(id), FriendBag.class);
-	}
-
-	public static GiftBag getGiftBag(Long id) {
-		return (GiftBag) JedisUtilJson.getInstance().get(GiftBag.generateCacheKey(id), GiftBag.class);
 	}
 
 	public static NoticeBag getNoticeBag(Long id) {

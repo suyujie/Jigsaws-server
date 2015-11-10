@@ -22,20 +22,19 @@ import server.node.system.Root;
 
 import com.alibaba.fastjson.JSONObject;
 
-@WebServlet("/tts")
-public class TellTheSecretServlet extends AbstractHttpServlet {
+@WebServlet("/game")
+public class GameServlet extends AbstractHttpServlet {
 
 	private static final long serialVersionUID = 5764052240012555875L;
 
-	private static final Logger logger = LogManager.getLogger(TellTheSecretServlet.class.getName());
+	private static final Logger logger = LogManager.getLogger(GameServlet.class.getName());
 
-	public TellTheSecretServlet() {
+	public GameServlet() {
 
 	}
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		System.out.println("test");
 		this.doPost(req, resp);
 	}
 

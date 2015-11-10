@@ -5,10 +5,6 @@ import org.apache.logging.log4j.Logger;
 
 import gamecore.task.TaskCenter;
 import server.node.system.account.AccountSystem;
-import server.node.system.blackList.BlackListSystem;
-import server.node.system.feedback.FeedbackSystem;
-import server.node.system.friend.FriendSystem;
-import server.node.system.gift.GiftSystem;
 import server.node.system.ids.IdsSystem;
 import server.node.system.lang.LangSystem;
 import server.node.system.log.LogSystem;
@@ -32,16 +28,12 @@ public final class Root {
 
 	public static IdsSystem idsSystem = null;
 	public static LangSystem langSystem = null;
-	public static BlackListSystem blackListSystem = null;
 	public static SessionSystem sessionSystem = null;
 	public static AccountSystem accountSystem = null;
 	public static PlayerSystem playerSystem = null;
 	public static ToturialSystem toturialSystem = null;
 	public static LogSystem logSystem = null;
-	public static FriendSystem friendSystem = null;
-	public static GiftSystem giftSystem = null;
 	public static PushSystem pushSystem = null;
-	public static FeedbackSystem feedbackSystem = null;
 	public static NoticeSystem noticeSystem = null;
 
 	public static TriggerSystem triggerSystem = null;
@@ -66,16 +58,12 @@ public final class Root {
 		System.out.println("all child system startup ....");
 		idsSystem = new IdsSystem();
 		langSystem = new LangSystem();
-		blackListSystem = new BlackListSystem();
 		sessionSystem = new SessionSystem();
 		accountSystem = new AccountSystem();
 		playerSystem = new PlayerSystem();
 		toturialSystem = new ToturialSystem();
-		friendSystem = new FriendSystem();
 		triggerSystem = new TriggerSystem();
-		giftSystem = new GiftSystem();
 		pushSystem = new PushSystem();
-		feedbackSystem = new FeedbackSystem();
 		logSystem = new LogSystem();
 		noticeSystem = new NoticeSystem();
 
@@ -86,10 +74,6 @@ public final class Root {
 		}
 		if (!langSystem.startup()) {
 			logger.error("versionSystem startup failed");
-			return false;
-		}
-		if (!blackListSystem.startup()) {
-			logger.error("blackListSystem startup failed");
 			return false;
 		}
 		if (!accountSystem.startup()) {
@@ -112,19 +96,7 @@ public final class Root {
 			logger.error("logSystem startup failed");
 			return false;
 		}
-		if (!friendSystem.startup()) {
-			logger.error("friendSystem startup failed");
-			return false;
-		}
-		if (!giftSystem.startup()) {
-			logger.error("giftSystem startup failed");
-			return false;
-		}
 		if (!pushSystem.startup()) {
-			logger.error("pushSystem startup failed");
-			return false;
-		}
-		if (!feedbackSystem.startup()) {
 			logger.error("pushSystem startup failed");
 			return false;
 		}
@@ -147,9 +119,6 @@ public final class Root {
 		if (null != langSystem) {
 			langSystem.shutdown();
 		}
-		if (null != blackListSystem) {
-			blackListSystem.shutdown();
-		}
 		if (null != idsSystem) {
 			idsSystem.shutdown();
 		}
@@ -168,17 +137,8 @@ public final class Root {
 		if (null != logSystem) {
 			logSystem.shutdown();
 		}
-		if (null != friendSystem) {
-			friendSystem.shutdown();
-		}
-		if (null != giftSystem) {
-			giftSystem.shutdown();
-		}
 		if (null != pushSystem) {
 			pushSystem.shutdown();
-		}
-		if (null != feedbackSystem) {
-			feedbackSystem.shutdown();
 		}
 		if (null != triggerSystem) {
 			triggerSystem.shutdown();
