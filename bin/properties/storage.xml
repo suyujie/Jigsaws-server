@@ -5,20 +5,6 @@
 
 	<!-- storage -->
 	<storages>
-		<!-- 
-		
-		<platfrom tag="aws">
-			<storage tag="1">
-				<cdnUrl>http://d2oasfbmdznf7u.cloudfront.net</cdnUrl>
-				<bucketName>herobotfile</bucketName>
-				<accessUrl>https://s3-ap-southeast-1.amazonaws.com/herobotfile
-				</accessUrl>
-				<accessId>AKIAIJSHKBJFILDMHLGA</accessId>
-				<accessKey>4eTe3xFhFHkwLGAcZi86FwmX4DtQrMDajEZiEJTp</accessKey>
-			</storage>
-		</platfrom>
-		
-		 -->
 		<platfrom tag="azure">
 			<storage tag="1">
 				<storageAccount>herobotstoragetest</storageAccount>
