@@ -1,7 +1,10 @@
 package server.node;
 
 import gamecore.action.ActionFactory;
+import gamecore.cache.redis.JedisUtilJson;
+import gamecore.db.DBManager;
 import gamecore.task.TaskCenter;
+import gamecore.util.Clock;
 import server.node.system.ConfigManager;
 import server.node.system.Root;
 
@@ -34,21 +37,21 @@ public class BootStrap {
 
 		System.out.println("**Server TAG : " + ConfigManager.getInstance().tag);
 
-		// if (!JedisUtilJson.getInstance().init()) {
-		// System.out.println("!!!!!redisJson init error");
-		// Clock.stop();
-		// System.exit(1);
-		// } else {
-		// System.out.println("**init redisJson is OK");
-		// }
+		if (!JedisUtilJson.getInstance().init()) {
+			System.out.println("!!!!!redisJson init error");
+			Clock.stop();
+			System.exit(1);
+		} else {
+			System.out.println("**init redisJson is OK");
+		}
 
-		// if (!DBManager.getInstance().initConnPools()) {
-		// System.out.println("!!!!!dbmanager init error");
-		// Clock.stop();
-		// System.exit(1);
-		// } else {
-		// System.out.println("**init mysql OK");
-		// }
+		if (!DBManager.getInstance().initConnPools()) {
+			System.out.println("!!!!!dbmanager init error");
+			Clock.stop();
+			System.exit(1);
+		} else {
+			System.out.println("**init mysql OK");
+		}
 
 		try {
 			System.out.println("child system start...");

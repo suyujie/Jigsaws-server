@@ -1,2 +1,5 @@
-/server/
+/common/
 /gamecore/
+/log4j2.xml
+/properties/
+/server/

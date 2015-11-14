@@ -5,9 +5,8 @@
 
 		<mysql tag="1">
 			<driver>com.mysql.jdbc.Driver</driver>
-			<url>jdbc:mysql://127.0.0.1:3306/jigsaws?autoReconnect=true&amp;jdbcCompliantTruncation=false&amp;characterEncoding=UTF-8
-			</url>
-			<user>robot_db</user>
+			<url>jdbc:mysql://test-db.coc6uoraahrk.ap-northeast-1.rds.amazonaws.com:3306/test?autoReconnect=true&amp;jdbcCompliantTruncation=false&amp;characterEncoding=UTF-8</url>
+			<user>herobot_db</user>
 			<password>rulesgame_robot_19870125</password>
 			<minPoolSize>1</minPoolSize>
 			<maxPoolSize>5</maxPoolSize>

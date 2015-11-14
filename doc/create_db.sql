@@ -21,7 +21,7 @@ CREATE TABLE t_account (
   channel varchar(100) default null,
   device varchar(100) default null,
   ct bigint(20) UNSIGNED DEFAULT '0',
-  PRIMARY KEY (mobile_id)
+  PRIMARY KEY (device_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /**

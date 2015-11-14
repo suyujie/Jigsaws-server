@@ -7,13 +7,13 @@
 
 	<server>
 		<!-- 工作 -->
-		<work-port>9010</work-port>
+		<work-port>10010</work-port>
 		<work-queue-size>5000</work-queue-size>
 		<!-- 支付 -->
-		<pay-port>80</pay-port>
+		<pay-port>8080</pay-port>
 		<pay-queue-size>1000</pay-queue-size>
 		<!-- 管理 -->
-		<mgmt-port>9011</mgmt-port>
+		<mgmt-port>10011</mgmt-port>
 		<mgmt-queue-size>100</mgmt-queue-size>
 
 	</server>
