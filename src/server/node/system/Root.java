@@ -6,13 +6,8 @@ import org.apache.logging.log4j.Logger;
 import gamecore.task.TaskCenter;
 import server.node.system.account.AccountSystem;
 import server.node.system.ids.IdsSystem;
-import server.node.system.lang.LangSystem;
-import server.node.system.log.LogSystem;
-import server.node.system.notice.NoticeSystem;
 import server.node.system.player.PlayerSystem;
-import server.node.system.push.PushSystem;
 import server.node.system.session.SessionSystem;
-import server.node.system.toturial.ToturialSystem;
 import server.node.system.trigger.TriggerSystem;
 
 /**
@@ -27,14 +22,9 @@ public final class Root {
 	private boolean run = true;
 
 	public static IdsSystem idsSystem = null;
-	public static LangSystem langSystem = null;
 	public static SessionSystem sessionSystem = null;
 	public static AccountSystem accountSystem = null;
 	public static PlayerSystem playerSystem = null;
-	public static ToturialSystem toturialSystem = null;
-	public static LogSystem logSystem = null;
-	public static PushSystem pushSystem = null;
-	public static NoticeSystem noticeSystem = null;
 
 	public static TriggerSystem triggerSystem = null;
 
@@ -57,23 +47,14 @@ public final class Root {
 
 		System.out.println("all child system startup ....");
 		idsSystem = new IdsSystem();
-		langSystem = new LangSystem();
 		sessionSystem = new SessionSystem();
 		accountSystem = new AccountSystem();
 		playerSystem = new PlayerSystem();
-		toturialSystem = new ToturialSystem();
 		triggerSystem = new TriggerSystem();
-		pushSystem = new PushSystem();
-		logSystem = new LogSystem();
-		noticeSystem = new NoticeSystem();
 
 		// 启动子系统
 		if (!idsSystem.startup()) {
 			logger.error("idsSystem startup failed");
-			return false;
-		}
-		if (!langSystem.startup()) {
-			logger.error("versionSystem startup failed");
 			return false;
 		}
 		if (!accountSystem.startup()) {
@@ -88,22 +69,6 @@ public final class Root {
 			logger.error("sessionSystem startup failed");
 			return false;
 		}
-		if (!toturialSystem.startup()) {
-			logger.error("toturialSystem startup failed");
-			return false;
-		}
-		if (!logSystem.startup()) {
-			logger.error("logSystem startup failed");
-			return false;
-		}
-		if (!pushSystem.startup()) {
-			logger.error("pushSystem startup failed");
-			return false;
-		}
-		if (!noticeSystem.startup()) {
-			logger.error("noticeSystem startup failed");
-			return false;
-		}
 		if (!triggerSystem.startup()) {
 			logger.error("triggerSystem startup failed");
 			return false;
@@ -116,9 +81,6 @@ public final class Root {
 
 	public void shutdown() {
 
-		if (null != langSystem) {
-			langSystem.shutdown();
-		}
 		if (null != idsSystem) {
 			idsSystem.shutdown();
 		}
@@ -131,20 +93,8 @@ public final class Root {
 		if (null != playerSystem) {
 			playerSystem.shutdown();
 		}
-		if (null != toturialSystem) {
-			toturialSystem.shutdown();
-		}
-		if (null != logSystem) {
-			logSystem.shutdown();
-		}
-		if (null != pushSystem) {
-			pushSystem.shutdown();
-		}
 		if (null != triggerSystem) {
 			triggerSystem.shutdown();
-		}
-		if (null != noticeSystem) {
-			noticeSystem.shutdown();
 		}
 
 		// 关闭任务中心

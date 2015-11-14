@@ -50,20 +50,6 @@ public final class LogTrigger implements Trigger, TopicSubscriber {
 				PlayerMessage playerMsg = (PlayerMessage) message;
 				Player player = playerMsg.getPlayer();
 
-				// 新注册,添加登陆日志
-				if (message.getName() == PlayerMessage.NewPlayer) {
-					Root.logSystem.addSignLog(player, false);
-				}
-				// 登录,更新掉之前的登陆日志,加入新的登陆日志
-				if (message.getName() == PlayerMessage.SignIn) {
-					if (player.getSignLogId() != null) {
-						player.setOnLineTime(player.getOnLineTime() + (player.getLastSignT() == null ? 0
-								: (Clock.currentTimeSecond() - player.getLastSignT())));
-						Root.logSystem.updateSignLog(player, false);
-					}
-					Root.logSystem.addSignLog(player, false);
-				}
-
 				player.synchronize();
 			}
 		}
@@ -73,10 +59,7 @@ public final class LogTrigger implements Trigger, TopicSubscriber {
 			if (message instanceof SessionMessage) {
 				SessionMessage sessionMessage = (SessionMessage) message;
 				if (message.getName() == SessionMessage.SignOut) {
-					Player player = sessionMessage.getPlayer();
-					if (player.getSignLogId() != null) {
-						Root.logSystem.updateSignLog(player, true);
-					}
+					
 				}
 			}
 		}

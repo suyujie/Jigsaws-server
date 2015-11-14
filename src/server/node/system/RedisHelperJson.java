@@ -3,10 +3,8 @@ package server.node.system;
 import java.util.List;
 
 import gamecore.cache.redis.JedisUtilJson;
-import server.node.system.notice.NoticeBag;
 import server.node.system.player.Player;
 import server.node.system.session.Session;
-import server.node.system.toturial.Toturial;
 
 /**
  * 缓存redis 帮助类
@@ -50,14 +48,6 @@ public final class RedisHelperJson {
 
 	public static void removePlayer(Long id) {
 		JedisUtilJson.getInstance().del(Player.generateCacheKey(id));
-	}
-
-	public static NoticeBag getNoticeBag(Long id) {
-		return (NoticeBag) JedisUtilJson.getInstance().get(NoticeBag.generateCacheKey(id), NoticeBag.class);
-	}
-
-	public static Toturial getToturial(Long id) {
-		return (Toturial) JedisUtilJson.getInstance().get(Toturial.generateCacheKey(id), Toturial.class);
 	}
 
 	public static boolean existsOpponent(Integer cup) {
