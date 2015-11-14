@@ -1,23 +1,14 @@
 package server.node.system.session;
 
-import gamecore.system.AbstractSystem;
-import gamecore.task.TaskCenter;
-import gamecore.util.Clock;
-import gamecore.util.Utils;
-
-import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import server.node.dao.DaoFactory;
-import server.node.dao.PlayerDao;
+import gamecore.system.AbstractSystem;
+import gamecore.util.Clock;
 import server.node.system.ConfigManager;
 import server.node.system.RedisHelperJson;
 import server.node.system.Root;
@@ -41,10 +32,7 @@ public final class SessionSystem extends AbstractSystem {
 
 		System.out.println("SessionSystem start....");
 
-		//onLinePlayer = new LinkedList<Long>();
-		//initOnlinePlayer();
-		//logger.info("      online player num : " + onLinePlayer.size());
-		//TaskCenter.getInstance().scheduleAtFixedRate(new CheckSignOut(), Utils.randomInt(1, 60), 10, TimeUnit.SECONDS);
+		onLinePlayer = new LinkedList<Long>();
 
 		System.out.println("SessionSystem start....OK");
 
@@ -57,21 +45,6 @@ public final class SessionSystem extends AbstractSystem {
 
 	public Session getSession(String mobileId) {
 		return RedisHelperJson.getSession(mobileId);
-	}
-
-	public void initOnlinePlayer() {
-		PlayerDao playerDao = DaoFactory.getInstance().borrowPlayerDao();
-		List<Map<String, Object>> list = playerDao.readPlayerOnline();
-		DaoFactory.getInstance().returnPlayerDao(playerDao);
-
-		if (list != null) {
-			for (Map<String, Object> map : list) {
-				if (map != null) {
-					Long id = ((BigInteger) map.get("id")).longValue();
-					saveOnlinePlayerList(id);
-				}
-			}
-		}
 	}
 
 	// 更新保存session
@@ -118,27 +91,12 @@ public final class SessionSystem extends AbstractSystem {
 		}
 	}
 
-	/**
-	 * 登录
-	 */
-	public void signIn(Player player) {
-
-		player.setOnLine(1);
-		player.synchronize();
-	}
-
 	// 玩家掉线
 	public void signOut(Player player, Long playerId) {
 		if (player == null) {
 			player = Root.playerSystem.getPlayerFromCache(playerId);
 		}
 		if (player != null) {
-
-			player.setOnLine(0);
-			if (player.getLastSignT() != null) {
-				player.setOnLineTime(player.getOnLineTime() + Clock.currentTimeSecond() - player.getLastSignT());
-				player.setLastSignT(null);
-			}
 
 			player.synchronize();
 

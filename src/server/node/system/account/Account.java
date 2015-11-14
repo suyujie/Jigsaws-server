@@ -5,8 +5,8 @@ import java.io.Serializable;
 public class Account implements Serializable {
 
 	private static final long serialVersionUID = -418852006093836118L;
+
 	private String deviceId;
-	private String name;
 	private Long playerId;
 	private String channel;
 	private String device;
@@ -14,9 +14,8 @@ public class Account implements Serializable {
 	public Account() {
 	}
 
-	public Account(String deviceId, String name, Long playerId, String channel, String device) {
+	public Account(String deviceId, Long playerId, String channel, String device) {
 		this.deviceId = deviceId;
-		this.name = name;
 		this.playerId = playerId;
 		this.channel = channel;
 		this.device = device;
@@ -28,14 +27,6 @@ public class Account implements Serializable {
 
 	public void setDeviceId(String deviceId) {
 		this.deviceId = deviceId;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public Long getPlayerId() {

@@ -9,38 +9,18 @@ public final class DaoFactory {
 
 	private static DaoFactory instance = new DaoFactory();
 
-	private FastTable<LogDao> logDaos;
 	private FastTable<AccountDao> accountDaos;
 	private FastTable<PlayerDao> playerDaos;
 	private FastTable<ToturialDao> toturialDaos;
-	private FastTable<NoticeDao> noticeDaos;
 
 	private DaoFactory() {
-		this.logDaos = new FastTable<LogDao>();
 		this.accountDaos = new FastTable<AccountDao>();
 		this.playerDaos = new FastTable<PlayerDao>();
 		this.toturialDaos = new FastTable<ToturialDao>();
-		this.noticeDaos = new FastTable<NoticeDao>();
 	}
 
 	public static DaoFactory getInstance() {
 		return DaoFactory.instance;
-	}
-
-	public LogDao borrowLogDao() {
-		synchronized (this.logDaos) {
-			if (logDaos.isEmpty()) {
-				return new LogDao();
-			} else {
-				return logDaos.removeFirst();
-			}
-		}
-	}
-
-	public void returnLogDao(LogDao logDao) {
-		synchronized (this.logDaos) {
-			this.logDaos.add(logDao);
-		}
 	}
 
 	public AccountDao borrowAccountDao() {
@@ -88,22 +68,6 @@ public final class DaoFactory {
 	public void returnToturialDao(ToturialDao toturialDao) {
 		synchronized (this.toturialDaos) {
 			this.toturialDaos.add(toturialDao);
-		}
-	}
-
-	public NoticeDao borrowNoticeDao() {
-		synchronized (this.noticeDaos) {
-			if (noticeDaos.isEmpty()) {
-				return new NoticeDao();
-			} else {
-				return noticeDaos.removeFirst();
-			}
-		}
-	}
-
-	public void returnNoticeDao(NoticeDao noticeDao) {
-		synchronized (this.noticeDaos) {
-			this.noticeDaos.add(noticeDao);
 		}
 	}
 
