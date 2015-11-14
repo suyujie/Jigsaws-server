@@ -15,7 +15,7 @@ public class PlayerDao {
 	// 单独保存player
 	public void savePlayer(Player player) {
 
-		String sql = "insert into t_player(id,level,exp,t) values (?,?,?,?)";
+		String sql = "insert into t_player(id,level,exp,last_signin_time) values (?,?,?,?)";
 		Object[] args = { player.getId(), player.getLevel(), player.getExp(), Clock.currentTimeSecond() };
 		TaskCenter.getInstance().executeWithSlidingWindow(new AsyncDBTask(DBOperator.Write, player.getId(), sql, args));
 	}
