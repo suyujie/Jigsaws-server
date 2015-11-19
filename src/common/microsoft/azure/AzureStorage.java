@@ -1,20 +1,19 @@
 package common.microsoft.azure;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 
 import com.microsoft.windowsazure.storage.CloudStorageAccount;
 import com.microsoft.windowsazure.storage.blob.CloudBlobClient;
 import com.microsoft.windowsazure.storage.blob.CloudBlobContainer;
+import com.microsoft.windowsazure.storage.blob.CloudBlockBlob;
 
 public class AzureStorage {
-	
-	private static Logger logger = LogManager.getLogger(AzureStorage.class.getName());
 
 	public static CloudBlobContainer createCloudBlobContainer(AzureStorageBean storage, String blobName) {
 
-		String storageConnectionString = "DefaultEndpointsProtocol=http;AccountName=" + storage.storageAccount + ";AccountKey=" + storage.storageAccountKey + ";BlobEndpoint="
-				+ storage.storageConnectionUri;
+		String storageConnectionString = "DefaultEndpointsProtocol=http;AccountName=" + storage.storageAccount
+				+ ";AccountKey=" + storage.storageAccountKey + ";BlobEndpoint=" + storage.storageConnectionUri;
 
 		CloudStorageAccount storageAccount;
 		try {
@@ -24,11 +23,25 @@ public class AzureStorage {
 			container.createIfNotExists();
 			return container;
 		} catch (Exception e) {
-			logger.error(e);
+			e.printStackTrace();
 		}
 
 		return null;
 
+	}
+
+	public static boolean upload2Storage(AzureStorageBean storage, String blobName, String fileName, byte[] fileBytes) {
+
+		CloudBlobContainer container = AzureStorage.createCloudBlobContainer(storage, blobName);
+		try {
+			CloudBlockBlob blob = container.getBlockBlobReference(fileName);
+			InputStream inputStream = new ByteArrayInputStream(fileBytes);
+			blob.upload(inputStream, inputStream.available());
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 }

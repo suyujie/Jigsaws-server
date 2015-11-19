@@ -7,30 +7,27 @@ import server.node.action.AbstractAction;
  */
 public class GameResponse {
 
-	private short commandId;
+	private Integer commandId;
 	private short success;
 	private byte[] body;
-	private byte[] security;
 
-	public GameResponse(short commandId, byte[] body, byte[] security) {
+	public GameResponse(Integer commandId, byte[] body) {
 		this.commandId = commandId;
 		this.success = AbstractAction.SC_OK;
 		this.body = body;
-		this.security = security;
 	}
 
-	public GameResponse(short commandId, short success, byte[] body, byte[] security) {
+	public GameResponse(Integer commandId, short success, byte[] body) {
 		this.commandId = commandId;
 		this.success = success;
 		this.body = body;
-		this.security = security;
 	}
 
-	public short getCommandId() {
+	public Integer getCommandId() {
 		return commandId;
 	}
 
-	public void setCommandId(short commandId) {
+	public void setCommandId(Integer commandId) {
 		this.commandId = commandId;
 	}
 
@@ -48,14 +45,6 @@ public class GameResponse {
 
 	public void setBody(byte[] body) {
 		this.body = body;
-	}
-
-	public byte[] getSecurity() {
-		return security;
-	}
-
-	public void setSecurity(byte[] security) {
-		this.security = security;
 	}
 
 }

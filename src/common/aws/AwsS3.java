@@ -24,28 +24,18 @@ public class AwsS3 {
 
 	public static boolean upload(AwsS3StorageBean storageBean, String key, File file) throws IOException {
 
-		AmazonS3 s3 = new AmazonS3Client(new BasicAWSCredentials(storageBean.getAccessId(), storageBean.getAccessKey()));
+		AmazonS3 s3 = new AmazonS3Client(
+				new BasicAWSCredentials(storageBean.getAccessId(), storageBean.getAccessKey()));
 
 		Region usWest2 = Region.getRegion(Regions.AP_SOUTHEAST_1);
 		s3.setRegion(usWest2);
 
 		try {
 
-			//			try {
-			//				s3.createBucket(bucketName);
-			//			} catch (Exception e) {
-			//				e.printStackTrace();
-			//			}
-
-			//			System.out.println("Listing buckets");
-			//			for (Bucket bucket : s3.listBuckets()) {
-			//				System.out.println(" - " + bucket.getName());
-			//			}
-
 			s3.putObject(new PutObjectRequest(storageBean.getBucketName(), key, file));
 
-			System.out.println("Listing objects");
-			ObjectListing objectListing = s3.listObjects(new ListObjectsRequest().withBucketName(storageBean.getBucketName()).withPrefix("My"));
+			ObjectListing objectListing = s3
+					.listObjects(new ListObjectsRequest().withBucketName(storageBean.getBucketName()).withPrefix("My"));
 			for (S3ObjectSummary objectSummary : objectListing.getObjectSummaries()) {
 				System.out.println(" - " + objectSummary.getKey() + "  " + "(size = " + objectSummary.getSize() + ")");
 			}

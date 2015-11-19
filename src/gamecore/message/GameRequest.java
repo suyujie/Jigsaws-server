@@ -5,50 +5,30 @@ package gamecore.message;
  */
 public class GameRequest {
 
-	private short commandId;
-	private String mobileId;
-	private int checkId;
-	private Long playerId;
+	private Integer commandId;
+	private String sessionId;
 	private byte[] body;
 
-	public GameRequest(short commandId, String mobileId, int checkId, Long playerId, byte[] body) {
+	public GameRequest(Integer commandId, String sessionId, byte[] body) {
 		this.commandId = commandId;
-		this.mobileId = mobileId;
-		this.checkId = checkId;
-		this.playerId = playerId;
+		this.sessionId = sessionId;
 		this.body = body;
 	}
 
-	public short getCommandId() {
+	public Integer getCommandId() {
 		return commandId;
 	}
 
-	public void setCommandId(short commandId) {
+	public void setCommandId(Integer commandId) {
 		this.commandId = commandId;
 	}
 
-	public String getMobileId() {
-		return mobileId;
+	public String getSessionId() {
+		return sessionId;
 	}
 
-	public void setMobileId(String mobileId) {
-		this.mobileId = mobileId;
-	}
-
-	public int getCheckId() {
-		return checkId;
-	}
-
-	public void setCheckId(int checkId) {
-		this.checkId = checkId;
-	}
-
-	public Long getPlayerId() {
-		return playerId;
-	}
-
-	public void setPlayerId(Long playerId) {
-		this.playerId = playerId;
+	public void setSessionId(String sessionId) {
+		this.sessionId = sessionId;
 	}
 
 	public byte[] getBody() {

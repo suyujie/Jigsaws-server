@@ -17,8 +17,8 @@ public class ActionFactory {
 
 	// 单例
 	private static ActionFactory instance = new ActionFactory();
-	private FastMap<String, IAction> actionMap = new FastMap<String, IAction>();
-	private FastMap<String, IAction> managerActionMap = new FastMap<String, IAction>();
+	private FastMap<Integer, IAction> actionMap = new FastMap<Integer, IAction>();
+	private FastMap<Integer, IAction> managerActionMap = new FastMap<Integer, IAction>();
 
 	public static ActionFactory getInstance() {
 		return instance;
@@ -38,10 +38,8 @@ public class ActionFactory {
 					try {
 						IAction action = (IAction) cls.newInstance();
 						ActionPathSpec path = (ActionPathSpec) ann;
-						String key = path.value();
-
+						Integer key = Integer.parseInt(path.value());
 						this.actionMap.put(key, action);
-
 						if (logger.isDebugEnabled()) {
 							logger.info("register action:[" + key + "] " + cls.getName() + " succeeded");
 						}
@@ -67,7 +65,8 @@ public class ActionFactory {
 					try {
 						IAction action = (IAction) cls.newInstance();
 						ActionPathSpec path = (ActionPathSpec) ann;
-						this.managerActionMap.put(path.value(), action);
+						Integer key = Integer.parseInt(path.value());
+						this.managerActionMap.put(key, action);
 
 						if (logger.isDebugEnabled()) {
 							logger.info("register manager action: " + cls.getName() + " succeeded");
@@ -83,11 +82,11 @@ public class ActionFactory {
 		return managerActionMap.size();
 	}
 
-	public IAction getAction(String commandId) {
+	public IAction getAction(Integer commandId) {
 		return actionMap.get(commandId);
 	}
 
-	public IAction getManagerAction(String commandId) {
+	public IAction getManagerAction(Integer commandId) {
 		return managerActionMap.get(commandId);
 	}
 

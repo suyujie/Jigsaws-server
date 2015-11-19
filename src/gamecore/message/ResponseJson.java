@@ -7,21 +7,21 @@ import com.alibaba.fastjson.JSONObject;
  */
 public class ResponseJson {
 
-	private String commandId;
+	private Integer commandId;
 	private boolean success;
 	private JSONObject body;
 
-	public ResponseJson(String commandId, boolean success, JSONObject body) {
+	public ResponseJson(Integer commandId, boolean success, JSONObject body) {
 		this.commandId = commandId;
 		this.success = success;
 		this.body = body;
 	}
 
-	public String getCommandId() {
+	public Integer getCommandId() {
 		return commandId;
 	}
 
-	public void setCommandId(String commandId) {
+	public void setCommandId(Integer commandId) {
 		this.commandId = commandId;
 	}
 

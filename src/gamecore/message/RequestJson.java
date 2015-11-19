@@ -7,21 +7,21 @@ import com.alibaba.fastjson.JSONObject;
  */
 public class RequestJson {
 
-	private String commandId;
+	private Integer commandId;
 	private String sessionId;
 	private JSONObject body;
 
-	public RequestJson(String commandId, String sessionId, JSONObject body) {
+	public RequestJson(Integer commandId, String sessionId, JSONObject body) {
 		this.commandId = commandId;
 		this.sessionId = sessionId;
 		this.body = body;
 	}
 
-	public String getCommandId() {
+	public Integer getCommandId() {
 		return commandId;
 	}
 
-	public void setCommandId(String commandId) {
+	public void setCommandId(Integer commandId) {
 		this.commandId = commandId;
 	}
 
