@@ -24,13 +24,13 @@ public final class SessionTrigger implements Trigger, TopicSubscriber {
 	}
 
 	public boolean start() {
-		Root.playerSystem.subscribe(PlayerMessage.NewPlayer, this);
+		Root.playerSystem.subscribe(PlayerMessage.Registe, this);
 		Root.playerSystem.subscribe(PlayerMessage.SignIn, this);
 		return true;
 	}
 
 	public void stop() {
-		Root.playerSystem.unsubscribe(PlayerMessage.NewPlayer, this);
+		Root.playerSystem.unsubscribe(PlayerMessage.Registe, this);
 		Root.playerSystem.unsubscribe(PlayerMessage.SignIn, this);
 	}
 
@@ -42,15 +42,16 @@ public final class SessionTrigger implements Trigger, TopicSubscriber {
 			if (message instanceof PlayerMessage) {
 				PlayerMessage playerMsg = (PlayerMessage) message;
 				Player player = playerMsg.getPlayer();
+				String sessionId = playerMsg.getSessionId();
 				if (player != null) {
 					// 新注册,创建session,加入在线列表
-					if (message.getName() == PlayerMessage.NewPlayer) {
-						Root.sessionSystem.updateOrSaveSession(player);
+					if (message.getName() == PlayerMessage.Registe) {
+						Root.sessionSystem.updateOrSaveSession(player, sessionId);
 						Root.sessionSystem.saveOnlinePlayerList(player);
 					}
 					// 刚登录,创建session 加入在线列表
 					if (message.getName() == PlayerMessage.SignIn) {
-						Root.sessionSystem.updateOrSaveSession(player);
+						Root.sessionSystem.updateOrSaveSession(player, sessionId);
 						Root.sessionSystem.saveOnlinePlayerList(player);
 					}
 				}

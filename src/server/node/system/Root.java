@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 import gamecore.task.TaskCenter;
 import server.node.system.account.AccountSystem;
+import server.node.system.gameImage.GameImageSystem;
 import server.node.system.ids.IdsSystem;
 import server.node.system.player.PlayerSystem;
 import server.node.system.session.SessionSystem;
@@ -25,6 +26,7 @@ public final class Root {
 	public static SessionSystem sessionSystem = null;
 	public static AccountSystem accountSystem = null;
 	public static PlayerSystem playerSystem = null;
+	public static GameImageSystem gameImageSystem = null;
 
 	public static TriggerSystem triggerSystem = null;
 
@@ -50,6 +52,7 @@ public final class Root {
 		sessionSystem = new SessionSystem();
 		accountSystem = new AccountSystem();
 		playerSystem = new PlayerSystem();
+		gameImageSystem = new GameImageSystem();
 		triggerSystem = new TriggerSystem();
 
 		// 启动子系统
@@ -63,6 +66,10 @@ public final class Root {
 		}
 		if (!playerSystem.startup()) {
 			logger.error("playerSystem startup failed");
+			return false;
+		}
+		if (!gameImageSystem.startup()) {
+			logger.error("gameImageSystem startup failed");
 			return false;
 		}
 		if (!sessionSystem.startup()) {
@@ -92,6 +99,9 @@ public final class Root {
 		}
 		if (null != playerSystem) {
 			playerSystem.shutdown();
+		}
+		if (null != gameImageSystem) {
+			gameImageSystem.shutdown();
 		}
 		if (null != triggerSystem) {
 			triggerSystem.shutdown();

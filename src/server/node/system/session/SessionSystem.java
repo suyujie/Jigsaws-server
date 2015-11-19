@@ -43,14 +43,14 @@ public final class SessionSystem extends AbstractSystem {
 	public void shutdown() {
 	}
 
-	public Session getSession(String mobileId) {
-		return RedisHelperJson.getSession(mobileId);
+	public Session getSession(String sessionId) {
+		return RedisHelperJson.getSession(sessionId);
 	}
 
 	// 更新保存session
-	public void updateOrSaveSession(Player player) {
+	public void updateOrSaveSession(Player player, String sessionId) {
 		if (player != null) {
-			Session session = getSession(player.getAccount().getDeviceId());
+			Session session = getSession(sessionId);
 			if (session == null) {
 				session = new Session(ConfigManager.getInstance().tag, player.getAccount().getDeviceId(),
 						player.getId(), Clock.currentTimeSecond());

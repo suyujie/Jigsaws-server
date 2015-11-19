@@ -10,14 +10,14 @@ public final class PlayerMessage extends TopicMessage {
 	// 升级
 	public static final String LEVEL_UP = "player_levelUp";
 	// 注册
-	public static final String NewPlayer = "player_newPlayer";
+	public static final String Registe = "player_registe";
 	// 刚登录
 	public static final String SignIn = "player_signIn";
 	// 有访问
 	public static final String PlayerActive = "player_active";
 
+	private String sessionId;
 	private Player player;
-	private short newRobotNum;
 	private int oldLevel;
 	private int currentLevel;
 
@@ -28,10 +28,10 @@ public final class PlayerMessage extends TopicMessage {
 		this.currentLevel = currentLevel;
 	}
 
-	public PlayerMessage(String name, Player player, short newRobotNum) {
+	public PlayerMessage(String name, Player player, String sessionId) {
 		super(name);
 		this.player = player;
-		this.newRobotNum = newRobotNum;
+		this.sessionId = sessionId;
 	}
 
 	public PlayerMessage(String name, Player player) {
@@ -47,12 +47,12 @@ public final class PlayerMessage extends TopicMessage {
 		this.player = player;
 	}
 
-	public short getNewRobotNum() {
-		return newRobotNum;
+	public String getSessionId() {
+		return sessionId;
 	}
 
-	public void setNewRobotNum(short newRobotNum) {
-		this.newRobotNum = newRobotNum;
+	public void setSessionId(String sessionId) {
+		this.sessionId = sessionId;
 	}
 
 	public int getOldLevel() {

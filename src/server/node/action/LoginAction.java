@@ -14,6 +14,7 @@ import gamecore.message.RequestJson;
 import gamecore.message.ResponseJson;
 import server.node.system.Root;
 import server.node.system.account.Account;
+import server.node.system.player.Player;
 
 @ActionPathSpec("101")
 public class LoginAction extends AbstractAction {
@@ -30,7 +31,9 @@ public class LoginAction extends AbstractAction {
 
 		String deviceId = jsonObject.getString("deviceId");
 
-		logger.debug("login deviceId:" + deviceId);
+		String sessionId = UUID.randomUUID().toString();
+
+		JSONObject json = new JSONObject();
 
 		if (StringUtils.isNotBlank(deviceId)) {
 
@@ -38,14 +41,16 @@ public class LoginAction extends AbstractAction {
 				// 登陆
 				Account account = Root.accountSystem.getAccount(deviceId);
 				if (account == null) {
-					Root.playerSystem.register(deviceId, "", "", true);
+					Player player = Root.playerSystem.register(deviceId, sessionId, true);
+					json.put("reg", true);
+				} else {
+					json.put("reg", false);
 				}
 
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 
-			JSONObject json = new JSONObject();
 			json.put("sessionId", UUID.randomUUID().toString());
 
 			responseJson.setBody(json);

@@ -22,10 +22,10 @@ public final class IdsSystem extends AbstractSystem {
 	private static final int max = 3000;// 最大阈值
 	private static final int numPerTime = 1000;// 每次增加数量
 
-	protected TreeSet<Long> playerIdPool = new TreeSet<Long>();
+	protected TreeSet<Long> idPool = new TreeSet<Long>();
 
 	public IdsSystem() {
-		this.playerIdPool = new TreeSet<Long>();
+		this.idPool = new TreeSet<Long>();
 	}
 
 	@Override
@@ -45,23 +45,23 @@ public final class IdsSystem extends AbstractSystem {
 	}
 
 	/**
-	 * 消耗一个playerId
+	 * 消耗一个Id
 	 */
-	public Long takePlayerId() {
+	public Long takeId() {
 
-		if (playerIdPool.size() <= max / 10) {
+		if (idPool.size() <= max / 10) {
 			TaskCenter.getInstance().execute(new PlayerIdTask());
 		}
 
 		Long id = null;
 		while (id == null) {
-			synchronized (playerIdPool) {
-				id = playerIdPool.pollFirst();
+			synchronized (idPool) {
+				id = idPool.pollFirst();
 			}
 			if (id == null) {
 				try {
 					Thread.sleep(10);
-					logger.info("waiting for playerId create");
+					logger.info("waiting for id create");
 				} catch (InterruptedException e) {
 					logger.error(e);
 				}
@@ -84,8 +84,8 @@ public final class IdsSystem extends AbstractSystem {
 
 	class PlayerIdTask implements Runnable {
 		public void run() {
-			if (playerIdPool.size() < max) {
-				createIds(ConfigManager.getInstance().tag, playerIdPool);
+			if (idPool.size() < max) {
+				createIds(ConfigManager.getInstance().tag, idPool);
 			}
 		}
 

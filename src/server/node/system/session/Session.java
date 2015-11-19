@@ -16,17 +16,17 @@ public class Session extends AbstractEntity {
 	private static final StringBuilder ckBuf = new StringBuilder();
 
 	private Integer nodeTag;// 节点id
-	private String deviceId;
+	private String sessionId;
 	private Long playerId;
 	private Long activeT;// 秒
 
 	public Session() {
 	}
 
-	public Session(Integer nodeTag, String deviceId, Long playerId, long activeT) {
-		super(generateCacheKey(deviceId));
+	public Session(Integer nodeTag, String sessionId, Long playerId, long activeT) {
+		super(generateCacheKey(sessionId));
 		this.nodeTag = nodeTag;
-		this.deviceId = deviceId;
+		this.sessionId = sessionId;
 		this.playerId = playerId;
 		this.activeT = activeT;
 	}
@@ -39,12 +39,12 @@ public class Session extends AbstractEntity {
 		this.nodeTag = nodeTag;
 	}
 
-	public String getDeviceId() {
-		return deviceId;
+	public String getSessionId() {
+		return sessionId;
 	}
 
-	public void setDeviceId(String deviceId) {
-		this.deviceId = deviceId;
+	public void setSessionId(String sessionId) {
+		this.sessionId = sessionId;
 	}
 
 	public Long getPlayerId() {
@@ -73,9 +73,9 @@ public class Session extends AbstractEntity {
 	/**
 	 * 生成存储键。
 	 */
-	public static String generateCacheKey(String mobileId) {
+	public static String generateCacheKey(String sessionId) {
 		synchronized (ckBuf) {
-			String ret = ckBuf.append(CKPrefix).append(mobileId).toString();
+			String ret = ckBuf.append(CKPrefix).append(sessionId).toString();
 			ckBuf.delete(0, ckBuf.length());
 			return ret;
 		}

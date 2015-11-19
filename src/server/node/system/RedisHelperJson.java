@@ -34,8 +34,8 @@ public final class RedisHelperJson {
 		JedisUtilJson.getInstance().del(key);
 	}
 
-	public static Session getSession(String mobileId) {
-		return (Session) JedisUtilJson.getInstance().get(Session.generateCacheKey(mobileId), Session.class);
+	public static Session getSession(String sessionId) {
+		return (Session) JedisUtilJson.getInstance().get(Session.generateCacheKey(sessionId), Session.class);
 	}
 
 	public static void removeSession(String mobileId) {

@@ -22,14 +22,14 @@ import server.node.system.Root;
 
 import com.alibaba.fastjson.JSONObject;
 
-@WebServlet("/game")
-public class GameServlet extends AbstractHttpServlet {
+@WebServlet("/game_json")
+public class GameJsonServlet extends AbstractHttpServlet {
 
 	private static final long serialVersionUID = 5764052240012555875L;
 
-	private static final Logger logger = LogManager.getLogger(GameServlet.class.getName());
+	private static final Logger logger = LogManager.getLogger(GameJsonServlet.class.getName());
 
-	public GameServlet() {
+	public GameJsonServlet() {
 
 	}
 
@@ -42,7 +42,7 @@ public class GameServlet extends AbstractHttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
 		long tb = System.currentTimeMillis();
-		String commandId = "";
+		Integer commandId;
 
 		OutputStream out = resp.getOutputStream();
 
@@ -54,9 +54,7 @@ public class GameServlet extends AbstractHttpServlet {
 
 		commandId = rj.getCommandId();
 
-		if (commandId == null) {
-			logger.error("commandId is null");
-		}
+		// logger.debug("commandId is = " + commandId);
 
 		try {
 			respJson = encode(execAction(rj));
@@ -105,7 +103,7 @@ public class GameServlet extends AbstractHttpServlet {
 	 */
 	public static RequestJson decode(JSONObject data) {
 
-		String commandId = data.getString("commandId");
+		Integer commandId = data.getInteger("commandId");
 		data.remove("commandId");
 
 		String sessionId = data.getString("sessionId");

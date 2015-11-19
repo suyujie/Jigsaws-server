@@ -7,65 +7,77 @@ import java.io.Serializable;
  */
 public class PlayerStatistics implements Serializable {
 
-	private static final long serialVersionUID = 7582153125956861246L;
+	private static final long serialVersionUID = -1647241546730237530L;
 
-	private int cupNum;//奖杯数
-	private int pvpAttackWinCount;//进攻胜利
-	private int pvpDefenceWinCount;//防守胜利
-	private int pvpBeatRobotCount;//击败机器人数量
-	private int letCount;//出租成功次数
+	private int gameSuccess;// 游戏胜利
+	private int gameFailure;// 游戏失败
+	private int gameGiveup;// 游戏放弃
+
+	private int upLoadNum;// 上传数量
+
+	private int upLoadGood;// 被评为好图
+	private int upLoadBad;// 被评为不好图
 
 	public PlayerStatistics() {
 
 	}
 
-	public PlayerStatistics(int cupNum, int pvpAttackWinCount, int pvpDefenceWinCount, int pvpBeatRobotCount, int letCount) {
-		super();
-		this.cupNum = cupNum;
-		this.pvpAttackWinCount = pvpAttackWinCount;
-		this.pvpDefenceWinCount = pvpDefenceWinCount;
-		this.pvpBeatRobotCount = pvpBeatRobotCount;
-		this.letCount = letCount;
+	public PlayerStatistics(int gameSuccess, int gameFailure, int gameGiveup, int upLoadNum, int upLoadGood,
+			int upLoadBad) {
+		this.gameSuccess = gameSuccess;
+		this.gameFailure = gameFailure;
+		this.gameGiveup = gameGiveup;
+		this.upLoadNum = upLoadNum;
+		this.upLoadGood = upLoadGood;
+		this.upLoadBad = upLoadBad;
 	}
 
-	public int getCupNum() {
-		return cupNum;
+	public int getGameSuccess() {
+		return gameSuccess;
 	}
 
-	public void setCupNum(int cupNum) {
-		this.cupNum = cupNum;
+	public void setGameSuccess(int gameSuccess) {
+		this.gameSuccess = gameSuccess;
 	}
 
-	public int getPvpAttackWinCount() {
-		return pvpAttackWinCount;
+	public int getGameFailure() {
+		return gameFailure;
 	}
 
-	public void setPvpAttackWinCount(int pvpAttackWinCount) {
-		this.pvpAttackWinCount = pvpAttackWinCount;
+	public void setGameFailure(int gameFailure) {
+		this.gameFailure = gameFailure;
 	}
 
-	public int getPvpDefenceWinCount() {
-		return pvpDefenceWinCount;
+	public int getGameGiveup() {
+		return gameGiveup;
 	}
 
-	public void setPvpDefenceWinCount(int pvpDefenceWinCount) {
-		this.pvpDefenceWinCount = pvpDefenceWinCount;
+	public void setGameGiveup(int gameGiveup) {
+		this.gameGiveup = gameGiveup;
 	}
 
-	public int getPvpBeatRobotCount() {
-		return pvpBeatRobotCount;
+	public int getUpLoadNum() {
+		return upLoadNum;
 	}
 
-	public void setPvpBeatRobotCount(int pvpBeatRobotCount) {
-		this.pvpBeatRobotCount = pvpBeatRobotCount;
+	public void setUpLoadNum(int upLoadNum) {
+		this.upLoadNum = upLoadNum;
 	}
 
-	public int getLetCount() {
-		return letCount;
+	public int getUpLoadGood() {
+		return upLoadGood;
 	}
 
-	public void setLetCount(int letCount) {
-		this.letCount = letCount;
+	public void setUpLoadGood(int upLoadGood) {
+		this.upLoadGood = upLoadGood;
+	}
+
+	public int getUpLoadBad() {
+		return upLoadBad;
+	}
+
+	public void setUpLoadBad(int upLoadBad) {
+		this.upLoadBad = upLoadBad;
 	}
 
 }

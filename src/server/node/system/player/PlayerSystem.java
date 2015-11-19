@@ -38,27 +38,26 @@ public final class PlayerSystem extends AbstractSystem {
 	/**
 	 * 注册玩家
 	 */
-	public Player register(String deviceId, String channel, String device, boolean syncPlayer) {
+	public Player register(String deviceId, String sessionId, boolean sync) {
 
-		Long playerId = Root.idsSystem.takePlayerId();
+		Long playerId = Root.idsSystem.takeId();
 
-		Account account = new Account(deviceId, playerId, channel, device);
+		Account account = new Account(deviceId, playerId, null, null);
 		Root.accountSystem.saveAccount(account);
 
 		Player player = new Player(playerId, 0, 0);
 		player.setAccount(account);
 
-		if (syncPlayer) {
-			player.synchronize();
-		}
-
 		PlayerDao playerDao = DaoFactory.getInstance().borrowPlayerDao();
 		playerDao.savePlayer(player);
 		DaoFactory.getInstance().returnPlayerDao(playerDao);
 
+		if (sync) {
+			player.synchronize();
+		}
+
 		// 发布注册消息
-		PlayerMessage playerMessage = new PlayerMessage(PlayerMessage.NewPlayer, player);
-		this.publish(playerMessage);
+		this.publish(new PlayerMessage(PlayerMessage.Registe, player, sessionId));
 
 		return player;
 	}

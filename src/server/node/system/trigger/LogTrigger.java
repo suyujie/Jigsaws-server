@@ -7,7 +7,6 @@ import gamecore.trigger.TopicMessage;
 import gamecore.trigger.TopicPublisher;
 import gamecore.trigger.TopicSubscriber;
 import gamecore.trigger.Trigger;
-import gamecore.util.Clock;
 import server.node.system.Root;
 import server.node.system.player.Player;
 import server.node.system.player.PlayerMessage;
@@ -27,7 +26,7 @@ public final class LogTrigger implements Trigger, TopicSubscriber {
 	}
 
 	public boolean start() {
-		Root.playerSystem.subscribe(PlayerMessage.NewPlayer, this);
+		Root.playerSystem.subscribe(PlayerMessage.Registe, this);
 		Root.playerSystem.subscribe(PlayerMessage.SignIn, this);
 		Root.sessionSystem.subscribe(SessionMessage.SignOut, this);
 		Root.playerSystem.subscribe(PlayerMessage.LEVEL_UP, this);
@@ -35,7 +34,7 @@ public final class LogTrigger implements Trigger, TopicSubscriber {
 	}
 
 	public void stop() {
-		Root.playerSystem.unsubscribe(PlayerMessage.NewPlayer, this);
+		Root.playerSystem.unsubscribe(PlayerMessage.Registe, this);
 		Root.playerSystem.unsubscribe(PlayerMessage.SignIn, this);
 		Root.sessionSystem.unsubscribe(SessionMessage.SignOut, this);
 		Root.playerSystem.unsubscribe(PlayerMessage.LEVEL_UP, this);
@@ -59,7 +58,7 @@ public final class LogTrigger implements Trigger, TopicSubscriber {
 			if (message instanceof SessionMessage) {
 				SessionMessage sessionMessage = (SessionMessage) message;
 				if (message.getName() == SessionMessage.SignOut) {
-					
+
 				}
 			}
 		}

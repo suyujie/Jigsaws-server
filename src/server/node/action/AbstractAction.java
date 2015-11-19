@@ -1,7 +1,5 @@
 package server.node.action;
 
-import java.sql.SQLException;
-
 import common.coin.CoinType;
 import common.language.LangType;
 import gamecore.action.IAction;
@@ -28,40 +26,20 @@ public abstract class AbstractAction extends AbstractHttpServlet implements IAct
 
 	private static final byte[] salt = { 1, 2, 3 };
 
-	public Session getSession(String mobileId, int newCheckId) {
-		Session session = Root.sessionSystem.getSession(mobileId);
+	public Session getSession(String sessionId) {
+		Session session = Root.sessionSystem.getSession(sessionId);
 		return session;
 	}
 
-	public Session getSession(GameRequest gameRequest) {
-		return getSession(gameRequest.getMobileId(), gameRequest.getCheckId());
-	}
+	public Player getPlayer(String sessionId) {
 
-	public Player getPlayer(GameRequest gameRequest) {
-
-		Session session = getSession(gameRequest);
+		Session session = getSession(sessionId);
 		if (session != null && session.getPlayerId() != null) {
 			// 更新session
 			Root.sessionSystem.updateOrSaveSession(session);
 			try {
 				return Root.playerSystem.getPlayer(session.getPlayerId());
 			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-
-		return null;
-	}
-
-	public Player getPlayer(String mobileId) {
-
-		Session session = getSession(mobileId, 0);
-		if (session != null && session.getPlayerId() != null) {
-			// 更新session
-			Root.sessionSystem.updateOrSaveSession(session);
-			try {
-				return Root.playerSystem.getPlayer(session.getPlayerId());
-			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
