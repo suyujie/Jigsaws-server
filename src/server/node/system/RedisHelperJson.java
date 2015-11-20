@@ -3,6 +3,7 @@ package server.node.system;
 import java.util.List;
 
 import gamecore.cache.redis.JedisUtilJson;
+import server.node.system.gameImage.GameImage;
 import server.node.system.player.Player;
 import server.node.system.session.Session;
 
@@ -48,6 +49,10 @@ public final class RedisHelperJson {
 
 	public static void removePlayer(Long id) {
 		JedisUtilJson.getInstance().del(Player.generateCacheKey(id));
+	}
+
+	public static GameImage getGameImage(Long id) {
+		return (GameImage) JedisUtilJson.getInstance().get(GameImage.generateCacheKey(id), GameImage.class);
 	}
 
 	public static boolean existsOpponent(Integer cup) {

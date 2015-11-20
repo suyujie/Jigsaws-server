@@ -1,7 +1,5 @@
 package server.node.action;
 
-import java.util.UUID;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,8 +33,6 @@ public class HeartBeatAction extends AbstractAction {
 			Session session = Root.sessionSystem.getSession(sessionId);
 
 			Root.sessionSystem.updateOrSaveSession(session);
-
-			resultJson.put("sessionId", UUID.randomUUID().toString());
 
 			responseJson.setBody(resultJson);
 		}

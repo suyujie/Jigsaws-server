@@ -43,6 +43,7 @@ public final class SessionTrigger implements Trigger, TopicSubscriber {
 				PlayerMessage playerMsg = (PlayerMessage) message;
 				Player player = playerMsg.getPlayer();
 				String sessionId = playerMsg.getSessionId();
+				logger.info("sessionId==="+sessionId);
 				if (player != null) {
 					// 新注册,创建session,加入在线列表
 					if (message.getName() == PlayerMessage.Registe) {

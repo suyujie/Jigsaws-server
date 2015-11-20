@@ -11,10 +11,12 @@ public final class DaoFactory {
 
 	private FastTable<AccountDao> accountDaos;
 	private FastTable<PlayerDao> playerDaos;
+	private FastTable<ImageDao> imageDaos;
 
 	private DaoFactory() {
 		this.accountDaos = new FastTable<AccountDao>();
 		this.playerDaos = new FastTable<PlayerDao>();
+		this.imageDaos = new FastTable<ImageDao>();
 	}
 
 	public static DaoFactory getInstance() {
@@ -50,6 +52,22 @@ public final class DaoFactory {
 	public void returnPlayerDao(PlayerDao playerDao) {
 		synchronized (this.playerDaos) {
 			this.playerDaos.add(playerDao);
+		}
+	}
+
+	public ImageDao borrowImageDao() {
+		synchronized (this.imageDaos) {
+			if (imageDaos.isEmpty()) {
+				return new ImageDao();
+			} else {
+				return imageDaos.removeFirst();
+			}
+		}
+	}
+
+	public void returnImageDao(ImageDao imageDao) {
+		synchronized (this.imageDaos) {
+			this.imageDaos.add(imageDao);
 		}
 	}
 

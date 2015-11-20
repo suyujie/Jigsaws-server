@@ -7,6 +7,7 @@ import gamecore.task.TaskCenter;
 import gamecore.util.Clock;
 import server.node.system.ConfigManager;
 import server.node.system.Root;
+import server.node.system.StorageManager;
 
 /**
  * 
@@ -26,11 +27,11 @@ public class BootStrap {
 			System.out.println("**load node config OK");
 		}
 
-		// if (!StorageManager.getInstance().load()) {
-		// System.exit(1);
-		// } else {
-		// System.out.println("**load storage config OK");
-		// }
+		if (!StorageManager.getInstance().load()) {
+			System.exit(1);
+		} else {
+			System.out.println("**load storage config OK");
+		}
 
 		TaskCenter.getInstance().setMaxThread(ConfigManager.getInstance().maxTasks);
 		TaskCenter.getInstance().setWindowTPS(ConfigManager.getInstance().tasksPerSecond);

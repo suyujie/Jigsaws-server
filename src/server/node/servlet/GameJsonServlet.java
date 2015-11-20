@@ -119,7 +119,11 @@ public class GameJsonServlet extends AbstractHttpServlet {
 	 * 编码响应消息。
 	 */
 	public static JSONObject encode(ResponseJson respJson) {
-		return respJson.getBody();
+		if (respJson.getBody() == null) {
+			return new JSONObject();
+		} else {
+			return respJson.getBody();
+		}
 	}
 
 	// 执行Action

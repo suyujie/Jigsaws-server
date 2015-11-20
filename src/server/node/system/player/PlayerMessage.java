@@ -11,10 +11,8 @@ public final class PlayerMessage extends TopicMessage {
 	public static final String LEVEL_UP = "player_levelUp";
 	// 注册
 	public static final String Registe = "player_registe";
-	// 刚登录
+	// 登录
 	public static final String SignIn = "player_signIn";
-	// 有访问
-	public static final String PlayerActive = "player_active";
 
 	private String sessionId;
 	private Player player;
@@ -32,11 +30,6 @@ public final class PlayerMessage extends TopicMessage {
 		super(name);
 		this.player = player;
 		this.sessionId = sessionId;
-	}
-
-	public PlayerMessage(String name, Player player) {
-		super(name);
-		this.player = player;
 	}
 
 	public Player getPlayer() {

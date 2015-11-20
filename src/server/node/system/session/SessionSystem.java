@@ -52,8 +52,8 @@ public final class SessionSystem extends AbstractSystem {
 		if (player != null) {
 			Session session = getSession(sessionId);
 			if (session == null) {
-				session = new Session(ConfigManager.getInstance().tag, player.getAccount().getDeviceId(),
-						player.getId(), Clock.currentTimeSecond());
+				session = new Session(ConfigManager.getInstance().tag, sessionId, player.getId(),
+						Clock.currentTimeSecond());
 			} else {
 				session.setActiveT(Clock.currentTimeSecond());
 			}

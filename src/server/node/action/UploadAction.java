@@ -25,7 +25,13 @@ public class UploadAction extends AbstractAction {
 
 		GameResponse gameResponse = new GameResponse(gameRequest.getCommandId(), null);
 
+		logger.debug("   player.sessionId:" + gameRequest.getSessionId());
+
 		Player player = getPlayer(gameRequest.getSessionId());
+		if (player == null) {
+			gameResponse.setStatus(SC_ERROR);
+			return gameResponse;
+		}
 
 		GameInput input = new ByteArrayGameInput(gameRequest.getBody());
 

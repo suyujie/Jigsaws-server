@@ -1,7 +1,5 @@
 package server.node.action;
 
-import java.util.UUID;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -13,10 +11,11 @@ import gamecore.message.ResponseJson;
 import server.node.system.Root;
 import server.node.system.player.Player;
 
-@ActionPathSpec("201")
+@ActionPathSpec("401")
 public class CommentAction extends AbstractAction {
 
 	private static final long serialVersionUID = -5591454136604322538L;
+
 	private static final Logger logger = LogManager.getLogger(CommentAction.class);
 
 	@Override
@@ -31,14 +30,12 @@ public class CommentAction extends AbstractAction {
 		Long imageId = jsonObject.getLong("imageId");
 		Integer comment = jsonObject.getInteger("comment");
 
-		JSONObject json = new JSONObject();
-
 		Root.gameImageSystem.commentImage(player, imageId, comment);
 
-		json.put("sessionId", UUID.randomUUID().toString());
+		JSONObject resultJson = new JSONObject();
+		resultJson.put("success", true);
 
-		responseJson.setBody(json);
-
+		responseJson.setBody(resultJson);
 		return responseJson;
 	}
 }

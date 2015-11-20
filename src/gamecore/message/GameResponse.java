@@ -8,18 +8,18 @@ import server.node.action.AbstractAction;
 public class GameResponse {
 
 	private Integer commandId;
-	private short success;
+	private byte status;
 	private byte[] body;
 
 	public GameResponse(Integer commandId, byte[] body) {
 		this.commandId = commandId;
-		this.success = AbstractAction.SC_OK;
+		this.status = AbstractAction.SC_OK;
 		this.body = body;
 	}
 
-	public GameResponse(Integer commandId, short success, byte[] body) {
+	public GameResponse(Integer commandId, byte status, byte[] body) {
 		this.commandId = commandId;
-		this.success = success;
+		this.status = status;
 		this.body = body;
 	}
 
@@ -31,12 +31,12 @@ public class GameResponse {
 		this.commandId = commandId;
 	}
 
-	public short getSuccess() {
-		return success;
+	public byte getStatus() {
+		return status;
 	}
 
-	public void setSuccess(short success) {
-		this.success = success;
+	public void setStatus(byte status) {
+		this.status = status;
 	}
 
 	public byte[] getBody() {

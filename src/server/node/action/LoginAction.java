@@ -37,13 +37,16 @@ public class LoginAction extends AbstractAction {
 
 		if (StringUtils.isNotBlank(deviceId)) {
 
+			Player player = null;
+
 			try {
 				// 登陆
 				Account account = Root.accountSystem.getAccount(deviceId);
 				if (account == null) {
-					Player player = Root.playerSystem.register(deviceId, sessionId, true);
+					player = Root.playerSystem.register(deviceId, sessionId, true);
 					json.put("reg", true);
 				} else {
+					player = Root.playerSystem.getPlayer(account,sessionId);
 					json.put("reg", false);
 				}
 
@@ -51,7 +54,7 @@ public class LoginAction extends AbstractAction {
 				e.printStackTrace();
 			}
 
-			json.put("sessionId", UUID.randomUUID().toString());
+			json.put("sessionId", sessionId);
 
 			responseJson.setBody(json);
 		}

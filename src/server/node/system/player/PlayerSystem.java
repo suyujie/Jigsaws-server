@@ -83,7 +83,7 @@ public final class PlayerSystem extends AbstractSystem {
 	/**
 	 * 读取player 实体 主动读取需要同步session,被动就不要了
 	 */
-	public Player getPlayer(Account account) throws SQLException {
+	public Player getPlayer(Account account, String sessionId) throws SQLException {
 
 		if (account == null || account.getPlayerId() == null) {
 			return null;
@@ -98,7 +98,7 @@ public final class PlayerSystem extends AbstractSystem {
 		}
 
 		// 发布登陆消息
-		this.publish(new PlayerMessage(PlayerMessage.SignIn, player));
+		this.publish(new PlayerMessage(PlayerMessage.SignIn, player, sessionId));
 
 		return player;
 	}
