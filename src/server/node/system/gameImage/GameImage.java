@@ -15,6 +15,8 @@ public class GameImage extends AbstractEntity {
 
 	private Long id;
 	private Long playerId;
+	private int good;
+	private int bad;
 
 	public GameImage() {
 	}
@@ -39,6 +41,22 @@ public class GameImage extends AbstractEntity {
 
 	public void setPlayerId(Long playerId) {
 		this.playerId = playerId;
+	}
+
+	public int getGood() {
+		return good;
+	}
+
+	public void setGood(int good) {
+		this.good = good;
+	}
+
+	public int getBad() {
+		return bad;
+	}
+
+	public void setBad(int bad) {
+		this.bad = bad;
 	}
 
 	/**

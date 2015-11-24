@@ -8,9 +8,12 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.amazonaws.services.codedeploy.model.ErrorCode;
+
 import common.microsoft.azure.AzureStorage;
 import common.microsoft.azure.AzureStorageBean;
 import gamecore.system.AbstractSystem;
+import gamecore.system.SystemResult;
 import gamecore.util.Utils;
 import server.node.dao.DaoFactory;
 import server.node.dao.ImageDao;
@@ -38,6 +41,28 @@ public class GameImageSystem extends AbstractSystem {
 
 	@Override
 	public void shutdown() {
+	}
+
+	public GameImage getGameImage(Long id) {
+
+		GameImage gameImage = RedisHelperJson.getGameImage(id);
+		if (gameImage == null) {
+			gameImage = readGameImageFromDB(id);
+		}
+
+		return gameImage;
+
+	}
+
+	public GameImage readGameImageFromDB(Long id) {
+		GameImage gameImage = null;
+		ImageDao dao = DaoFactory.getInstance().borrowImageDao();
+		Map<String, Object> map = dao.readImage(id);
+		DaoFactory.getInstance().returnImageDao(dao);
+		if (map != null) {
+			gameImage = encapsulateGameImage(map);
+		}
+		return gameImage;
 	}
 
 	public GameImage readGameImage() {
@@ -123,10 +148,37 @@ public class GameImageSystem extends AbstractSystem {
 		return false;
 	}
 
-	public void commentImage(Player player, Long imageId, Integer comment) {
+	public SystemResult commentImage(Player player, Long imageId, Integer comment) {
+
+		SystemResult result = new SystemResult();
 
 		logger.debug("--" + player.getId() + "  " + imageId + "  " + comment);
 
+		GameImage gi = getGameImage(imageId);
+
+		if (gi == null) {
+			result.setCode(gamecore.system.ErrorCode.PARAM_ERROR);
+			return result;
+		}
+
+		if (comment == 1) {
+			gi.setGood(gi.getGood() + 1);
+		} else {
+			gi.setBad(gi.getBad() + 1);
+		}
+
+		gi.synchronize();
+
+		updateDB(gi);
+
+		return result;
+
+	}
+
+	private void updateDB(GameImage gameImage) {
+		ImageDao dao = DaoFactory.getInstance().borrowImageDao();
+		dao.updateImage(gameImage);
+		DaoFactory.getInstance().returnImageDao(dao);
 	}
 
 }
