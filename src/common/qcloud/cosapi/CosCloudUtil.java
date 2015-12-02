@@ -12,7 +12,6 @@ import gamecore.util.Utils;
 import server.node.system.StorageManager;
 
 public class CosCloudUtil {
-	// 通过控制台获取AppId,SecretId,SecretKey
 
 	static List<String> bucketNames = new ArrayList<String>(Arrays.asList("pic1", "pic2"));
 
