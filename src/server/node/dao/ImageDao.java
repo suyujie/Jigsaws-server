@@ -8,14 +8,15 @@ import gamecore.db.DBOperator;
 import gamecore.db.SyncDBUtil;
 import gamecore.task.TaskCenter;
 import server.node.system.gameImage.GameImage;
-import server.node.system.player.Player;
 
 public class ImageDao {
 
-	public void saveImage(Player player, GameImage gameImage) {
-		String sql = "insert into t_image(id,player_id) values (?,?)";
-		Object[] args = { gameImage.getId(), player.getId() };
-		TaskCenter.getInstance().executeWithSlidingWindow(new AsyncDBTask(DBOperator.Write, player.getId(), sql, args));
+	public void saveImage(GameImage gameImage) {
+		String sql = "insert into t_image(id,player_id,url,good,bad) values (?,?,?,?,?)";
+		Object[] args = { gameImage.getId(), gameImage.getPlayerId(), gameImage.getImageUrl(), gameImage.getGood(),
+				gameImage.getBad() };
+		TaskCenter.getInstance()
+				.executeWithSlidingWindow(new AsyncDBTask(DBOperator.Write, gameImage.getPlayerId(), sql, args));
 	}
 
 	public List<Map<String, Object>> readImages() {
@@ -31,7 +32,7 @@ public class ImageDao {
 	}
 
 	public void updateImage(GameImage gameImage) {
-		String sql = "update set t_image good = ?,bad = ? where id = ?";
+		String sql = "update t_image set good = ?,bad = ? where id = ?";
 		Object[] args = { gameImage.getGood(), gameImage.getBad(), gameImage.getId() };
 		TaskCenter.getInstance()
 				.executeWithSlidingWindow(new AsyncDBTask(DBOperator.Write, gameImage.getPlayerId(), sql, args));

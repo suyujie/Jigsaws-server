@@ -1,7 +1,5 @@
 package server.node.system;
 
-import java.util.List;
-
 import gamecore.cache.redis.JedisUtilJson;
 import server.node.system.gameImage.GameImage;
 import server.node.system.player.Player;
@@ -55,48 +53,16 @@ public final class RedisHelperJson {
 		return (GameImage) JedisUtilJson.getInstance().get(GameImage.generateCacheKey(id), GameImage.class);
 	}
 
-	public static boolean existsOpponent(Integer cup) {
-		return JedisUtilJson.getInstance().exists("opponent_" + cup);
+	public static Long getWaitImageIdSet(Integer tag) {
+		return (Long) JedisUtilJson.getInstance().setRandGet("image_id_" + tag, Long.class);
 	}
 
-	public static Long getOpponent(Integer cup) {
-		return (Long) JedisUtilJson.getInstance().setRandGet("opponent_" + cup, Long.class);
+	public static void addWaitImageIdSet(Integer tag, Long id) {
+		JedisUtilJson.getInstance().setAdd("image_id_" + tag, id);
 	}
 
-	public static void addOpponent(Integer cup, Long id) {
-		JedisUtilJson.getInstance().setAdd("opponent_" + cup, id);
-	}
-
-	public static void removeOpponent(Integer cup, Long id) {
-		JedisUtilJson.getInstance().setRemove("opponent_" + cup, id);
-	}
-
-	public static void addWaitRentOrder(Integer cup, String rentOrderKey) {
-		JedisUtilJson.getInstance().setAdd("waitOrder_" + cup, rentOrderKey);
-	}
-
-	public static void removeWaitRentOrder(Integer cup, String rentOrderKey) {
-		JedisUtilJson.getInstance().setRemove("waitOrder_" + cup, rentOrderKey);
-	}
-
-	public static List<String> getWaitRentOrder(Integer cup, int num) {
-		return JedisUtilJson.getInstance().setRandGet("waitOrder_" + cup, num, String.class);
-	}
-
-	public static void addRankingScore(String area, Integer score, long playerId, long robotId) {
-		JedisUtilJson.getInstance().sortedSetAdd("rank_score_" + area, playerId + "_" + robotId, score);
-	}
-
-	public static List<String> getRankingScore(String area, int num) {
-		return JedisUtilJson.getInstance().sortedSetGet("rank_score_" + area, 0, num, false, String.class);
-	}
-
-	public static void addRankingCup(String area, Integer cup, Long playerId) {
-		JedisUtilJson.getInstance().sortedSetAdd("rank_cup_" + area, playerId, cup);
-	}
-
-	public static List<Long> getRankingCup(String area, int num) {
-		return JedisUtilJson.getInstance().sortedSetGet("rank_cup_" + area, 0, num, false, Long.class);
+	public static void removeWaitImageIdSet(Integer tag, Long id) {
+		JedisUtilJson.getInstance().setRemove("image_id_" + tag, id);
 	}
 
 }

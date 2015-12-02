@@ -15,16 +15,20 @@ public class GameImage extends AbstractEntity {
 
 	private Long id;
 	private Long playerId;
+	private String imageUrl;
 	private int good;
 	private int bad;
 
 	public GameImage() {
 	}
 
-	public GameImage(Long id, Long playerId) {
+	public GameImage(Long id, Long playerId, String imageUrl, int good, int bad) {
 		super(GameImage.generateCacheKey(id));
 		this.id = id;
 		this.playerId = playerId;
+		this.imageUrl = imageUrl;
+		this.good = good;
+		this.bad = bad;
 	}
 
 	public Long getId() {
@@ -41,6 +45,14 @@ public class GameImage extends AbstractEntity {
 
 	public void setPlayerId(Long playerId) {
 		this.playerId = playerId;
+	}
+
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
 	}
 
 	public int getGood() {

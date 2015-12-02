@@ -25,6 +25,15 @@ public class CommentAction extends AbstractAction {
 
 		Player player = getPlayer(requestJson.getSessionId());
 
+		JSONObject resultJson = new JSONObject();
+
+		if (player == null) {
+			resultJson.put(STATUS, SC_DISCONNECT);
+
+			responseJson.setBody(resultJson);
+			return responseJson;
+		}
+
 		JSONObject jsonObject = requestJson.getBody();
 
 		Long imageId = jsonObject.getLong("imageId");
@@ -32,8 +41,7 @@ public class CommentAction extends AbstractAction {
 
 		Root.gameImageSystem.commentImage(player, imageId, comment);
 
-		JSONObject resultJson = new JSONObject();
-		resultJson.put("success", true);
+		resultJson.put(STATUS, SC_DISCONNECT);
 
 		responseJson.setBody(resultJson);
 		return responseJson;

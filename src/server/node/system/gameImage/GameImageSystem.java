@@ -1,17 +1,15 @@
 package server.node.system.gameImage;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.amazonaws.services.codedeploy.model.ErrorCode;
-
 import common.microsoft.azure.AzureStorage;
 import common.microsoft.azure.AzureStorageBean;
+import common.qcloud.cosapi.Demo;
 import gamecore.system.AbstractSystem;
 import gamecore.system.SystemResult;
 import gamecore.util.Utils;
@@ -26,7 +24,7 @@ public class GameImageSystem extends AbstractSystem {
 
 	private static final Logger logger = LogManager.getLogger(GameImageSystem.class.getName());
 
-	private List<Long> gameImages = new ArrayList<Long>();
+	private static final int imageIdCacheTagMaxNum = 10;
 
 	@Override
 	public boolean startup() {
@@ -47,14 +45,14 @@ public class GameImageSystem extends AbstractSystem {
 
 		GameImage gameImage = RedisHelperJson.getGameImage(id);
 		if (gameImage == null) {
-			gameImage = readGameImageFromDB(id);
+			gameImage = readFromDB(id);
 		}
 
 		return gameImage;
 
 	}
 
-	public GameImage readGameImageFromDB(Long id) {
+	public GameImage readFromDB(Long id) {
 		GameImage gameImage = null;
 		ImageDao dao = DaoFactory.getInstance().borrowImageDao();
 		Map<String, Object> map = dao.readImage(id);
@@ -67,17 +65,30 @@ public class GameImageSystem extends AbstractSystem {
 
 	public GameImage readGameImage() {
 
+		int index = 0;
 		GameImage gameImage = null;
 
 		while (gameImage == null) {
-			Long id = Utils.randomSelectOne(gameImages);
-			gameImage = RedisHelperJson.getGameImage(id);
+			Long id = RedisHelperJson.getWaitImageIdSet(Utils.randomInt(0, imageIdCacheTagMaxNum));
+			if (id != null) {
+				gameImage = RedisHelperJson.getGameImage(id);
+			}
+			if (index++ > 10) {
+				break;
+			}
 		}
 
 		return gameImage;
 
 	}
 
+	private void addWaitImageIdSet(Long id) {
+		RedisHelperJson.addWaitImageIdSet(Utils.randomInt(0, imageIdCacheTagMaxNum), id);
+	}
+
+	/**
+	 * 初始化图片数据，放入缓存
+	 */
 	public void initImageIds() {
 
 		ImageDao dao = DaoFactory.getInstance().borrowImageDao();
@@ -87,7 +98,7 @@ public class GameImageSystem extends AbstractSystem {
 		for (Map<String, Object> map : list) {
 			GameImage gameImage = encapsulateGameImage(map);
 			gameImage.synchronize();
-			gameImages.add(gameImage.getId());
+			addWaitImageIdSet(gameImage.getId());
 		}
 
 	}
@@ -96,7 +107,10 @@ public class GameImageSystem extends AbstractSystem {
 		if (map != null) {
 			long id = ((BigInteger) map.get("id")).longValue();
 			long playerId = ((BigInteger) map.get("player_id")).longValue();
-			GameImage gameImage = new GameImage(id, playerId);
+			String url = (String) map.get("url");
+			int good = ((Long) map.get("good")).intValue();
+			int bad = ((Long) map.get("bad")).intValue();
+			GameImage gameImage = new GameImage(id, playerId, url, good, bad);
 			return gameImage;
 		} else {
 			return null;
@@ -106,16 +120,18 @@ public class GameImageSystem extends AbstractSystem {
 	public void uploadImage(Player player, byte[] bytes) {
 
 		Long id = Root.idsSystem.takeId();
-		GameImage gi = new GameImage(id, player.getId());
+
+		// 腾讯云 上传
+		Demo.updateFile(id.toString(), bytes);
+
+		GameImage gi = new GameImage(id, player.getId(), "", 0, 0);
 
 		gi.synchronize();
 
-		logger.info("--id " + id + "    " + gi.getPlayerId());
-		logger.info("uploading.... -->  azure storage");
+		addWaitImageIdSet(id);
 
-		// Azure上传
-		uploadAzure2Storage(id.toString(), bytes);
-		logger.info("uploaded      -->  azure storage");
+		saveDB(gi);
+
 	}
 
 	/**
@@ -152,8 +168,6 @@ public class GameImageSystem extends AbstractSystem {
 
 		SystemResult result = new SystemResult();
 
-		logger.debug("--" + player.getId() + "  " + imageId + "  " + comment);
-
 		GameImage gi = getGameImage(imageId);
 
 		if (gi == null) {
@@ -178,6 +192,12 @@ public class GameImageSystem extends AbstractSystem {
 	private void updateDB(GameImage gameImage) {
 		ImageDao dao = DaoFactory.getInstance().borrowImageDao();
 		dao.updateImage(gameImage);
+		DaoFactory.getInstance().returnImageDao(dao);
+	}
+
+	private void saveDB(GameImage gameImage) {
+		ImageDao dao = DaoFactory.getInstance().borrowImageDao();
+		dao.saveImage(gameImage);
 		DaoFactory.getInstance().returnImageDao(dao);
 	}
 

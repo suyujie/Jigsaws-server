@@ -16,6 +16,8 @@ public abstract class AbstractAction extends AbstractHttpServlet implements IAct
 
 	private static final long serialVersionUID = -8930418998280305692L;
 
+	public static final String STATUS = "status";
+
 	public static final byte SC_OK = 0;
 	public static final byte SC_ERROR = 1;
 	public static final byte SC_DISCONNECT = 2;
