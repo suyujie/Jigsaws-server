@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <storage>
 
-	<dataPath>herobot_data/robot_xml/</dataPath>
-
-	<!-- storage -->
 	<storages>
-		<platfrom tag="azure">
+		<platfrom tag="qqCloud">
 			<storage tag="1">
-				<storageAccount>herobotstoragetest</storageAccount>
-				<storageAccountKey>SFkVggbu6X/6gOZFbF3v6sMHFpuvwNSZ8XftLmE6qQahw6ZZTqQKoTU4El2dhSLE7h9DaMqMuVOlKRtiBtN7kw==
-				</storageAccountKey>
-				<storageConnectionUri>http://herobotstoragetest.blob.core.chinacloudapi.cn
-				</storageConnectionUri>
+				<app_id>10013504</app_id>
+				<secret_id>AKIDvBjkLMmLYOEEot401lkJPy5pet3YwdlG</secret_id>
+				<secret_key>8ZcUkEQxkam9XKokFGe7QDTGdDghP83I</secret_key>
+				<bucketNames>pic1,pic2</bucketNames>
 			</storage>
 		</platfrom>
 	</storages>

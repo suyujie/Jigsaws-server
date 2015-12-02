@@ -2,7 +2,6 @@ package server.node.system;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -12,8 +11,7 @@ import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
-import common.aws.AwsS3StorageBean;
-import common.microsoft.azure.AzureStorageBean;
+import common.qcloud.cosapi.QCloudStorageBean;
 
 /**
  * 存储的配置。
@@ -26,18 +24,14 @@ public class StorageManager implements Serializable {
 
 	private final static Logger logger = LogManager.getLogger(StorageManager.class.getName());
 
-	// 数据文件路径
-	public String dataPath;
-	//aws s3 存储
-	public HashMap<Integer, AwsS3StorageBean> awsS3StorageBeans = new HashMap<Integer, AwsS3StorageBean>();
-	//微软的存储,根据语言来分
-	public HashMap<Integer, AzureStorageBean> azureStorages = new HashMap<Integer, AzureStorageBean>();
+	public HashMap<Integer, QCloudStorageBean> qCloudStorages = new HashMap<Integer, QCloudStorageBean>();
 
 	public StorageManager() {
 	}
 
 	/**
 	 * 获取唯一实例.
+	 * 
 	 * @return
 	 */
 	public static StorageManager getInstance() {
@@ -64,48 +58,29 @@ public class StorageManager implements Serializable {
 			Document doc = reader.read(file);
 			Element root = doc.getRootElement();
 
-			Element storage = root.element("storage");
-
-			//数据文件路径
-			this.dataPath = root.element("dataPath").getTextTrim();
-
-			//存储服务器
+			// 存储服务器
 			Element storages = root.element("storages");
 
 			if (null != storages) {
 				@SuppressWarnings("unchecked")
 				List<Element> platForms = storages.elements("platfrom");
 				if (null != platForms) {
-					for (Element pf : platForms) {//存储平台
+					for (Element pf : platForms) {// 存储平台
 
 						String platfromTag = pf.attributeValue("tag");
 
-						if (platfromTag.equals("aws")) {
+						if (platfromTag.equals("qqCloud")) {
 							List<Element> storageArray = pf.elements("storage");
 							if (null != storageArray) {
 								for (Element st : storageArray) {
 									Integer stTag = Integer.parseInt(st.attributeValue("tag"));
-									String cdnUrl = st.element("cdnUrl").getTextTrim();
-									String bucketName = st.element("bucketName").getTextTrim();
-									String accessUrl = st.element("accessUrl").getTextTrim();
-									String accessId = st.element("accessId").getTextTrim();
-									String accessKey = st.element("accessKey").getTextTrim();
-									AwsS3StorageBean awsS3StorageBean = new AwsS3StorageBean(cdnUrl, bucketName, accessUrl, accessId, accessKey);
-									awsS3StorageBeans.put(stTag, awsS3StorageBean);
-								}
-							}
-						}
-
-						if (platfromTag.equals("azure")) {
-							List<Element> storageArray = pf.elements("storage");
-							if (null != storageArray) {
-								for (Element st : storageArray) {
-									Integer stTag = Integer.parseInt(st.attributeValue("tag"));
-									String storageAccount = st.element("storageAccount").getTextTrim();
-									String storageAccountKey = st.element("storageAccountKey").getTextTrim();
-									String storageConnectionUri = st.element("storageConnectionUri").getTextTrim();
-									AzureStorageBean storageBean = new AzureStorageBean(storageAccount, storageAccountKey, storageConnectionUri);
-									azureStorages.put(stTag, storageBean);
+									Integer appId = Integer.parseInt(st.element("app_id").getTextTrim());
+									String secretId = st.element("secret_id").getTextTrim();
+									String secretKey = st.element("secret_key").getTextTrim();
+									String bucketNames = st.element("bucketNames").getTextTrim();
+									QCloudStorageBean bean = new QCloudStorageBean(appId, secretId, secretKey,
+											bucketNames);
+									qCloudStorages.put(stTag, bean);
 								}
 							}
 						}
@@ -124,15 +99,4 @@ public class StorageManager implements Serializable {
 		return true;
 	}
 
-	public List<AzureStorageBean> getAzureStorageBeans() {
-		List<AzureStorageBean> result = new ArrayList<>();
-		result.addAll(this.azureStorages.values());
-		return result;
-	}
-
-	public List<AwsS3StorageBean> getAwsS3StorageBeans() {
-		List<AwsS3StorageBean> result = new ArrayList<>();
-		result.addAll(this.awsS3StorageBeans.values());
-		return result;
-	}
 }

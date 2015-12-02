@@ -29,10 +29,11 @@ public class ReadImageUrlAction extends AbstractAction {
 		ResponseJson responseJson = new ResponseJson(requestJson.getCommandId(), true, null);
 
 		JSONObject json = new JSONObject();
-		
+
 		GameImage gameImage = Root.gameImageSystem.readGameImage();
 
 		json.put("imageId", gameImage.getId());
+		json.put("url", gameImage.getImageUrl());
 
 		responseJson.setBody(json);
 

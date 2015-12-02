@@ -45,6 +45,7 @@ DROP TABLE IF EXISTS t_image ;
 CREATE TABLE t_image (
   id BIGINT(20) UNSIGNED NOT NULL,
   player_id BIGINT (20) UNSIGNED NOT NULL,
+  url varchar(100) default null,
   good INT (11) UNSIGNED DEFAULT '0',
   bad INT (11) UNSIGNED DEFAULT '0',
   PRIMARY KEY (id)

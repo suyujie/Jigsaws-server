@@ -33,6 +33,20 @@ public class DataUtils {
 		return fastTable;
 	}
 
+	public static List<String> string2Array(String str, String split) {
+		if (str == null) {
+			return null;
+		}
+		String[] ss = str.split(split);
+		List<String> list = new ArrayList<String>();
+		for (int i = 0; i < ss.length; i++) {
+			if (ss[i] != null && ss[i].trim().length() > 0) {
+				list.add(ss[i].trim());
+			}
+		}
+		return list;
+	}
+
 	public static byte[] arrayConcat(byte[] bs, byte[] bs2) {
 		byte[] result = Arrays.copyOf(bs, bs.length + bs2.length);
 		System.arraycopy(bs2, 0, result, bs.length, bs2.length);

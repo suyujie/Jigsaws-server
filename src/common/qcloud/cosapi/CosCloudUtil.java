@@ -9,12 +9,10 @@ import java.util.List;
 
 import common.qcloud.cosapi.api.CosCloud;
 import gamecore.util.Utils;
+import server.node.system.StorageManager;
 
-public class Demo {
+public class CosCloudUtil {
 	// 通过控制台获取AppId,SecretId,SecretKey
-	public static final int APP_ID = 10013504;
-	public static final String SECRET_ID = "AKIDvBjkLMmLYOEEot401lkJPy5pet3YwdlG";
-	public static final String SECRET_KEY = "8ZcUkEQxkam9XKokFGe7QDTGdDghP83I";
 
 	static List<String> bucketNames = new ArrayList<String>(Arrays.asList("pic1", "pic2"));
 
@@ -23,7 +21,9 @@ public class Demo {
 		long start = System.currentTimeMillis();
 		String bucketName = Utils.randomSelectOne(bucketNames);
 
-		CosCloud cos = new CosCloud(APP_ID, SECRET_ID, SECRET_KEY);
+		QCloudStorageBean cosBean = StorageManager.getInstance().qCloudStorages.get(1);
+
+		CosCloud cos = new CosCloud(cosBean.getAppId(), cosBean.getSecretId(), cosBean.getSecretKey());
 		try {
 			ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
 			String result = cos.uploadFile(bucketName, "/" + name, inputStream);
@@ -41,7 +41,9 @@ public class Demo {
 
 	public static void main(String[] args) {
 		// 分片上传大文件时，应把CosCloud构造方法第4个超时时间参数设置得长些，默认为60秒
-		CosCloud cos = new CosCloud(APP_ID, SECRET_ID, SECRET_KEY);
+		QCloudStorageBean cosBean = StorageManager.getInstance().qCloudStorages.get(1);
+
+		CosCloud cos = new CosCloud(cosBean.getAppId(), cosBean.getSecretId(), cosBean.getSecretKey());
 		try {
 			String result = "";
 			String bucketName = "111";

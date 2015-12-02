@@ -7,9 +7,11 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.alibaba.fastjson.JSONObject;
+
 import common.microsoft.azure.AzureStorage;
 import common.microsoft.azure.AzureStorageBean;
-import common.qcloud.cosapi.Demo;
+import common.qcloud.cosapi.CosCloudUtil;
 import gamecore.system.AbstractSystem;
 import gamecore.system.SystemResult;
 import gamecore.util.Utils;
@@ -122,46 +124,21 @@ public class GameImageSystem extends AbstractSystem {
 		Long id = Root.idsSystem.takeId();
 
 		// 腾讯云 上传
-		Demo.updateFile(id.toString(), bytes);
+		String result = CosCloudUtil.updateFile(id.toString(), bytes);
 
-		GameImage gi = new GameImage(id, player.getId(), "", 0, 0);
+		if (result != null) {
+			JSONObject jsonObject = JSONObject.parseObject(result);
+			String access_url = jsonObject.getString("access_url");
 
-		gi.synchronize();
+			GameImage gi = new GameImage(id, player.getId(), access_url, 0, 0);
 
-		addWaitImageIdSet(id);
+			gi.synchronize();
 
-		saveDB(gi);
+			addWaitImageIdSet(id);
 
-	}
-
-	/**
-	 * 
-	 */
-	private boolean uploadAzure2Storage(String filename, byte[] bytes) {
-		String blobName = "jigsawstest";
-		StringBuffer sb = new StringBuffer();
-
-		AzureStorageBean storage = StorageManager.getInstance().azureStorages.get(1);
-		try {
-
-			// Azure上传
-			boolean uploadSuccess = AzureStorage.upload2Storage(storage, blobName, filename, bytes);
-			if (uploadSuccess) {
-				logger.info(sb.append(storage.storageAccount).append(" [").append(blobName).append("]").append(" [")
-						.append(filename).append("] ok").append("\n").toString());
-				return true;
-			} else {
-				logger.info(sb.append(storage.storageAccount).append(" [").append(blobName).append("]").append(" [")
-						.append(filename).append("] error").append("\n"));
-				return false;
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			sb.append(storage.storageAccount).append(" error").append("\n");
+			saveDB(gi);
 		}
 
-		return false;
 	}
 
 	public SystemResult commentImage(Player player, Long imageId, Integer comment) {
