@@ -24,6 +24,8 @@ public class Player extends AbstractEntity {
 
 	private Account account;
 
+	private PlayerStatistics statistics;
+
 	public Player() {
 	}
 
@@ -69,6 +71,14 @@ public class Player extends AbstractEntity {
 
 	public void setAccount(Account account) {
 		this.account = account;
+	}
+
+	public PlayerStatistics getStatistics() {
+		return statistics;
+	}
+
+	public void setStatistics(PlayerStatistics statistics) {
+		this.statistics = statistics;
 	}
 
 	public boolean checkOnLine() {

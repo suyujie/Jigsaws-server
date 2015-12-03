@@ -62,9 +62,6 @@ public final class PlayerSystem extends AbstractSystem {
 		return player;
 	}
 
-	/**
-	 * 读取player 实体
-	 */
 	public Player getPlayer(Long playerId) throws SQLException {
 		if (playerId == null) {
 			return null;
@@ -80,9 +77,20 @@ public final class PlayerSystem extends AbstractSystem {
 		return player;
 	}
 
-	/**
-	 * 读取player 实体 主动读取需要同步session,被动就不要了
-	 */
+	public PlayerStatistics getPlayerStatistics(Player player) throws SQLException {
+
+		if (player.getStatistics() != null) {
+			return player.getStatistics();
+		} else {
+			PlayerStatistics pss = readPlayerStatisticsFromDB(player);
+			player.setStatistics(pss);
+			player.synchronize();
+
+			return pss;
+		}
+
+	}
+
 	public Player getPlayer(Account account, String sessionId) throws SQLException {
 
 		if (account == null || account.getPlayerId() == null) {
@@ -123,24 +131,70 @@ public final class PlayerSystem extends AbstractSystem {
 		}
 	}
 
+	private PlayerStatistics encapsulatePlayerStatistics(Map<String, Object> map) {
+		if (map != null) {
+			int gameSuccess = ((Long) map.get("game_success")).intValue();
+			int gameFailure = ((Long) map.get("game_failure")).intValue();
+			int gameGiveup = ((Long) map.get("game_giveup")).intValue();
+			int upLoadNum = ((Long) map.get("upload_num")).intValue();
+			int upLoadBeGood = ((Long) map.get("upload_be_good")).intValue();
+			int upLoadBeBad = ((Long) map.get("upload_be_bad")).intValue();
+			int commentGood = ((Long) map.get("comment_good")).intValue();
+			int commentBad = ((Long) map.get("comment_bad")).intValue();
+
+			PlayerStatistics ps = new PlayerStatistics(gameSuccess, gameFailure, gameGiveup, upLoadNum, upLoadBeGood,
+					upLoadBeBad, commentGood, commentBad);
+			return ps;
+		} else {
+			return new PlayerStatistics();
+		}
+	}
+
 	/**
 	 * 从数据库中读取玩家信息
 	 */
 	private Player readPlayerFromDB(Account account) throws SQLException {
 
 		Player player = null;
+
 		PlayerDao playerDao = DaoFactory.getInstance().borrowPlayerDao();
 		Map<String, Object> playerMap = playerDao.readPlayer(account.getPlayerId());
 		DaoFactory.getInstance().returnPlayerDao(playerDao);
+
 		if (playerMap != null) {
-
 			player = encapsulatePlayer(playerMap);
-
 			player.setAccount(account);
-
 		}
 
 		return player;
+	}
+
+	/**
+	 * 从数据库中读取玩家信息
+	 */
+	private PlayerStatistics readPlayerStatisticsFromDB(Player player) throws SQLException {
+
+		PlayerDao playerDao = DaoFactory.getInstance().borrowPlayerDao();
+		Map<String, Object> statisticsMap = playerDao.readPlayerStatistics(player.getId());
+		DaoFactory.getInstance().returnPlayerDao(playerDao);
+
+		if (statisticsMap != null) {
+			return encapsulatePlayerStatistics(statisticsMap);
+		} else {
+			return initPlayerStatistics(player);
+		}
+
+	}
+
+	private PlayerStatistics initPlayerStatistics(Player player) throws SQLException {
+
+		PlayerStatistics pss = new PlayerStatistics(0, 0, 0, 0, 0, 0, 0, 0);
+
+		PlayerDao playerDao = DaoFactory.getInstance().borrowPlayerDao();
+		playerDao.savePlayerStatistics(player.getId(), pss);
+		DaoFactory.getInstance().returnPlayerDao(playerDao);
+
+		return pss;
 	}
 
 	/**

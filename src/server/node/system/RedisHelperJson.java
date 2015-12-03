@@ -1,7 +1,10 @@
 package server.node.system;
 
+import java.util.List;
+
 import gamecore.cache.redis.JedisUtilJson;
-import server.node.system.gameImage.GameImage;
+import server.node.system.jigsaw.PlayedJigsawBag;
+import server.node.system.jigsaw.Jigsaw;
 import server.node.system.player.Player;
 import server.node.system.session.Session;
 
@@ -49,12 +52,20 @@ public final class RedisHelperJson {
 		JedisUtilJson.getInstance().del(Player.generateCacheKey(id));
 	}
 
-	public static GameImage getGameImage(Long id) {
-		return (GameImage) JedisUtilJson.getInstance().get(GameImage.generateCacheKey(id), GameImage.class);
+	public static Jigsaw getGameImage(Long id) {
+		return (Jigsaw) JedisUtilJson.getInstance().get(Jigsaw.generateCacheKey(id), Jigsaw.class);
 	}
 
 	public static Long getWaitImageIdSet(Integer tag) {
 		return (Long) JedisUtilJson.getInstance().setRandGet("image_id_" + tag, Long.class);
+	}
+
+	public static List<Long> getWaitImageIdSet(Integer tag, int num) {
+		return (List<Long>) JedisUtilJson.getInstance().setRandGet("image_id_" + tag, num, Long.class);
+	}
+
+	public static PlayedJigsawBag getDoneImageBag(Long id) {
+		return (PlayedJigsawBag) JedisUtilJson.getInstance().get(PlayedJigsawBag.generateCacheKey(id), PlayedJigsawBag.class);
 	}
 
 	public static void addWaitImageIdSet(Integer tag, Long id) {

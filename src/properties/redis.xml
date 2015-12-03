@@ -4,7 +4,7 @@
 	<redises>
 
 		<redis tag="1">
-			<host>test-cn-robot.chinacloudapp.cn</host>
+			<host>127.0.0.1</host>
 			<port>6379</port>
 			<maxTotal>1024</maxTotal>
 			<maxIdle>200</maxIdle>

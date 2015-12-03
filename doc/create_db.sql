@@ -51,3 +51,25 @@ CREATE TABLE t_image (
   PRIMARY KEY (id)
 ) ENGINE = INNODB DEFAULT CHARSET = utf8 ;
 
+
+/**
+ * 统计
+ */
+DROP TABLE IF EXISTS t_statistics ;
+CREATE TABLE t_statistics (
+  player_id BIGINT (20) UNSIGNED NOT NULL,
+  game_success INT (11) UNSIGNED DEFAULT '0',
+  game_failure INT (11) UNSIGNED DEFAULT '0',
+  game_giveup INT (11) UNSIGNED DEFAULT '0',
+  upload_num INT (11) UNSIGNED DEFAULT '0',
+  upload_be_good INT (11) UNSIGNED DEFAULT '0',
+  upload_be_bad INT (11) UNSIGNED DEFAULT '0',
+  comment_good INT (11) UNSIGNED DEFAULT '0',
+  comment_bad INT (11) UNSIGNED DEFAULT '0',
+  PRIMARY KEY (player_id)
+) ENGINE = INNODB DEFAULT CHARSET = utf8 ;
+
+
+
+
+

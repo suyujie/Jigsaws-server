@@ -5,8 +5,8 @@ import org.apache.logging.log4j.Logger;
 
 import gamecore.task.TaskCenter;
 import server.node.system.account.AccountSystem;
-import server.node.system.gameImage.GameImageSystem;
 import server.node.system.ids.IdsSystem;
+import server.node.system.jigsaw.JigsawSystem;
 import server.node.system.player.PlayerSystem;
 import server.node.system.session.SessionSystem;
 import server.node.system.trigger.TriggerSystem;
@@ -26,7 +26,7 @@ public final class Root {
 	public static SessionSystem sessionSystem = null;
 	public static AccountSystem accountSystem = null;
 	public static PlayerSystem playerSystem = null;
-	public static GameImageSystem gameImageSystem = null;
+	public static JigsawSystem gameImageSystem = null;
 
 	public static TriggerSystem triggerSystem = null;
 
@@ -52,7 +52,7 @@ public final class Root {
 		sessionSystem = new SessionSystem();
 		accountSystem = new AccountSystem();
 		playerSystem = new PlayerSystem();
-		gameImageSystem = new GameImageSystem();
+		gameImageSystem = new JigsawSystem();
 		triggerSystem = new TriggerSystem();
 
 		// 启动子系统

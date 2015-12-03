@@ -7,13 +7,13 @@ import gamecore.db.AsyncDBTask;
 import gamecore.db.DBOperator;
 import gamecore.db.SyncDBUtil;
 import gamecore.task.TaskCenter;
-import server.node.system.gameImage.GameImage;
+import server.node.system.jigsaw.Jigsaw;
 
 public class ImageDao {
 
-	public void saveImage(GameImage gameImage) {
+	public void saveImage(Jigsaw gameImage) {
 		String sql = "insert into t_image(id,player_id,url,good,bad) values (?,?,?,?,?)";
-		Object[] args = { gameImage.getId(), gameImage.getPlayerId(), gameImage.getImageUrl(), gameImage.getGood(),
+		Object[] args = { gameImage.getId(), gameImage.getPlayerId(), gameImage.getUrl(), gameImage.getGood(),
 				gameImage.getBad() };
 		TaskCenter.getInstance()
 				.executeWithSlidingWindow(new AsyncDBTask(DBOperator.Write, gameImage.getPlayerId(), sql, args));
@@ -31,7 +31,7 @@ public class ImageDao {
 		return SyncDBUtil.readMap(DBOperator.Read, sql, args);
 	}
 
-	public void updateImage(GameImage gameImage) {
+	public void updateImage(Jigsaw gameImage) {
 		String sql = "update t_image set good = ?,bad = ? where id = ?";
 		Object[] args = { gameImage.getGood(), gameImage.getBad(), gameImage.getId() };
 		TaskCenter.getInstance()

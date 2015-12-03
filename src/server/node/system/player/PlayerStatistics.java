@@ -15,21 +15,27 @@ public class PlayerStatistics implements Serializable {
 
 	private int upLoadNum;// 上传数量
 
-	private int upLoadGood;// 被评为好图
-	private int upLoadBad;// 被评为不好图
+	private int upLoadBeGood;// 被评为好图
+	private int upLoadBeBad;// 被评为不好图
+
+	private int commentGood;// 做出的好图评论
+	private int commentBad;// 做出的不好评论
 
 	public PlayerStatistics() {
 
 	}
 
-	public PlayerStatistics(int gameSuccess, int gameFailure, int gameGiveup, int upLoadNum, int upLoadGood,
-			int upLoadBad) {
+	public PlayerStatistics(int gameSuccess, int gameFailure, int gameGiveup, int upLoadNum, int upLoadBeGood,
+			int upLoadBeBad, int commentGood, int commentBad) {
+		super();
 		this.gameSuccess = gameSuccess;
 		this.gameFailure = gameFailure;
 		this.gameGiveup = gameGiveup;
 		this.upLoadNum = upLoadNum;
-		this.upLoadGood = upLoadGood;
-		this.upLoadBad = upLoadBad;
+		this.upLoadBeGood = upLoadBeGood;
+		this.upLoadBeBad = upLoadBeBad;
+		this.commentGood = commentGood;
+		this.commentBad = commentBad;
 	}
 
 	public int getGameSuccess() {
@@ -64,20 +70,36 @@ public class PlayerStatistics implements Serializable {
 		this.upLoadNum = upLoadNum;
 	}
 
-	public int getUpLoadGood() {
-		return upLoadGood;
+	public int getUpLoadBeGood() {
+		return upLoadBeGood;
 	}
 
-	public void setUpLoadGood(int upLoadGood) {
-		this.upLoadGood = upLoadGood;
+	public void setUpLoadBeGood(int upLoadBeGood) {
+		this.upLoadBeGood = upLoadBeGood;
 	}
 
-	public int getUpLoadBad() {
-		return upLoadBad;
+	public int getUpLoadBeBad() {
+		return upLoadBeBad;
 	}
 
-	public void setUpLoadBad(int upLoadBad) {
-		this.upLoadBad = upLoadBad;
+	public void setUpLoadBeBad(int upLoadBeBad) {
+		this.upLoadBeBad = upLoadBeBad;
+	}
+
+	public int getCommentGood() {
+		return commentGood;
+	}
+
+	public void setCommentGood(int commentGood) {
+		this.commentGood = commentGood;
+	}
+
+	public int getCommentBad() {
+		return commentBad;
+	}
+
+	public void setCommentBad(int commentBad) {
+		this.commentBad = commentBad;
 	}
 
 }

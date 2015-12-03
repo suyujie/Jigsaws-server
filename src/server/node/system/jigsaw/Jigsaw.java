@@ -1,32 +1,32 @@
-package server.node.system.gameImage;
+package server.node.system.jigsaw;
 
 import gamecore.entity.AbstractEntity;
 
 /**
  * 图片实体
  */
-public class GameImage extends AbstractEntity {
+public class Jigsaw extends AbstractEntity {
 
 	private static final long serialVersionUID = -4828830629858473329L;
 
 	private static final StringBuilder ckBuf = new StringBuilder();
 
-	public final static String CKPrefix = "g_img_";
+	public final static String CKPrefix = "jigsaw_";
 
 	private Long id;
 	private Long playerId;
-	private String imageUrl;
+	private String url;
 	private int good;
 	private int bad;
 
-	public GameImage() {
+	public Jigsaw() {
 	}
 
-	public GameImage(Long id, Long playerId, String imageUrl, int good, int bad) {
-		super(GameImage.generateCacheKey(id));
+	public Jigsaw(Long id, Long playerId, String url, int good, int bad) {
+		super(Jigsaw.generateCacheKey(id));
 		this.id = id;
 		this.playerId = playerId;
-		this.imageUrl = imageUrl;
+		this.url = url;
 		this.good = good;
 		this.bad = bad;
 	}
@@ -47,12 +47,12 @@ public class GameImage extends AbstractEntity {
 		this.playerId = playerId;
 	}
 
-	public String getImageUrl() {
-		return imageUrl;
+	public String getUrl() {
+		return url;
 	}
 
-	public void setImageUrl(String imageUrl) {
-		this.imageUrl = imageUrl;
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
 	public int getGood() {
@@ -76,7 +76,7 @@ public class GameImage extends AbstractEntity {
 	 */
 	public static String generateCacheKey(Long id) {
 		synchronized (ckBuf) {
-			String ret = ckBuf.append(GameImage.CKPrefix).append(id).toString();
+			String ret = ckBuf.append(Jigsaw.CKPrefix).append(id).toString();
 			ckBuf.delete(0, ckBuf.length());
 			return ret;
 		}
