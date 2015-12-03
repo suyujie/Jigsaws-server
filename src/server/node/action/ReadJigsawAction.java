@@ -46,13 +46,13 @@ public class ReadJigsawAction extends AbstractAction {
 			// 玩的挺多的了，90%给玩家上传的图片
 			if (pss.getCommentGood() + pss.getCommentBad() > 10) {
 				if (Utils.successRate(9, 10)) {
-					gameImage = Root.gameImageSystem.readGameImage(player);
+					gameImage = Root.jigsawSystem.readJigsaw(player);
 				}
 			}
 
 			// 刚开始玩，或者没有匹配到玩家上传的图片，给官方图片
 			if (gameImage == null) {
-				gameImage = Root.gameImageSystem.readGameImage_guanfang(player);
+				gameImage = Root.jigsawSystem.readJigsaw_guanfang(player);
 			}
 
 		} catch (SQLException e) {

@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 import gamecore.task.TaskCenter;
 import server.node.system.account.AccountSystem;
+import server.node.system.evaluate.EvaluateSystem;
 import server.node.system.ids.IdsSystem;
 import server.node.system.jigsaw.JigsawSystem;
 import server.node.system.player.PlayerSystem;
@@ -26,7 +27,8 @@ public final class Root {
 	public static SessionSystem sessionSystem = null;
 	public static AccountSystem accountSystem = null;
 	public static PlayerSystem playerSystem = null;
-	public static JigsawSystem gameImageSystem = null;
+	public static JigsawSystem jigsawSystem = null;
+	public static EvaluateSystem evaluateSystem = null;
 
 	public static TriggerSystem triggerSystem = null;
 
@@ -52,8 +54,9 @@ public final class Root {
 		sessionSystem = new SessionSystem();
 		accountSystem = new AccountSystem();
 		playerSystem = new PlayerSystem();
-		gameImageSystem = new JigsawSystem();
+		jigsawSystem = new JigsawSystem();
 		triggerSystem = new TriggerSystem();
+		evaluateSystem = new EvaluateSystem();
 
 		// 启动子系统
 		if (!idsSystem.startup()) {
@@ -68,8 +71,12 @@ public final class Root {
 			logger.error("playerSystem startup failed");
 			return false;
 		}
-		if (!gameImageSystem.startup()) {
-			logger.error("gameImageSystem startup failed");
+		if (!jigsawSystem.startup()) {
+			logger.error("jigsawSystem startup failed");
+			return false;
+		}
+		if (!evaluateSystem.startup()) {
+			logger.error("evaluateSystem startup failed");
 			return false;
 		}
 		if (!sessionSystem.startup()) {
@@ -100,8 +107,11 @@ public final class Root {
 		if (null != playerSystem) {
 			playerSystem.shutdown();
 		}
-		if (null != gameImageSystem) {
-			gameImageSystem.shutdown();
+		if (null != jigsawSystem) {
+			jigsawSystem.shutdown();
+		}
+		if (null != evaluateSystem) {
+			evaluateSystem.shutdown();
 		}
 		if (null != triggerSystem) {
 			triggerSystem.shutdown();

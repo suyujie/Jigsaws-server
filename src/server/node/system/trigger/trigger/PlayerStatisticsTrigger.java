@@ -1,4 +1,4 @@
-package server.node.system.trigger;
+package server.node.system.trigger.trigger;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,12 +17,12 @@ import server.node.system.session.SessionSystem;
 /**
  * log 触发器
  */
-public final class LogTrigger implements Trigger, TopicSubscriber {
+public final class PlayerStatisticsTrigger implements Trigger, TopicSubscriber {
 
 	@SuppressWarnings("unused")
-	private final static Logger logger = LogManager.getLogger(LogTrigger.class.getName());
+	private final static Logger logger = LogManager.getLogger(PlayerStatisticsTrigger.class.getName());
 
-	public LogTrigger() {
+	public PlayerStatisticsTrigger() {
 	}
 
 	public boolean start() {

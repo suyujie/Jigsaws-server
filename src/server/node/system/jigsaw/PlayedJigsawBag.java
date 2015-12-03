@@ -45,7 +45,7 @@ public class PlayedJigsawBag extends AbstractEntity {
 	}
 
 	// 是否包含,true不包含 false包含
-	public boolean repeat(Long id) {
+	public boolean contains(Long id) {
 		if (playedIds == null || playedIds.isEmpty()) {
 			return false;
 		} else {
@@ -54,7 +54,7 @@ public class PlayedJigsawBag extends AbstractEntity {
 	}
 
 	// 增加一个
-	public boolean addJigsawId(Long id) {
+	public boolean addPlayedId(Long id) {
 		if (playedIds.contains(id)) {
 			return false;
 		} else {

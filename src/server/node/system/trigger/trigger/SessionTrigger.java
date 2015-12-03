@@ -1,4 +1,4 @@
-package server.node.system.trigger;
+package server.node.system.trigger.trigger;
 
 import gamecore.trigger.TopicMessage;
 import gamecore.trigger.TopicPublisher;

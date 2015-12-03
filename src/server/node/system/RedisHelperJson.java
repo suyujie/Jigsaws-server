@@ -52,28 +52,29 @@ public final class RedisHelperJson {
 		JedisUtilJson.getInstance().del(Player.generateCacheKey(id));
 	}
 
-	public static Jigsaw getGameImage(Long id) {
+	public static Jigsaw getJigsaw(Long id) {
 		return (Jigsaw) JedisUtilJson.getInstance().get(Jigsaw.generateCacheKey(id), Jigsaw.class);
 	}
 
-	public static Long getWaitImageIdSet(Integer tag) {
-		return (Long) JedisUtilJson.getInstance().setRandGet("image_id_" + tag, Long.class);
+	public static Long getWaitJigsawIdSet(Integer tag) {
+		return (Long) JedisUtilJson.getInstance().setRandGet("j_id_" + tag, Long.class);
 	}
 
-	public static List<Long> getWaitImageIdSet(Integer tag, int num) {
-		return (List<Long>) JedisUtilJson.getInstance().setRandGet("image_id_" + tag, num, Long.class);
+	public static List<Long> getWaitJigsawIdSet(Integer tag, int num) {
+		return (List<Long>) JedisUtilJson.getInstance().setRandGet("j_id_" + tag, num, Long.class);
 	}
 
-	public static PlayedJigsawBag getDoneImageBag(Long id) {
-		return (PlayedJigsawBag) JedisUtilJson.getInstance().get(PlayedJigsawBag.generateCacheKey(id), PlayedJigsawBag.class);
+	public static PlayedJigsawBag getPlayedJigsawBag(Long id) {
+		return (PlayedJigsawBag) JedisUtilJson.getInstance().get(PlayedJigsawBag.generateCacheKey(id),
+				PlayedJigsawBag.class);
 	}
 
 	public static void addWaitImageIdSet(Integer tag, Long id) {
-		JedisUtilJson.getInstance().setAdd("image_id_" + tag, id);
+		JedisUtilJson.getInstance().setAdd("j_id_" + tag, id);
 	}
 
 	public static void removeWaitImageIdSet(Integer tag, Long id) {
-		JedisUtilJson.getInstance().setRemove("image_id_" + tag, id);
+		JedisUtilJson.getInstance().setRemove("j_id_" + tag, id);
 	}
 
 }

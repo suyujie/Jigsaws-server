@@ -9,14 +9,15 @@ import gamecore.action.ActionPathSpec;
 import gamecore.message.RequestJson;
 import gamecore.message.ResponseJson;
 import server.node.system.Root;
+import server.node.system.evaluate.EvaluateType;
 import server.node.system.player.Player;
 
 @ActionPathSpec("401")
-public class CommentAction extends AbstractAction {
+public class EvaluateAction extends AbstractAction {
 
 	private static final long serialVersionUID = -5591454136604322538L;
 
-	private static final Logger logger = LogManager.getLogger(CommentAction.class);
+	private static final Logger logger = LogManager.getLogger(EvaluateAction.class);
 
 	@Override
 	public ResponseJson execute(RequestJson requestJson) {
@@ -39,7 +40,9 @@ public class CommentAction extends AbstractAction {
 		Long imageId = jsonObject.getLong("imageId");
 		Integer comment = jsonObject.getInteger("comment");
 
-		Root.gameImageSystem.commentImage(player, imageId, comment);
+		EvaluateType type = EvaluateType.asEnum(comment);
+
+		Root.evaluateSystem.EvaluateJigsaw(player, imageId, type);
 
 		resultJson.put(STATUS, SC_DISCONNECT);
 
