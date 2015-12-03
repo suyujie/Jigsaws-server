@@ -5,7 +5,7 @@ package server.node.system.evaluate;
  */
 public enum EvaluateType {
 
-	GOOD(0, "good"), BAD(1, "bad");
+	GOOD(1, "good"), BAD(2, "bad");
 
 	private int sc;
 	private String desc;

@@ -47,11 +47,11 @@ public class PlayerDao {
 	/**
 	 * update PlayerStatistics
 	 */
-	public Map<String, Object> updatePlayerStatistics(Long playerId, PlayerStatistics ss) throws SQLException {
+	public void updatePlayerStatistics(Long playerId, PlayerStatistics ss) {
 		String sql = "update t_statistics set game_success=?,game_failure=?,game_giveup=?,upload_num=?,upload_be_good=?,upload_be_bad=?,comment_good=?,comment_bad=? where player_id = ? ";
 		Object[] args = { ss.getGameSuccess(), ss.getGameFailure(), ss.getGameGiveup(), ss.getUpLoadNum(),
 				ss.getUpLoadBeGood(), ss.getUpLoadBeBad(), ss.getCommentGood(), ss.getCommentBad(), playerId };
-		return SyncDBUtil.readMap(DBOperator.Read, playerId, sql, args, false);
+		TaskCenter.getInstance().executeWithSlidingWindow(new AsyncDBTask(DBOperator.Write, playerId, sql, args));
 	}
 
 }

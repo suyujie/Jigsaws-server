@@ -39,20 +39,6 @@ CREATE TABLE t_player (
 
 
 /**
- * 图片
- */
-DROP TABLE IF EXISTS t_image ;
-CREATE TABLE t_image (
-  id BIGINT(20) UNSIGNED NOT NULL,
-  player_id BIGINT (20) UNSIGNED NOT NULL,
-  url varchar(100) default null,
-  good INT (11) UNSIGNED DEFAULT '0',
-  bad INT (11) UNSIGNED DEFAULT '0',
-  PRIMARY KEY (id)
-) ENGINE = INNODB DEFAULT CHARSET = utf8 ;
-
-
-/**
  * 统计
  */
 DROP TABLE IF EXISTS t_statistics ;
@@ -68,6 +54,21 @@ CREATE TABLE t_statistics (
   comment_bad INT (11) UNSIGNED DEFAULT '0',
   PRIMARY KEY (player_id)
 ) ENGINE = INNODB DEFAULT CHARSET = utf8 ;
+
+
+/**
+ * 图片
+ */
+DROP TABLE IF EXISTS t_jigsaw ;
+CREATE TABLE t_jigsaw (
+  id BIGINT(20) UNSIGNED NOT NULL,
+  player_id BIGINT (20) UNSIGNED NOT NULL,
+  url varchar(100) default null,
+  good INT (11) UNSIGNED DEFAULT '0',
+  bad INT (11) UNSIGNED DEFAULT '0',
+  PRIMARY KEY (id)
+) ENGINE = INNODB DEFAULT CHARSET = utf8 ;
+
 
 
 

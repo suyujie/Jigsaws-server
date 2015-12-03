@@ -7,6 +7,7 @@ import gamecore.system.AbstractSystem;
 import gamecore.system.SystemResult;
 import server.node.system.Root;
 import server.node.system.jigsaw.Jigsaw;
+import server.node.system.jigsaw.JigsawMessage;
 import server.node.system.player.Player;
 
 public class EvaluateSystem extends AbstractSystem {
@@ -30,6 +31,11 @@ public class EvaluateSystem extends AbstractSystem {
 
 		SystemResult result = new SystemResult();
 
+		if (jigsawId < 10000) {// 官方拼图，不评价
+			this.publish(new JigsawMessage(JigsawMessage.Evaluate, player, type));
+			return result;
+		}
+
 		Jigsaw jigsaw = Root.jigsawSystem.getJigsaw(jigsawId);
 
 		if (jigsaw == null) {
@@ -47,6 +53,8 @@ public class EvaluateSystem extends AbstractSystem {
 		jigsaw.synchronize();
 
 		Root.jigsawSystem.updateDB(jigsaw);
+
+		this.publish(new JigsawMessage(JigsawMessage.Evaluate, player, jigsaw, type));
 
 		return result;
 

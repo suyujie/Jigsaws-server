@@ -16,7 +16,7 @@ import gamecore.system.AbstractSystem;
 import gamecore.system.SystemResult;
 import gamecore.util.Utils;
 import server.node.dao.DaoFactory;
-import server.node.dao.ImageDao;
+import server.node.dao.JigsawDao;
 import server.node.system.RedisHelperJson;
 import server.node.system.Root;
 import server.node.system.player.Player;
@@ -61,9 +61,9 @@ public class JigsawSystem extends AbstractSystem {
 
 	private Jigsaw readFromDB(Long id) {
 		Jigsaw gameImage = null;
-		ImageDao dao = DaoFactory.getInstance().borrowImageDao();
-		Map<String, Object> map = dao.readImage(id);
-		DaoFactory.getInstance().returnImageDao(dao);
+		JigsawDao dao = DaoFactory.getInstance().borrowJigsawDao();
+		Map<String, Object> map = dao.read(id);
+		DaoFactory.getInstance().returnJigsawDao(dao);
 		if (map != null) {
 			gameImage = encapsulateJigsaw(map);
 		}
@@ -76,7 +76,7 @@ public class JigsawSystem extends AbstractSystem {
 		Jigsaw gameImage = null;
 
 		// 玩家玩过的最近的几个
-		PlayedJigsawBag playedJigsawBag = RedisHelperJson.getPlayedJigsawBag(player.getId());
+		PlayedJigsawBag playedJigsawBag = getPlayedJigsawBag(player);
 
 		while (gameImage == null) {
 
@@ -103,13 +103,30 @@ public class JigsawSystem extends AbstractSystem {
 
 	}
 
+	private PlayedJigsawBag getPlayedJigsawBag(Player player) {
+		// 玩家玩过的最近的几个
+		PlayedJigsawBag playedJigsawBag = RedisHelperJson.getPlayedJigsawBag(player.getId());
+		if (playedJigsawBag == null) {
+			playedJigsawBag = new PlayedJigsawBag(player.getId());
+			playedJigsawBag.synchronize();
+		}
+		return playedJigsawBag;
+	}
+
+	public void playedJigsaw(Player player, Jigsaw jigsaw) {
+
+		PlayedJigsawBag playedJigsawBag = RedisHelperJson.getPlayedJigsawBag(player.getId());
+		playedJigsawBag.addPlayedId(jigsaw.getId());
+		playedJigsawBag.synchronize();
+
+	}
+
 	public Jigsaw readJigsaw_guanfang(Player player) {
 
 		int index = 0;
 		Jigsaw gameImage = null;
 
-		// 玩家玩过的最近的几个
-		PlayedJigsawBag playedJigsawBag = RedisHelperJson.getPlayedJigsawBag(player.getId());
+		PlayedJigsawBag playedJigsawBag = getPlayedJigsawBag(player);
 
 		while (gameImage == null) {
 
@@ -152,9 +169,9 @@ public class JigsawSystem extends AbstractSystem {
 	 */
 	public void initImages() {
 
-		ImageDao dao = DaoFactory.getInstance().borrowImageDao();
-		List<Map<String, Object>> list = dao.readImages();
-		DaoFactory.getInstance().returnImageDao(dao);
+		JigsawDao dao = DaoFactory.getInstance().borrowJigsawDao();
+		List<Map<String, Object>> list = dao.read();
+		DaoFactory.getInstance().returnJigsawDao(dao);
 
 		if (list != null) {
 			for (Map<String, Object> map : list) {
@@ -207,15 +224,15 @@ public class JigsawSystem extends AbstractSystem {
 	}
 
 	public void updateDB(Jigsaw jigsaw) {
-		ImageDao dao = DaoFactory.getInstance().borrowImageDao();
-		dao.updateImage(jigsaw);
-		DaoFactory.getInstance().returnImageDao(dao);
+		JigsawDao dao = DaoFactory.getInstance().borrowJigsawDao();
+		dao.update(jigsaw);
+		DaoFactory.getInstance().returnJigsawDao(dao);
 	}
 
 	public void saveDB(Jigsaw jigsaw) {
-		ImageDao dao = DaoFactory.getInstance().borrowImageDao();
-		dao.saveImage(jigsaw);
-		DaoFactory.getInstance().returnImageDao(dao);
+		JigsawDao dao = DaoFactory.getInstance().borrowJigsawDao();
+		dao.save(jigsaw);
+		DaoFactory.getInstance().returnJigsawDao(dao);
 	}
 
 }

@@ -1,7 +1,5 @@
 package server.node.system.trigger.trigger;
 
-import java.sql.SQLException;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -11,20 +9,18 @@ import gamecore.trigger.TopicSubscriber;
 import gamecore.trigger.Trigger;
 import server.node.system.Root;
 import server.node.system.evaluate.EvaluateSystem;
-import server.node.system.evaluate.EvaluateType;
 import server.node.system.jigsaw.Jigsaw;
 import server.node.system.jigsaw.JigsawMessage;
 import server.node.system.player.Player;
 
 /**
- * 统计 触发器
+ * 拼图触发器
  */
-public final class PlayerStatisticsTrigger implements Trigger, TopicSubscriber {
+public final class JigsawTrigger implements Trigger, TopicSubscriber {
 
-	@SuppressWarnings("unused")
-	private final static Logger logger = LogManager.getLogger(PlayerStatisticsTrigger.class.getName());
+	private final static Logger logger = LogManager.getLogger(JigsawTrigger.class.getName());
 
-	public PlayerStatisticsTrigger() {
+	public JigsawTrigger() {
 	}
 
 	public boolean start() {
@@ -45,17 +41,8 @@ public final class PlayerStatisticsTrigger implements Trigger, TopicSubscriber {
 				JigsawMessage msg = (JigsawMessage) message;
 				Player player = msg.getPlayer();
 				Jigsaw jigsaw = msg.getJigsaw();
-				EvaluateType type = msg.getEvaluateType();
 
-				try {
-					Root.playerSystem.updatePlayerStatisticsAsPlayer(player, type);// 玩这个游戏的人
-																					// 统计
-					if (jigsaw != null) {
-						Root.playerSystem.updatePlayerStatisticsAsOwner(jigsaw.getPlayerId(), type);// 提供这个游戏的人统计
-					}
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
+				Root.jigsawSystem.playedJigsaw(player, jigsaw);
 
 				player.synchronize();
 			}

@@ -13,6 +13,8 @@ import server.node.dao.PlayerDao;
 import server.node.system.RedisHelperJson;
 import server.node.system.Root;
 import server.node.system.account.Account;
+import server.node.system.evaluate.EvaluateType;
+import server.node.system.jigsaw.Jigsaw;
 
 /**
  * 玩家系统。
@@ -111,6 +113,28 @@ public final class PlayerSystem extends AbstractSystem {
 		return player;
 	}
 
+	/**
+	 * 从数据库中读取玩家信息
+	 */
+	private Player readPlayerFromDB(long playerId) throws SQLException {
+
+		Account account = Root.accountSystem.getAccountFromDB(playerId);
+
+		if (account != null) {
+			PlayerDao playerDao = DaoFactory.getInstance().borrowPlayerDao();
+			Map<String, Object> playerMap = playerDao.readPlayer(account.getPlayerId());
+			DaoFactory.getInstance().returnPlayerDao(playerDao);
+			Player player = encapsulatePlayer(playerMap);
+			if (player != null) {
+				player.setAccount(account);
+			}
+			return player;
+		} else {
+			return null;
+		}
+
+	}
+
 	public Player getPlayerFromCache(Long playerId) {
 		if (playerId == null) {
 			return null;
@@ -169,9 +193,6 @@ public final class PlayerSystem extends AbstractSystem {
 		return player;
 	}
 
-	/**
-	 * 从数据库中读取玩家信息
-	 */
 	private PlayerStatistics readPlayerStatisticsFromDB(Player player) throws SQLException {
 
 		PlayerDao playerDao = DaoFactory.getInstance().borrowPlayerDao();
@@ -190,33 +211,58 @@ public final class PlayerSystem extends AbstractSystem {
 
 		PlayerStatistics pss = new PlayerStatistics(0, 0, 0, 0, 0, 0, 0, 0);
 
-		PlayerDao playerDao = DaoFactory.getInstance().borrowPlayerDao();
-		playerDao.savePlayerStatistics(player.getId(), pss);
-		DaoFactory.getInstance().returnPlayerDao(playerDao);
-
 		return pss;
 	}
 
-	/**
-	 * 从数据库中读取玩家信息
-	 */
-	private Player readPlayerFromDB(long playerId) throws SQLException {
+	// 玩游戏的人的统计信息更新
+	public void updatePlayerStatisticsAsPlayer(Player player, EvaluateType evaluateType) throws SQLException {
 
-		Account account = Root.accountSystem.getAccountFromDB(playerId);
+		// 玩拼图的人的统计信息
+		PlayerStatistics pss = getPlayerStatistics(player);
+		if (evaluateType == EvaluateType.BAD) {
+			pss.setCommentBad(pss.getCommentBad() + 1);
+		}
+		if (evaluateType == EvaluateType.GOOD) {
+			pss.setCommentGood(pss.getCommentGood() + 1);
+		}
+		pss.setGameSuccess(pss.getGameSuccess() + 1);
+		player.setStatistics(pss);
+		player.synchronize();
+		updateStatistics(player);
 
-		if (account != null) {
-			PlayerDao playerDao = DaoFactory.getInstance().borrowPlayerDao();
-			Map<String, Object> playerMap = playerDao.readPlayer(account.getPlayerId());
-			DaoFactory.getInstance().returnPlayerDao(playerDao);
-			Player player = encapsulatePlayer(playerMap);
-			if (player != null) {
-				player.setAccount(account);
-			}
-			return player;
-		} else {
-			return null;
+	}
+
+	// 提供游戏的人的统计信息
+	public void updatePlayerStatisticsAsOwner(Long playerId, EvaluateType evaluateType) throws SQLException {
+
+		// 拼图的提供者,官方的话，不统计
+
+		Player ownPlayer = getPlayer(playerId);
+
+		PlayerStatistics opss = getPlayerStatistics(ownPlayer);
+		if (evaluateType == EvaluateType.BAD) {
+			opss.setUpLoadBeBad(opss.getUpLoadBeBad() + 1);
+		}
+		if (evaluateType == EvaluateType.GOOD) {
+			opss.setUpLoadBeGood(opss.getUpLoadBeGood() + 1);
 		}
 
+		ownPlayer.setStatistics(opss);
+		ownPlayer.synchronize();
+		updateStatistics(ownPlayer);
+
+	}
+
+	public void saveStatistics(Player player) {
+		PlayerDao playerDao = DaoFactory.getInstance().borrowPlayerDao();
+		playerDao.savePlayerStatistics(player.getId(), player.getStatistics());
+		DaoFactory.getInstance().returnPlayerDao(playerDao);
+	}
+
+	public void updateStatistics(Player player) {
+		PlayerDao playerDao = DaoFactory.getInstance().borrowPlayerDao();
+		playerDao.updatePlayerStatistics(player.getId(), player.getStatistics());
+		DaoFactory.getInstance().returnPlayerDao(playerDao);
 	}
 
 }
