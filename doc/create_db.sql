@@ -66,6 +66,7 @@ CREATE TABLE t_jigsaw (
   url varchar(100) default null,
   good INT (11) UNSIGNED DEFAULT '0',
   bad INT (11) UNSIGNED DEFAULT '0',
+  enable INT (1) UNSIGNED DEFAULT '0',
   PRIMARY KEY (id)
 ) ENGINE = INNODB DEFAULT CHARSET = utf8 ;
 
