@@ -18,17 +18,19 @@ public class Jigsaw extends AbstractEntity {
 	private String url;
 	private int good;
 	private int bad;
+	private boolean enable;
 
 	public Jigsaw() {
 	}
 
-	public Jigsaw(Long id, Long playerId, String url, int good, int bad) {
+	public Jigsaw(Long id, Long playerId, String url, int good, int bad, boolean enable) {
 		super(Jigsaw.generateCacheKey(id));
 		this.id = id;
 		this.playerId = playerId;
 		this.url = url;
 		this.good = good;
 		this.bad = bad;
+		this.enable = enable;
 	}
 
 	public Long getId() {
@@ -69,6 +71,14 @@ public class Jigsaw extends AbstractEntity {
 
 	public void setBad(int bad) {
 		this.bad = bad;
+	}
+
+	public boolean isEnable() {
+		return enable;
+	}
+
+	public void setEnable(boolean enable) {
+		this.enable = enable;
 	}
 
 	/**

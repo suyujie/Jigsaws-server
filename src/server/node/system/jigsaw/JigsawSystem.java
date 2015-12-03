@@ -2,7 +2,6 @@ package server.node.system.jigsaw;
 
 import java.math.BigInteger;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +12,6 @@ import com.alibaba.fastjson.JSONObject;
 
 import common.qcloud.cosapi.CosCloudUtil;
 import gamecore.system.AbstractSystem;
-import gamecore.system.SystemResult;
 import gamecore.util.Utils;
 import server.node.dao.DaoFactory;
 import server.node.dao.JigsawDao;
@@ -190,7 +188,8 @@ public class JigsawSystem extends AbstractSystem {
 			String url = (String) map.get("url");
 			int good = ((Long) map.get("good")).intValue();
 			int bad = ((Long) map.get("bad")).intValue();
-			Jigsaw gameImage = new Jigsaw(id, playerId, url, good, bad);
+			int enable = ((Long) map.get("enable")).intValue();
+			Jigsaw gameImage = new Jigsaw(id, playerId, url, good, bad, enable == 1);
 			return gameImage;
 		} else {
 			return null;
@@ -211,7 +210,7 @@ public class JigsawSystem extends AbstractSystem {
 			if (success) {
 				String access_url = jsonObject.getJSONObject("data").getString("access_url");
 
-				Jigsaw gi = new Jigsaw(id, player.getId(), access_url, 0, 0);
+				Jigsaw gi = new Jigsaw(id, player.getId(), access_url, 0, 0, true);
 
 				gi.synchronize();
 

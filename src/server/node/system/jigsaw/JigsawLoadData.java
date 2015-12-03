@@ -55,7 +55,7 @@ public class JigsawLoadData extends AbstractLoadData {
 					for (Element el : imgList) {
 						Long id = Long.parseLong(el.element("id").getTextTrim());
 						String url = el.element("url").getTextTrim();
-						Jigsaw gameImage = new Jigsaw(id, null, url, 0, 0);
+						Jigsaw gameImage = new Jigsaw(id, null, url, 0, 0, true);
 						this.image_guanfang.put(id, gameImage);
 						this.ids_guanfang.add(id);
 						System.out.println(id + "  " + gameImage.getUrl());

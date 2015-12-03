@@ -11,17 +11,16 @@ import server.node.system.jigsaw.Jigsaw;
 
 public class JigsawDao {
 
-	public void save(Jigsaw gameImage) {
-		String sql = "insert into t_jigsaw(id,player_id,url,good,bad) values (?,?,?,?,?)";
-		Object[] args = { gameImage.getId(), gameImage.getPlayerId(), gameImage.getUrl(), gameImage.getGood(),
-				gameImage.getBad() };
+	public void save(Jigsaw jigsaw) {
+		String sql = "insert into t_jigsaw(id,player_id,url,good,bad,enable) values (?,?,?,?,?,?)";
+		Object[] args = { jigsaw.getId(), jigsaw.getPlayerId(), jigsaw.getUrl(), jigsaw.getGood(), jigsaw.getBad() };
 		TaskCenter.getInstance()
-				.executeWithSlidingWindow(new AsyncDBTask(DBOperator.Write, gameImage.getPlayerId(), sql, args));
+				.executeWithSlidingWindow(new AsyncDBTask(DBOperator.Write, jigsaw.getPlayerId(), sql, args));
 	}
 
 	public List<Map<String, Object>> read() {
-		String sql = "SELECT * from t_jigsaw limit 0,10000";
-		Object[] args = {};
+		String sql = "SELECT * from t_jigsaw where enable = ? limit 0,10000";
+		Object[] args = { 1 };
 		return SyncDBUtil.readList(DBOperator.Read, sql, args);
 	}
 
@@ -31,11 +30,11 @@ public class JigsawDao {
 		return SyncDBUtil.readMap(DBOperator.Read, sql, args);
 	}
 
-	public void update(Jigsaw gameImage) {
-		String sql = "update t_jigsaw set good = ?,bad = ? where id = ?";
-		Object[] args = { gameImage.getGood(), gameImage.getBad(), gameImage.getId() };
+	public void update(Jigsaw jigsaw) {
+		String sql = "update t_jigsaw set good = ?,bad = ?,enable = ? where id = ?";
+		Object[] args = { jigsaw.getGood(), jigsaw.getBad(), jigsaw.getId(), jigsaw.isEnable() ? 1 : 0 };
 		TaskCenter.getInstance()
-				.executeWithSlidingWindow(new AsyncDBTask(DBOperator.Write, gameImage.getPlayerId(), sql, args));
+				.executeWithSlidingWindow(new AsyncDBTask(DBOperator.Write, jigsaw.getPlayerId(), sql, args));
 	}
 
 }
