@@ -41,8 +41,15 @@ public final class JigsawTrigger implements Trigger, TopicSubscriber {
 				JigsawMessage msg = (JigsawMessage) message;
 				Player player = msg.getPlayer();
 				Jigsaw jigsaw = msg.getJigsaw();
+				Long jigsawId = msg.getJigsawId();
 
-				Root.jigsawSystem.playedJigsaw(player, jigsaw);
+				if (jigsaw != null) {
+					Root.jigsawSystem.playedJigsaw(player, jigsaw);
+				}
+				// 官方拼图，只给id
+				if (jigsawId != null) {
+					Root.jigsawSystem.playedJigsaw(player, jigsawId);
+				}
 
 				player.synchronize();
 			}

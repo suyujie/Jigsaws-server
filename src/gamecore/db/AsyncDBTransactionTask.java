@@ -1,7 +1,5 @@
 package gamecore.db;
 
-import gamecore.entity.AbstractEntity;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -10,8 +8,6 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import com.mysql.jdbc.Blob;
 
 public class AsyncDBTransactionTask extends DataAccessObject implements Runnable {
 
@@ -77,26 +73,7 @@ public class AsyncDBTransactionTask extends DataAccessObject implements Runnable
 				logger.error(e1);
 			}
 			for (int i = 0; i < sqls.size(); i++) {
-				logger.error(sqls.get(i));
-				Object[] currentArgs = args.get(i);
-				for (int j = 1; j <= currentArgs.length; j++) {
-
-					Object o = currentArgs[j - 1];
-
-					if (o == null) {
-						logger.error("null  ");
-					} else if (o.getClass() == Integer.class) {
-						logger.error((Integer) o + "  ");
-					} else if (o.getClass() == Long.class) {
-						logger.error((Long) o + "  ");
-					} else if (o.getClass() == String.class) {
-						logger.error((String) o + "  ");
-					} else if (o.getClass() == Blob.class) {
-						logger.error((String) o + "  ");
-					} else if (o.getClass() == AbstractEntity.class) {
-						logger.error(o + "  ");
-					}
-				}
+				logger.error(DbDebugUtil.toDebugSql(sqls.get(i), args.get(i)));
 			}
 			e.printStackTrace();
 		} finally {

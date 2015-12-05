@@ -1,6 +1,5 @@
 package gamecore.db;
 
-import gamecore.entity.AbstractEntity;
 import gamecore.task.TaskCenter;
 
 import java.sql.Connection;
@@ -11,8 +10,6 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import com.mysql.jdbc.Blob;
 
 /**
  * 异步 批量执行sql
@@ -79,25 +76,7 @@ public class AsyncDBBacthTask extends DataAccessObject implements Runnable {
 						ps.execute();
 						ps.close();
 					} catch (Exception e) {
-						logger.error(currentSql);
-						for (int j = 1; j <= currentArgs.length; j++) {
-
-							Object o = currentArgs[j - 1];
-
-							if (o == null) {
-								logger.error("null  ");
-							} else if (o.getClass() == Integer.class) {
-								logger.error((Integer) o + "  ");
-							} else if (o.getClass() == Long.class) {
-								logger.error((Long) o + "  ");
-							} else if (o.getClass() == String.class) {
-								logger.error((String) o + "  ");
-							} else if (o.getClass() == Blob.class) {
-								logger.error((String) o + "  ");
-							} else if (o.getClass() == AbstractEntity.class) {
-								logger.error(o + "  ");
-							}
-						}
+						logger.error(DbDebugUtil.toDebugSql(currentSql, currentArgs));
 						e.printStackTrace();
 					} finally {
 						close(connection);

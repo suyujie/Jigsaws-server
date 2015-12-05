@@ -28,6 +28,14 @@ public class PlayedJigsawBag extends AbstractEntity {
 		super(PlayedJigsawBag.generateCacheKey(playerId));
 	}
 
+	public List<Long> getPlayedIds() {
+		return playedIds;
+	}
+
+	public void setPlayedIds(List<Long> playedIds) {
+		this.playedIds = playedIds;
+	}
+
 	// 取出all
 	public List<Long> readPlayedIds() {
 		List<Long> result = new ArrayList<Long>();

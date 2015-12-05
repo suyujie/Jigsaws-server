@@ -13,7 +13,8 @@ public class JigsawDao {
 
 	public void save(Jigsaw jigsaw) {
 		String sql = "insert into t_jigsaw(id,player_id,url,good,bad,enable) values (?,?,?,?,?,?)";
-		Object[] args = { jigsaw.getId(), jigsaw.getPlayerId(), jigsaw.getUrl(), jigsaw.getGood(), jigsaw.getBad() };
+		Object[] args = { jigsaw.getId(), jigsaw.getPlayerId(), jigsaw.getUrl(), jigsaw.getGood(), jigsaw.getBad(),
+				jigsaw.isEnable() ? 1 : 0 };
 		TaskCenter.getInstance()
 				.executeWithSlidingWindow(new AsyncDBTask(DBOperator.Write, jigsaw.getPlayerId(), sql, args));
 	}

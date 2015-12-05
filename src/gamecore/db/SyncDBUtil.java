@@ -1,7 +1,5 @@
 package gamecore.db;
 
-import gamecore.entity.AbstractEntity;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -22,8 +20,6 @@ import org.apache.commons.dbutils.handlers.MapListHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.mysql.jdbc.Blob;
-
 /**
  * 同步执行sql
  * @author suiyujie
@@ -31,8 +27,6 @@ import com.mysql.jdbc.Blob;
 public class SyncDBUtil extends DataAccessObject {
 
 	private static Logger logger = LogManager.getLogger(SyncDBUtil.class.getName());
-
-	private static final String Move = "move";
 
 	public static boolean execute(DBOperator dBOperator, Long tagId, String sql, Object[] args) {
 
@@ -64,23 +58,7 @@ public class SyncDBUtil extends DataAccessObject {
 			result = ps.executeUpdate() == 1;
 
 		} catch (Exception e) {
-			logger.error(sql);
-			for (int j = 1; j <= args.length; j++) {
-				Object o = args[j - 1];
-				if (o == null) {
-					logger.error("null  ");
-				} else if (o.getClass() == Integer.class) {
-					logger.error((Integer) o + "  ");
-				} else if (o.getClass() == Long.class) {
-					logger.error((Long) o + "  ");
-				} else if (o.getClass() == String.class) {
-					logger.error((String) o + "  ");
-				} else if (o.getClass() == Blob.class) {
-					logger.error((String) o + "  ");
-				} else if (o.getClass() == AbstractEntity.class) {
-					logger.error(o + "  ");
-				}
-			}
+			logger.error(DbDebugUtil.toDebugSql(sql, args));
 			e.printStackTrace();
 		} finally {
 			try {
@@ -110,9 +88,6 @@ public class SyncDBUtil extends DataAccessObject {
 		//如果没有找到，所有的库一起找
 		if (checkAll && map == null) {
 			map = readMap(dBOperator, sql, args);
-			if (map != null) {//数据应该迁移
-				map.put(Move, true);
-			}
 		}
 
 		return map;

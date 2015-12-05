@@ -119,6 +119,14 @@ public class JigsawSystem extends AbstractSystem {
 
 	}
 
+	public void playedJigsaw(Player player, Long jigsawId) {
+
+		PlayedJigsawBag playedJigsawBag = RedisHelperJson.getPlayedJigsawBag(player.getId());
+		playedJigsawBag.addPlayedId(jigsawId);
+		playedJigsawBag.synchronize();
+
+	}
+
 	public Jigsaw readJigsaw_guanfang(Player player) {
 
 		int index = 0;

@@ -13,6 +13,7 @@ public final class JigsawMessage extends TopicMessage {
 	public static final String Evaluate = "evaluate";
 	private Player player;
 	private Jigsaw jigsaw;
+	private Long jigsawId;
 	private EvaluateType evaluateType;
 
 	public JigsawMessage(String name, Player player, Jigsaw jigsaw, EvaluateType evaluateType) {
@@ -22,9 +23,10 @@ public final class JigsawMessage extends TopicMessage {
 		this.evaluateType = evaluateType;
 	}
 
-	public JigsawMessage(String name, Player player, EvaluateType evaluateType) {
+	public JigsawMessage(String name, Player player, Long jigsawId, EvaluateType evaluateType) {
 		super(name);
 		this.player = player;
+		this.jigsawId = jigsawId;
 		this.evaluateType = evaluateType;
 	}
 
@@ -42,6 +44,14 @@ public final class JigsawMessage extends TopicMessage {
 
 	public void setJigsaw(Jigsaw jigsaw) {
 		this.jigsaw = jigsaw;
+	}
+
+	public Long getJigsawId() {
+		return jigsawId;
+	}
+
+	public void setJigsawId(Long jigsawId) {
+		this.jigsawId = jigsawId;
 	}
 
 	public EvaluateType getEvaluateType() {

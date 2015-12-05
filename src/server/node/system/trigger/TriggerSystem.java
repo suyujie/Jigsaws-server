@@ -3,6 +3,7 @@ package server.node.system.trigger;
 import gamecore.system.AbstractSystem;
 import gamecore.trigger.Trigger;
 import javolution.util.FastTable;
+import server.node.system.trigger.trigger.JigsawTrigger;
 import server.node.system.trigger.trigger.LogTrigger;
 import server.node.system.trigger.trigger.PlayerStatisticsTrigger;
 import server.node.system.trigger.trigger.SessionTrigger;
@@ -34,6 +35,7 @@ public class TriggerSystem extends AbstractSystem {
 		triggers.add(new SessionTrigger());
 		triggers.add(new LogTrigger());
 		triggers.add(new PlayerStatisticsTrigger());
+		triggers.add(new JigsawTrigger());
 
 		for (Trigger t : triggers) {
 			t.start();

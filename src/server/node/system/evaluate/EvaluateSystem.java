@@ -32,7 +32,7 @@ public class EvaluateSystem extends AbstractSystem {
 		SystemResult result = new SystemResult();
 
 		if (jigsawId < 10000) {// 官方拼图，不评价
-			this.publish(new JigsawMessage(JigsawMessage.Evaluate, player, type));
+			this.publish(new JigsawMessage(JigsawMessage.Evaluate, player, jigsawId, type));
 			return result;
 		}
 
