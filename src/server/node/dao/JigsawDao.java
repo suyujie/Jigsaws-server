@@ -8,20 +8,21 @@ import gamecore.db.DBOperator;
 import gamecore.db.SyncDBUtil;
 import gamecore.task.TaskCenter;
 import server.node.system.jigsaw.Jigsaw;
+import server.node.system.jigsaw.JigsawState;
 
 public class JigsawDao {
 
 	public void save(Jigsaw jigsaw) {
 		String sql = "insert into t_jigsaw(id,player_id,url,good,bad,enable) values (?,?,?,?,?,?)";
 		Object[] args = { jigsaw.getId(), jigsaw.getPlayerId(), jigsaw.getUrl(), jigsaw.getGood(), jigsaw.getBad(),
-				jigsaw.isEnable() ? 1 : 0 };
+				jigsaw.getState().asCode() };
 		TaskCenter.getInstance()
 				.executeWithSlidingWindow(new AsyncDBTask(DBOperator.Write, jigsaw.getPlayerId(), sql, args));
 	}
 
 	public List<Map<String, Object>> read(int begin, int num) {
 		String sql = "SELECT * from t_jigsaw where enable = ? limit begin,num";
-		Object[] args = { 1, begin, num };
+		Object[] args = { JigsawState.ENABLE, begin, num };
 		return SyncDBUtil.readList(DBOperator.Read, sql, args);
 	}
 
@@ -33,7 +34,7 @@ public class JigsawDao {
 
 	public void update(Jigsaw jigsaw) {
 		String sql = "update t_jigsaw set good = ?,bad = ?,enable = ? where id = ?";
-		Object[] args = { jigsaw.getGood(), jigsaw.getBad(), jigsaw.getId(), jigsaw.isEnable() ? 1 : 0 };
+		Object[] args = { jigsaw.getGood(), jigsaw.getBad(), jigsaw.getId(), jigsaw.getState().asCode() };
 		TaskCenter.getInstance()
 				.executeWithSlidingWindow(new AsyncDBTask(DBOperator.Write, jigsaw.getPlayerId(), sql, args));
 	}

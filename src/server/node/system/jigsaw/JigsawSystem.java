@@ -188,8 +188,9 @@ public class JigsawSystem extends AbstractSystem {
 			String url = (String) map.get("url");
 			int good = ((Long) map.get("good")).intValue();
 			int bad = ((Long) map.get("bad")).intValue();
-			int enable = ((Long) map.get("state")).intValue();
-			Jigsaw gameImage = new Jigsaw(id, playerId, url, good, bad, enable == 1);
+			JigsawState state = JigsawState.asEnum(((Long) map.get("state")).intValue());
+
+			Jigsaw gameImage = new Jigsaw(id, playerId, url, good, bad, state);
 			return gameImage;
 		} else {
 			return null;
@@ -210,7 +211,7 @@ public class JigsawSystem extends AbstractSystem {
 			if (success) {
 				String access_url = jsonObject.getJSONObject("data").getString("access_url");
 
-				Jigsaw gi = new Jigsaw(id, player.getId(), access_url, 0, 0, true);
+				Jigsaw gi = new Jigsaw(id, player.getId(), access_url, 0, 0, JigsawState.ENABLE);
 
 				gi.synchronize();
 
