@@ -30,13 +30,11 @@ public class JigsawSystem extends AbstractSystem {
 	// 信息放入是个缓存key中
 	private static final int imageIdCacheTagMaxNum = 10;
 
-	private static Queue<Long> deleteingJigsaws = null;
+	private static Queue<Long> deleteingJigsaws = new ArrayBlockingQueue<Long>(10000000);
 
 	@Override
 	public boolean startup() {
 		System.out.println("JigsawSystem start..");
-
-		deleteingJigsaws = new ArrayBlockingQueue<Long>(10000000);
 
 		// 加载官方Jigsaw信息
 		JigsawLoadData.getInstance().readData();
@@ -186,11 +184,12 @@ public class JigsawSystem extends AbstractSystem {
 			long id = ((BigInteger) map.get("id")).longValue();
 			long playerId = ((BigInteger) map.get("player_id")).longValue();
 			String url = (String) map.get("url");
+			String bucketName = (String) map.get("bucket_name");
 			int good = ((Long) map.get("good")).intValue();
 			int bad = ((Long) map.get("bad")).intValue();
 			JigsawState state = JigsawState.asEnum(((Long) map.get("state")).intValue());
 
-			Jigsaw gameImage = new Jigsaw(id, playerId, url, good, bad, state);
+			Jigsaw gameImage = new Jigsaw(id, playerId, url, bucketName, good, bad, state);
 			return gameImage;
 		} else {
 			return null;
@@ -201,8 +200,16 @@ public class JigsawSystem extends AbstractSystem {
 
 		Long id = Root.idsSystem.takeId();
 
+		String bucketName = CosCloudUtil.readBucketName();
+
+		Jigsaw gi = new Jigsaw(id, player.getId(), null, bucketName, 0, 0, JigsawState.ENABLE);
+
 		// 腾讯云 上传
-		String result = CosCloudUtil.updateFile(id.toString(), bytes);
+		String result = CosCloudUtil.updateFile(bucketName, id.toString(), bytes);
+
+		System.out.println("===================");
+		System.out.println(result);
+		System.out.println("===================");
 
 		if (result != null) {
 			JSONObject jsonObject = JSONObject.parseObject(result);
@@ -210,8 +217,6 @@ public class JigsawSystem extends AbstractSystem {
 			boolean success = jsonObject.getInteger("code") == 0;
 			if (success) {
 				String access_url = jsonObject.getJSONObject("data").getString("access_url");
-
-				Jigsaw gi = new Jigsaw(id, player.getId(), access_url, 0, 0, JigsawState.ENABLE);
 
 				gi.synchronize();
 

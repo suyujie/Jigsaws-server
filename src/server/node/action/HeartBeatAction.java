@@ -10,6 +10,7 @@ import gamecore.action.ActionPathSpec;
 import gamecore.message.RequestJson;
 import gamecore.message.ResponseJson;
 import server.node.system.Root;
+import server.node.system.player.Player;
 import server.node.system.session.Session;
 
 @ActionPathSpec("1001")
@@ -22,11 +23,19 @@ public class HeartBeatAction extends AbstractAction {
 	@Override
 	public ResponseJson execute(RequestJson requestJson) {
 
-		ResponseJson responseJson = new ResponseJson(requestJson.getCommandId(), true, null);
+		ResponseJson responseJson = new ResponseJson(requestJson.getCommandId(), SC_OK, null);
+
+		Player player = getPlayer(requestJson.getSessionId());
+
+		JSONObject resultJson = getResultJson();
+
+		if (player == null) {
+			responseJson.setState(SC_DISCONNECT);
+			responseJson.setBody(resultJson);
+			return responseJson;
+		}
 
 		String sessionId = requestJson.getSessionId();
-
-		JSONObject resultJson = new JSONObject();
 
 		if (StringUtils.isNotBlank(sessionId)) {
 

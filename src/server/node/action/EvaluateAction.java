@@ -22,29 +22,24 @@ public class EvaluateAction extends AbstractAction {
 	@Override
 	public ResponseJson execute(RequestJson requestJson) {
 
-		ResponseJson responseJson = new ResponseJson(requestJson.getCommandId(), true, null);
+		ResponseJson responseJson = new ResponseJson(requestJson.getCommandId(), SC_OK, null);
 
 		Player player = getPlayer(requestJson.getSessionId());
 
-		JSONObject resultJson = new JSONObject();
-
+		JSONObject resultJson = getResultJson();
 		if (player == null) {
-			resultJson.put(STATUS, SC_DISCONNECT);
-
-			responseJson.setBody(resultJson);
+			responseJson.setState(SC_DISCONNECT);
 			return responseJson;
 		}
 
-		JSONObject jsonObject = requestJson.getBody();
+		JSONObject reqBody = requestJson.getBody();
 
-		Long imageId = jsonObject.getLong("imageId");
-		Integer comment = jsonObject.getInteger("comment");
+		Long imageId = reqBody.getLong("imageId");
+		Integer comment = reqBody.getInteger("comment");
 
 		EvaluateType type = EvaluateType.asEnum(comment);
 
 		Root.evaluateSystem.EvaluateJigsaw(player, imageId, type);
-
-		resultJson.put(STATUS, SC_DISCONNECT);
 
 		responseJson.setBody(resultJson);
 		return responseJson;

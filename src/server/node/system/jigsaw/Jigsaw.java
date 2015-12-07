@@ -16,6 +16,7 @@ public class Jigsaw extends AbstractEntity {
 	private Long id;
 	private Long playerId;
 	private String url;
+	private String bucketName;
 	private int good;
 	private int bad;
 	private JigsawState state;
@@ -23,11 +24,12 @@ public class Jigsaw extends AbstractEntity {
 	public Jigsaw() {
 	}
 
-	public Jigsaw(Long id, Long playerId, String url, int good, int bad, JigsawState state) {
+	public Jigsaw(Long id, Long playerId, String url, String bucketName, int good, int bad, JigsawState state) {
 		super(Jigsaw.generateCacheKey(id));
 		this.id = id;
 		this.playerId = playerId;
 		this.url = url;
+		this.bucketName = bucketName;
 		this.good = good;
 		this.bad = bad;
 		this.state = state;
@@ -55,6 +57,14 @@ public class Jigsaw extends AbstractEntity {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+	public String getBucketName() {
+		return bucketName;
+	}
+
+	public void setBucketName(String bucketName) {
+		this.bucketName = bucketName;
 	}
 
 	public int getGood() {

@@ -25,15 +25,14 @@ public class LoginAction extends AbstractAction {
 	@Override
 	public ResponseJson execute(RequestJson requestJson) {
 
-		ResponseJson responseJson = new ResponseJson(requestJson.getCommandId(), true, null);
+		ResponseJson responseJson = new ResponseJson(requestJson.getCommandId(), SC_OK, null);
 
-		JSONObject jsonObject = requestJson.getBody();
-
-		String deviceId = jsonObject.getString("deviceId");
+		JSONObject reqBody = requestJson.getBody();
+		String deviceId = reqBody.getString("deviceId");
 
 		String sessionId = UUID.randomUUID().toString();
 
-		JSONObject json = new JSONObject();
+		JSONObject resultJson = getResultJson();
 
 		if (StringUtils.isNotBlank(deviceId)) {
 
@@ -44,19 +43,19 @@ public class LoginAction extends AbstractAction {
 				Account account = Root.accountSystem.getAccount(deviceId);
 				if (account == null) {
 					player = Root.playerSystem.register(deviceId, sessionId, true);
-					json.put("reg", true);
+					resultJson.put("reg", true);
 				} else {
-					player = Root.playerSystem.getPlayer(account,sessionId);
-					json.put("reg", false);
+					player = Root.playerSystem.getPlayer(account, sessionId);
+					resultJson.put("reg", false);
 				}
 
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 
-			json.put("sessionId", sessionId);
+			resultJson.put("sessionId", sessionId);
 
-			responseJson.setBody(json);
+			responseJson.setBody(resultJson);
 		}
 
 		return responseJson;

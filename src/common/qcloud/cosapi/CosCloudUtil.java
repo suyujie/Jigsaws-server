@@ -15,10 +15,11 @@ public class CosCloudUtil {
 
 	static List<String> bucketNames = new ArrayList<String>(Arrays.asList("pic1", "pic2"));
 
-	public static String updateFile(String name, byte[] bytes) {
+	public static String readBucketName() {
+		return Utils.randomSelectOne(bucketNames);
+	}
 
-		long start = System.currentTimeMillis();
-		String bucketName = Utils.randomSelectOne(bucketNames);
+	public static String updateFile(String bucketName, String name, byte[] bytes) {
 
 		QCloudStorageBean cosBean = StorageManager.getInstance().qCloudStorages.get(1);
 
@@ -26,9 +27,6 @@ public class CosCloudUtil {
 		try {
 			ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
 			String result = cos.uploadFile(bucketName, "/" + name, inputStream);
-			long end = System.currentTimeMillis();
-			System.out.println(result);
-			System.out.println("总用时：" + (end - start) + "毫秒");
 
 			return result;
 		} catch (Exception e) {

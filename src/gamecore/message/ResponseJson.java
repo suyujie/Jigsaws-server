@@ -8,12 +8,12 @@ import com.alibaba.fastjson.JSONObject;
 public class ResponseJson {
 
 	private Integer commandId;
-	private boolean success;
+	private int state;
 	private JSONObject body;
 
-	public ResponseJson(Integer commandId, boolean success, JSONObject body) {
+	public ResponseJson(Integer commandId, int state, JSONObject body) {
 		this.commandId = commandId;
-		this.success = success;
+		this.state = state;
 		this.body = body;
 	}
 
@@ -25,12 +25,12 @@ public class ResponseJson {
 		this.commandId = commandId;
 	}
 
-	public boolean getSuccess() {
-		return success;
+	public int getState() {
+		return state;
 	}
 
-	public void setSuccess(boolean success) {
-		this.success = success;
+	public void setState(int state) {
+		this.state = state;
 	}
 
 	public JSONObject getBody() {

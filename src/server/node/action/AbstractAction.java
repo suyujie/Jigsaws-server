@@ -1,5 +1,7 @@
 package server.node.action;
 
+import com.alibaba.fastjson.JSONObject;
+
 import common.coin.CoinType;
 import common.language.LangType;
 import gamecore.action.IAction;
@@ -16,12 +18,16 @@ public abstract class AbstractAction extends AbstractHttpServlet implements IAct
 
 	private static final long serialVersionUID = -8930418998280305692L;
 
-	public static final String STATUS = "status";
+	public static final String STATE = "state";
 
 	public static final byte SC_OK = 0;
 	public static final byte SC_ERROR = 1;
 	public static final byte SC_DISCONNECT = 2;
 	public static final byte SC_BLACKLIST = 20;
+
+	public JSONObject getResultJson() {
+		return new JSONObject();
+	}
 
 	public Session getSession(String sessionId) {
 		Session session = Root.sessionSystem.getSession(sessionId);

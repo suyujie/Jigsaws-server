@@ -31,11 +31,15 @@ public class ReadJigsawAction extends AbstractAction {
 	@Override
 	public ResponseJson execute(RequestJson requestJson) {
 
-		ResponseJson responseJson = new ResponseJson(requestJson.getCommandId(), true, null);
+		ResponseJson responseJson = new ResponseJson(requestJson.getCommandId(), SC_OK, null);
 
 		Player player = getPlayer(requestJson.getSessionId());
 
-		JSONObject json = new JSONObject();
+		JSONObject resultJson = getResultJson();
+		if (player == null) {
+			responseJson.setState(SC_DISCONNECT);
+			return responseJson;
+		}
 
 		Jigsaw jigsaw = null;
 
@@ -59,10 +63,10 @@ public class ReadJigsawAction extends AbstractAction {
 			e.printStackTrace();
 		}
 
-		json.put("imageId", jigsaw.getId());
-		json.put("url", jigsaw.getUrl());
+		resultJson.put("imageId", jigsaw.getId());
+		resultJson.put("url", jigsaw.getUrl());
 
-		responseJson.setBody(json);
+		responseJson.setBody(resultJson);
 
 		return responseJson;
 	}

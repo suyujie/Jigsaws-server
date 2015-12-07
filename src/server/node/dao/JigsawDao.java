@@ -13,7 +13,7 @@ import server.node.system.jigsaw.JigsawState;
 public class JigsawDao {
 
 	public void save(Jigsaw jigsaw) {
-		String sql = "insert into t_jigsaw(id,player_id,url,good,bad,enable) values (?,?,?,?,?,?)";
+		String sql = "insert into t_jigsaw(id,player_id,url,good,bad,state) values (?,?,?,?,?,?)";
 		Object[] args = { jigsaw.getId(), jigsaw.getPlayerId(), jigsaw.getUrl(), jigsaw.getGood(), jigsaw.getBad(),
 				jigsaw.getState().asCode() };
 		TaskCenter.getInstance()
@@ -21,8 +21,8 @@ public class JigsawDao {
 	}
 
 	public List<Map<String, Object>> read(int begin, int num) {
-		String sql = "SELECT * from t_jigsaw where enable = ? limit begin,num";
-		Object[] args = { JigsawState.ENABLE, begin, num };
+		String sql = "SELECT * from t_jigsaw where state = ? limit ?,?";
+		Object[] args = { JigsawState.ENABLE.asCode(), begin, num };
 		return SyncDBUtil.readList(DBOperator.Read, sql, args);
 	}
 
