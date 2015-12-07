@@ -4,6 +4,9 @@ import java.math.BigInteger;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,6 +15,7 @@ import com.alibaba.fastjson.JSONObject;
 
 import common.qcloud.cosapi.CosCloudUtil;
 import gamecore.system.AbstractSystem;
+import gamecore.task.TaskCenter;
 import gamecore.util.Utils;
 import server.node.dao.DaoFactory;
 import server.node.dao.JigsawDao;
@@ -26,17 +30,24 @@ public class JigsawSystem extends AbstractSystem {
 	// 信息放入是个缓存key中
 	private static final int imageIdCacheTagMaxNum = 10;
 
+	private static Queue<Long> deleteingJigsaws = null;
+
 	@Override
 	public boolean startup() {
-		System.out.println("GameImageSystem start..");
+		System.out.println("JigsawSystem start..");
 
-		// 加载官方图片信息
+		deleteingJigsaws = new ArrayBlockingQueue<Long>(10000000);
+
+		// 加载官方Jigsaw信息
 		JigsawLoadData.getInstance().readData();
 
-		// 初始化玩家图片
-		initImages();
+		// 初始化玩家的Jigsaw
+		TaskCenter.getInstance().schedule(new LoadJigsaw2WaitingList(), 0, TimeUnit.SECONDS);
 
-		System.out.println("GameImageSystem start..ok");
+		// 处理要删除的Jigsaw
+		TaskCenter.getInstance().scheduleWithFixedDelay(new LoadJigsaw2WaitingList(), 0, 10, TimeUnit.SECONDS);
+
+		System.out.println("JigsawSystem start..ok");
 
 		return true;
 	}
@@ -166,27 +177,8 @@ public class JigsawSystem extends AbstractSystem {
 
 	}
 
-	private void addWaitImageIdSet(Long id) {
+	private void addWaitJigsawIdSet(Long id) {
 		RedisHelperJson.addWaitImageIdSet(Utils.randomInt(0, imageIdCacheTagMaxNum), id);
-	}
-
-	/**
-	 * 初始化图片数据，放入缓存
-	 */
-	public void initImages() {
-
-		JigsawDao dao = DaoFactory.getInstance().borrowJigsawDao();
-		List<Map<String, Object>> list = dao.read();
-		DaoFactory.getInstance().returnJigsawDao(dao);
-
-		if (list != null) {
-			for (Map<String, Object> map : list) {
-				Jigsaw gameImage = encapsulateJigsaw(map);
-				gameImage.synchronize();
-				addWaitImageIdSet(gameImage.getId());
-			}
-		}
-
 	}
 
 	private Jigsaw encapsulateJigsaw(Map<String, Object> map) {
@@ -196,7 +188,7 @@ public class JigsawSystem extends AbstractSystem {
 			String url = (String) map.get("url");
 			int good = ((Long) map.get("good")).intValue();
 			int bad = ((Long) map.get("bad")).intValue();
-			int enable = ((Long) map.get("enable")).intValue();
+			int enable = ((Long) map.get("state")).intValue();
 			Jigsaw gameImage = new Jigsaw(id, playerId, url, good, bad, enable == 1);
 			return gameImage;
 		} else {
@@ -204,7 +196,7 @@ public class JigsawSystem extends AbstractSystem {
 		}
 	}
 
-	public void uploadImage(Player player, byte[] bytes) {
+	public void uploadJigsaw(Player player, byte[] bytes) {
 
 		Long id = Root.idsSystem.takeId();
 
@@ -222,12 +214,20 @@ public class JigsawSystem extends AbstractSystem {
 
 				gi.synchronize();
 
-				addWaitImageIdSet(id);
+				addWaitJigsawIdSet(id);
 
 				saveDB(gi);
 			}
 		}
 
+	}
+
+	private void deleteJigsaw(Long jigsawId) {
+		synchronized (deleteingJigsaws) {
+			if (!deleteingJigsaws.contains(jigsawId)) {
+				deleteingJigsaws.add(jigsawId);
+			}
+		}
 	}
 
 	public void updateDB(Jigsaw jigsaw) {
@@ -240,6 +240,51 @@ public class JigsawSystem extends AbstractSystem {
 		JigsawDao dao = DaoFactory.getInstance().borrowJigsawDao();
 		dao.save(jigsaw);
 		DaoFactory.getInstance().returnJigsawDao(dao);
+	}
+
+	/**
+	 * 守护任务。 内部线程类,从db中载入jigsaw进入可玩列表
+	 */
+	protected class LoadJigsaw2WaitingList implements Runnable {
+
+		protected LoadJigsaw2WaitingList() {
+		}
+
+		int loadNumEveryTime = 100;
+
+		@Override
+		public void run() {
+
+			int index = 0;
+
+			while (true) {
+				JigsawDao dao = DaoFactory.getInstance().borrowJigsawDao();
+				List<Map<String, Object>> list = dao.read(index * loadNumEveryTime, loadNumEveryTime);
+				DaoFactory.getInstance().returnJigsawDao(dao);
+
+				if (list != null) {
+					for (Map<String, Object> map : list) {
+						Jigsaw gameImage = encapsulateJigsaw(map);
+						gameImage.synchronize();
+						addWaitJigsawIdSet(gameImage.getId());
+					}
+				}
+
+				if (list == null || list.size() < loadNumEveryTime) {
+					break;
+				}
+
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+
+				index++;
+
+			}
+
+		}
 	}
 
 }

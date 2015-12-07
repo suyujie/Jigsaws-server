@@ -19,9 +19,9 @@ public class JigsawDao {
 				.executeWithSlidingWindow(new AsyncDBTask(DBOperator.Write, jigsaw.getPlayerId(), sql, args));
 	}
 
-	public List<Map<String, Object>> read() {
-		String sql = "SELECT * from t_jigsaw where enable = ? limit 0,10000";
-		Object[] args = { 1 };
+	public List<Map<String, Object>> read(int begin, int num) {
+		String sql = "SELECT * from t_jigsaw where enable = ? limit begin,num";
+		Object[] args = { 1, begin, num };
 		return SyncDBUtil.readList(DBOperator.Read, sql, args);
 	}
 

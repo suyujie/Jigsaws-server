@@ -39,7 +39,7 @@ public class UploadAction extends AbstractAction {
 
 		logger.debug("bmpBytesStr:" + img.length);
 
-		Root.jigsawSystem.uploadImage(player, img);
+		Root.jigsawSystem.uploadJigsaw(player, img);
 
 		GameOutput go = new ByteArrayGameOutput();
 
