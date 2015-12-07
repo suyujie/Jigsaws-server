@@ -37,7 +37,7 @@ public class ReadJigsawAction extends AbstractAction {
 
 		JSONObject json = new JSONObject();
 
-		Jigsaw gameImage = null;
+		Jigsaw jigsaw = null;
 
 		// 判断玩家是否玩过很多，玩的多，随机给官方，玩的少，只给官方
 		try {
@@ -46,21 +46,21 @@ public class ReadJigsawAction extends AbstractAction {
 			// 玩的挺多的了，90%给玩家上传的图片
 			if (pss.getCommentGood() + pss.getCommentBad() > 10) {
 				if (Utils.successRate(9, 10)) {
-					gameImage = Root.jigsawSystem.readJigsaw(player);
+					jigsaw = Root.jigsawSystem.readJigsaw(player);
 				}
 			}
 
 			// 刚开始玩，或者没有匹配到玩家上传的图片，给官方图片
-			if (gameImage == null) {
-				gameImage = Root.jigsawSystem.readJigsaw_guanfang(player);
+			if (jigsaw == null) {
+				jigsaw = Root.jigsawSystem.readJigsaw_guanfang(player);
 			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
-		json.put("imageId", gameImage.getId());
-		json.put("url", gameImage.getUrl());
+		json.put("imageId", jigsaw.getId());
+		json.put("url", jigsaw.getUrl());
 
 		responseJson.setBody(json);
 
