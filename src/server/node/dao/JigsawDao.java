@@ -13,9 +13,9 @@ import server.node.system.jigsaw.JigsawState;
 public class JigsawDao {
 
 	public void save(Jigsaw jigsaw) {
-		String sql = "insert into t_jigsaw(id,player_id,url,good,bad,state) values (?,?,?,?,?,?)";
-		Object[] args = { jigsaw.getId(), jigsaw.getPlayerId(), jigsaw.getUrl(), jigsaw.getGood(), jigsaw.getBad(),
-				jigsaw.getState().asCode() };
+		String sql = "insert into t_jigsaw(id,player_id,bucket_name,url,good,bad,state) values (?,?,?,?,?,?,?)";
+		Object[] args = { jigsaw.getId(), jigsaw.getPlayerId(), jigsaw.getBucketName(), jigsaw.getUrl(),
+				jigsaw.getGood(), jigsaw.getBad(), jigsaw.getState().asCode() };
 		TaskCenter.getInstance()
 				.executeWithSlidingWindow(new AsyncDBTask(DBOperator.Write, jigsaw.getPlayerId(), sql, args));
 	}
@@ -33,8 +33,15 @@ public class JigsawDao {
 	}
 
 	public void update(Jigsaw jigsaw) {
-		String sql = "update t_jigsaw set good = ?,bad = ?,enable = ? where id = ?";
-		Object[] args = { jigsaw.getGood(), jigsaw.getBad(), jigsaw.getId(), jigsaw.getState().asCode() };
+		String sql = "update t_jigsaw set good = ?,bad = ?,state = ? where id = ?";
+		Object[] args = { jigsaw.getGood(), jigsaw.getBad(), jigsaw.getState().asCode(), jigsaw.getId() };
+		TaskCenter.getInstance()
+				.executeWithSlidingWindow(new AsyncDBTask(DBOperator.Write, jigsaw.getPlayerId(), sql, args));
+	}
+
+	public void delete(Jigsaw jigsaw) {
+		String sql = "update t_jigsaw set url = ?,state = ? where id = ?";
+		Object[] args = { jigsaw.getUrl(), jigsaw.getState().asCode(), jigsaw.getId() };
 		TaskCenter.getInstance()
 				.executeWithSlidingWindow(new AsyncDBTask(DBOperator.Write, jigsaw.getPlayerId(), sql, args));
 	}

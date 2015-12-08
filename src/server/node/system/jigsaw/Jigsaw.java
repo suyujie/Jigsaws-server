@@ -1,6 +1,8 @@
 package server.node.system.jigsaw;
 
+import gamecore.cache.redis.JedisUtilJson;
 import gamecore.entity.AbstractEntity;
+import server.node.system.Content;
 
 /**
  * 图片实体
@@ -99,6 +101,15 @@ public class Jigsaw extends AbstractEntity {
 			String ret = ckBuf.append(Jigsaw.CKPrefix).append(id).toString();
 			ckBuf.delete(0, ckBuf.length());
 			return ret;
+		}
+	}
+
+	/**
+	 * 实例数据写入缓存。
+	 */
+	public void synchronize(int hour) {
+		synchronized (this) {
+			JedisUtilJson.getInstance().setForHour(getCacheKey(), this, hour);
 		}
 	}
 

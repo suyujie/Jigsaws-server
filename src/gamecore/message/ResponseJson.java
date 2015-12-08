@@ -41,4 +41,11 @@ public class ResponseJson {
 		this.body = body;
 	}
 
+	public JSONObject toJson() {
+		JSONObject json = new JSONObject();
+		json.put("state", state);
+		json.put("body", getBody());
+		return json;
+	}
+
 }

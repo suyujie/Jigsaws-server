@@ -8,18 +8,12 @@ import server.node.action.AbstractAction;
 public class GameResponse {
 
 	private Integer commandId;
-	private byte status;
+	private int state;
 	private byte[] body;
 
-	public GameResponse(Integer commandId, byte[] body) {
+	public GameResponse(Integer commandId, int state, byte[] body) {
 		this.commandId = commandId;
-		this.status = AbstractAction.SC_OK;
-		this.body = body;
-	}
-
-	public GameResponse(Integer commandId, byte status, byte[] body) {
-		this.commandId = commandId;
-		this.status = status;
+		this.state = state;
 		this.body = body;
 	}
 
@@ -31,12 +25,12 @@ public class GameResponse {
 		this.commandId = commandId;
 	}
 
-	public byte getStatus() {
-		return status;
+	public int getState() {
+		return state;
 	}
 
-	public void setStatus(byte status) {
-		this.status = status;
+	public void setState(int state) {
+		this.state = state;
 	}
 
 	public byte[] getBody() {

@@ -5,9 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 import gamecore.action.ActionPathSpec;
 import gamecore.io.ByteArrayGameInput;
-import gamecore.io.ByteArrayGameOutput;
 import gamecore.io.GameInput;
-import gamecore.io.GameOutput;
 import gamecore.message.GameRequest;
 import gamecore.message.GameResponse;
 import server.node.system.Root;
@@ -23,13 +21,13 @@ public class UploadAction extends AbstractAction {
 	@Override
 	public GameResponse execute(GameRequest gameRequest) {
 
-		GameResponse gameResponse = new GameResponse(gameRequest.getCommandId(), null);
+		GameResponse gameResponse = new GameResponse(gameRequest.getCommandId(), SC_OK, null);
 
 		logger.debug("   player.sessionId:" + gameRequest.getSessionId());
 
 		Player player = getPlayer(gameRequest.getSessionId());
 		if (player == null) {
-			gameResponse.setStatus(SC_ERROR);
+			gameResponse.setState(SC_DISCONNECT);
 			return gameResponse;
 		}
 
@@ -40,10 +38,6 @@ public class UploadAction extends AbstractAction {
 		logger.debug("bmpBytesStr:" + img.length);
 
 		Root.jigsawSystem.uploadJigsaw(player, img);
-
-		GameOutput go = new ByteArrayGameOutput();
-
-		gameResponse.setBody(go.toByteArray());
 
 		return gameResponse;
 	}

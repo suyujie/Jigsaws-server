@@ -18,12 +18,10 @@ public abstract class AbstractAction extends AbstractHttpServlet implements IAct
 
 	private static final long serialVersionUID = -8930418998280305692L;
 
-	public static final String STATE = "state";
-
-	public static final byte SC_OK = 0;
-	public static final byte SC_ERROR = 1;
-	public static final byte SC_DISCONNECT = 2;
-	public static final byte SC_BLACKLIST = 20;
+	public static final int SC_OK = 0;
+	public static final int SC_ERROR = 1;
+	public static final int SC_DISCONNECT = 2;
+	public static final int SC_BLACKLIST = 20;
 
 	public JSONObject getResultJson() {
 		return new JSONObject();

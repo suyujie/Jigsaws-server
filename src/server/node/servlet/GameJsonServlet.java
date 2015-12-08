@@ -54,8 +54,6 @@ public class GameJsonServlet extends AbstractHttpServlet {
 
 		commandId = rj.getCommandId();
 
-		// logger.debug("commandId is = " + commandId);
-
 		try {
 			respJson = encode(execAction(rj));
 		} catch (Exception e) {
@@ -122,7 +120,7 @@ public class GameJsonServlet extends AbstractHttpServlet {
 		if (respJson.getBody() == null) {
 			return new JSONObject();
 		} else {
-			return respJson.getBody();
+			return respJson.toJson();
 		}
 	}
 

@@ -36,6 +36,21 @@ public class CosCloudUtil {
 		return null;
 	}
 
+	public static String deleteFile(String bucketName, String name) {
+
+		QCloudStorageBean cosBean = StorageManager.getInstance().qCloudStorages.get(1);
+
+		CosCloud cos = new CosCloud(cosBean.getAppId(), cosBean.getSecretId(), cosBean.getSecretKey());
+		String result = null;
+		try {
+			result = cos.deleteFile(bucketName, name);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return result;
+	}
+
 	public static void main(String[] args) {
 		// 分片上传大文件时，应把CosCloud构造方法第4个超时时间参数设置得长些，默认为60秒
 		QCloudStorageBean cosBean = StorageManager.getInstance().qCloudStorages.get(1);

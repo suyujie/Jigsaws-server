@@ -43,7 +43,7 @@ public class JigsawSystem extends AbstractSystem {
 		TaskCenter.getInstance().schedule(new LoadJigsaw2WaitingList(), 0, TimeUnit.SECONDS);
 
 		// 处理要删除的Jigsaw
-		TaskCenter.getInstance().scheduleWithFixedDelay(new LoadJigsaw2WaitingList(), 0, 10, TimeUnit.SECONDS);
+		TaskCenter.getInstance().scheduleWithFixedDelay(new DeleteJigsaw(), 0, 10, TimeUnit.SECONDS);
 
 		System.out.println("JigsawSystem start..ok");
 
@@ -217,11 +217,9 @@ public class JigsawSystem extends AbstractSystem {
 			boolean success = jsonObject.getInteger("code") == 0;
 			if (success) {
 				String access_url = jsonObject.getJSONObject("data").getString("access_url");
-
+				gi.setUrl(access_url);
 				gi.synchronize();
-
 				addWaitJigsawIdSet(id);
-
 				saveDB(gi);
 			}
 		}
@@ -236,15 +234,21 @@ public class JigsawSystem extends AbstractSystem {
 		}
 	}
 
+	public void saveDB(Jigsaw jigsaw) {
+		JigsawDao dao = DaoFactory.getInstance().borrowJigsawDao();
+		dao.save(jigsaw);
+		DaoFactory.getInstance().returnJigsawDao(dao);
+	}
+
 	public void updateDB(Jigsaw jigsaw) {
 		JigsawDao dao = DaoFactory.getInstance().borrowJigsawDao();
 		dao.update(jigsaw);
 		DaoFactory.getInstance().returnJigsawDao(dao);
 	}
 
-	public void saveDB(Jigsaw jigsaw) {
+	public void deleteDB(Jigsaw jigsaw) {
 		JigsawDao dao = DaoFactory.getInstance().borrowJigsawDao();
-		dao.save(jigsaw);
+		dao.delete(jigsaw);
 		DaoFactory.getInstance().returnJigsawDao(dao);
 	}
 
@@ -276,6 +280,8 @@ public class JigsawSystem extends AbstractSystem {
 					}
 				}
 
+				logger.info("list.size " + list.size());
+
 				if (list == null || list.size() < loadNumEveryTime) {
 					break;
 				}
@@ -288,6 +294,58 @@ public class JigsawSystem extends AbstractSystem {
 
 				index++;
 
+			}
+
+		}
+	}
+
+	/**
+	 * 守护任务。 内部线程类,从db中载入jigsaw进入可玩列表
+	 */
+	protected class DeleteJigsaw implements Runnable {
+
+		protected DeleteJigsaw() {
+		}
+
+		@Override
+		public void run() {
+
+			int indexNum = 0;
+
+			try {
+				while (deleteingJigsaws != null && !deleteingJigsaws.isEmpty() && indexNum <= 100) {
+					indexNum++;
+
+					Long jid = null;
+
+					synchronized (deleteingJigsaws) {
+						jid = deleteingJigsaws.remove();
+					}
+
+					// 删除
+					if (jid != null) {
+						Jigsaw jigsaw = getJigsaw(jid);
+
+						if (jigsaw != null && jigsaw.getBucketName() != null) {
+							// 删除存储
+							String deleteResult = CosCloudUtil.deleteFile(jigsaw.getBucketName(),
+									jigsaw.getId().toString());
+
+							logger.info("======" + deleteResult);
+							// 更新jigsaw
+							jigsaw.setUrl(null);
+							jigsaw.setState(JigsawState.DELETE);
+							// 保持缓存一小时
+							jigsaw.synchronize(1);
+
+							// 更新db
+							updateDB(jigsaw);
+
+						}
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 
 		}

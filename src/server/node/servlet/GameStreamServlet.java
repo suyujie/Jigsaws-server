@@ -167,10 +167,7 @@ public class GameStreamServlet extends AbstractHttpServlet {
 
 		ByteArrayGameOutput out = new ByteArrayGameOutput();
 
-		// commandId
-		out.putInt(resp.getCommandId());
-
-		out.put(resp.getStatus());
+		out.putInt(resp.getState());
 
 		if (resp.getBody() != null) {
 			out.putBytesNoLength(resp.getBody());
