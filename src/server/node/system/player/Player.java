@@ -84,8 +84,7 @@ public class Player extends AbstractEntity {
 	public boolean checkOnLine() {
 		Session session = RedisHelperJson.getSession(account.getDeviceId());
 		if (session != null) {
-			return Clock.currentTimeSecond() - session.getActiveT() < Content.HeartBeatOffLine
-					* Content.HeartBeatTimePeriod;
+			return Clock.currentTimeSecond() - session.getActiveT() < Content.SessionTimeOutSec;
 		}
 		return false;
 	}

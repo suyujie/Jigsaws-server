@@ -65,8 +65,7 @@ public class Session extends AbstractEntity {
 
 	public void synchronize() {
 		synchronized (this) {
-			JedisUtilJson.getInstance().setForSec(getCacheKey(), this,
-					Content.HeartBeatOffLine * Content.HeartBeatTimePeriod);
+			JedisUtilJson.getInstance().setForSec(getCacheKey(), this, Content.SessionTimeOutSec);
 		}
 	}
 

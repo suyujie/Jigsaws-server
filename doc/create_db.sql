@@ -64,6 +64,7 @@ CREATE TABLE t_jigsaw (
   id BIGINT(20) UNSIGNED NOT NULL,
   player_id BIGINT (20) UNSIGNED NOT NULL,
   url varchar(100) default null,
+  bucket_name varchar(20) default null,
   good INT (11) UNSIGNED DEFAULT '0',
   bad INT (11) UNSIGNED DEFAULT '0',
   state INT (1) UNSIGNED DEFAULT '0',
