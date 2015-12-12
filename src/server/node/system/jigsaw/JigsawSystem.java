@@ -1,7 +1,9 @@
 package server.node.system.jigsaw;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
@@ -11,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import common.qcloud.cosapi.CosCloudUtil;
@@ -32,18 +35,23 @@ public class JigsawSystem extends AbstractSystem {
 
 	private static Queue<Long> deleteingJigsaws = new ArrayBlockingQueue<Long>(10000000);
 
+	// 官方图片
+	private List<Long> ids_guanfang = new ArrayList<Long>();
+	// 官方图片
+	private HashMap<Long, Jigsaw> image_guanfang = new HashMap<Long, Jigsaw>();
+
 	@Override
 	public boolean startup() {
 		System.out.println("JigsawSystem start..");
 
-		// 加载官方Jigsaw信息
-		JigsawLoadData.getInstance().readData();
+		// 初始化官方Jigsaw信息
+		TaskCenter.getInstance().scheduleWithFixedDelay(new LoadJigsaw_guanfang(), 0, 1, TimeUnit.HOURS);
 
 		// 初始化玩家的Jigsaw
 		TaskCenter.getInstance().schedule(new LoadJigsaw2WaitingList(), 0, TimeUnit.SECONDS);
 
 		// 处理要删除的Jigsaw
-		TaskCenter.getInstance().scheduleWithFixedDelay(new DeleteJigsaw(), 0, 10, TimeUnit.SECONDS);
+		TaskCenter.getInstance().scheduleWithFixedDelay(new DeleteJigsaw(), 20, 10, TimeUnit.SECONDS);
 
 		System.out.println("JigsawSystem start..ok");
 
@@ -146,7 +154,7 @@ public class JigsawSystem extends AbstractSystem {
 		while (gameImage == null) {
 
 			// 从缓存中一次读取20个
-			List<Long> ids = JigsawLoadData.getInstance().readRandomList(20);
+			List<Long> ids = (List<Long>) Utils.randomSelect(ids_guanfang, 20);
 
 			Collections.shuffle(ids);
 
@@ -156,7 +164,7 @@ public class JigsawSystem extends AbstractSystem {
 
 					// 检查是否最近玩过这个
 					if (!playedJigsawBag.contains(id)) {// 不包含，最近玩过了
-						gameImage = JigsawLoadData.getInstance().readGameImage(id);
+						gameImage = image_guanfang.get(id);
 						if (gameImage != null) {
 							return gameImage;
 						}
@@ -207,9 +215,7 @@ public class JigsawSystem extends AbstractSystem {
 		// 腾讯云 上传
 		String result = CosCloudUtil.updateFile(bucketName, id.toString(), bytes);
 
-		System.out.println("===================");
-		System.out.println(result);
-		System.out.println("===================");
+		logger.info("===================" + result);
 
 		if (result != null) {
 			JSONObject jsonObject = JSONObject.parseObject(result);
@@ -253,6 +259,71 @@ public class JigsawSystem extends AbstractSystem {
 	}
 
 	/**
+	 * 载入官方信息
+	 */
+	protected class LoadJigsaw_guanfang implements Runnable {
+
+		protected LoadJigsaw_guanfang() {
+		}
+
+		@Override
+		public void run() {
+
+			int numEveryTime = 10;
+
+			boolean hashMore = true;
+
+			String context = "";
+
+			try {
+				while (hashMore) {
+
+					JSONObject resultJson = CosCloudUtil.readFolderList("pic", numEveryTime, context);
+
+					if (resultJson != null) {
+						int code = resultJson.getIntValue("code");
+						if (code == 0) {
+
+							context = resultJson.getJSONObject("data").getString("context");
+
+							hashMore = resultJson.getJSONObject("data").getBooleanValue("has_more");
+
+							JSONArray jsonArray = resultJson.getJSONObject("data").getJSONArray("infos");
+							for (int i = 0; i < jsonArray.size(); i++) {
+								JSONObject jo = jsonArray.getJSONObject(i);
+
+								String url = jo.getString("access_url");
+
+								Long id = new Integer(url.hashCode()).longValue();
+
+								Jigsaw gameImage = new Jigsaw(id, null, url, null, 0, 0, JigsawState.ENABLE);
+
+								synchronized (image_guanfang) {
+									image_guanfang.put(id, gameImage);
+									if (!ids_guanfang.contains(id)) {
+										ids_guanfang.add(id);
+									}
+								}
+
+							}
+						}
+
+					} else {
+						break;
+					}
+
+				}
+				
+				logger.info("guanfang images.size " + ids_guanfang.size());
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		}
+	}
+
+	/**
 	 * 守护任务。 内部线程类,从db中载入jigsaw进入可玩列表
 	 */
 	protected class LoadJigsaw2WaitingList implements Runnable {
@@ -280,7 +351,7 @@ public class JigsawSystem extends AbstractSystem {
 					}
 				}
 
-				logger.info("list.size " + list.size());
+				logger.info("player upload images.size " + list.size());
 
 				if (list == null || list.size() < loadNumEveryTime) {
 					break;

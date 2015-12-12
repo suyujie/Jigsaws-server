@@ -9,6 +9,6 @@ public class Content {
 	public static final int CacheTimeOutHour = 48;
 
 	// session超时时间
-	public static final int SessionTimeOutSec = 10;
+	public static final int SessionTimeOutSec = 120;
 
 }
