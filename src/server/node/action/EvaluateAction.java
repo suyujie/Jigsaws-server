@@ -39,10 +39,6 @@ public class EvaluateAction extends AbstractAction {
 
 		EvaluateType type = EvaluateType.asEnum(comment);
 
-		System.out.println(player);
-		System.out.println(imageId);
-		System.out.println(type);
-
 		Root.evaluateSystem.EvaluateJigsaw(player, imageId, type);
 
 		responseJson.setBody(resultJson);

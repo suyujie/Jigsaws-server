@@ -292,16 +292,27 @@ public class JigsawSystem extends AbstractSystem {
 							for (int i = 0; i < jsonArray.size(); i++) {
 								JSONObject jo = jsonArray.getJSONObject(i);
 
+								Long id = null;
+
+								String name = jo.getString("name");
+								if (name != null) {
+									if (name.contains(".")) {
+										id = Long.parseLong(name.substring(0, name.indexOf(".")));
+									} else {
+										id = Long.parseLong(name);
+									}
+								}
+
 								String url = jo.getString("access_url");
 
-								Long id = new Integer(url.hashCode()).longValue();
+								if (id != null) {
+									Jigsaw gameImage = new Jigsaw(id, null, url, null, 0, 0, JigsawState.ENABLE);
 
-								Jigsaw gameImage = new Jigsaw(id, null, url, null, 0, 0, JigsawState.ENABLE);
-
-								synchronized (image_guanfang) {
-									image_guanfang.put(id, gameImage);
-									if (!ids_guanfang.contains(id)) {
-										ids_guanfang.add(id);
+									synchronized (image_guanfang) {
+										image_guanfang.put(id, gameImage);
+										if (!ids_guanfang.contains(id)) {
+											ids_guanfang.add(id);
+										}
 									}
 								}
 
@@ -313,9 +324,9 @@ public class JigsawSystem extends AbstractSystem {
 					}
 
 				}
-				
+
 				logger.info("guanfang images.size " + ids_guanfang.size());
-				
+
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

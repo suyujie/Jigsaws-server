@@ -13,7 +13,7 @@ public class AccountDao {
 
 	public Map<String, Object> readAccount(Long playerId) {
 		String sql = "select * from t_account where player_id = ? limit 0,1";
-		Object[] args = { playerId, 1 };
+		Object[] args = { playerId };
 		return SyncDBUtil.readMap(DBOperator.Read, sql, args);
 	}
 
