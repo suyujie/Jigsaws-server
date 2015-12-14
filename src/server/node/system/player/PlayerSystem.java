@@ -14,7 +14,6 @@ import server.node.system.RedisHelperJson;
 import server.node.system.Root;
 import server.node.system.account.Account;
 import server.node.system.evaluate.EvaluateType;
-import server.node.system.jigsaw.Jigsaw;
 
 /**
  * 玩家系统。
@@ -211,6 +210,8 @@ public final class PlayerSystem extends AbstractSystem {
 
 		PlayerStatistics pss = new PlayerStatistics(0, 0, 0, 0, 0, 0, 0, 0);
 
+		saveStatistics(player, pss);
+
 		return pss;
 	}
 
@@ -253,9 +254,9 @@ public final class PlayerSystem extends AbstractSystem {
 
 	}
 
-	public void saveStatistics(Player player) {
+	public void saveStatistics(Player player, PlayerStatistics pss) {
 		PlayerDao playerDao = DaoFactory.getInstance().borrowPlayerDao();
-		playerDao.savePlayerStatistics(player.getId(), player.getStatistics());
+		playerDao.savePlayerStatistics(player.getId(), pss);
 		DaoFactory.getInstance().returnPlayerDao(playerDao);
 	}
 
