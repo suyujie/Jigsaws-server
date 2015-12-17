@@ -69,11 +69,11 @@ public final class RedisHelperJson {
 				PlayedJigsawBag.class);
 	}
 
-	public static void addWaitImageIdSet(Integer tag, Long id) {
+	public static void addWaitJigsawIdSet(Integer tag, Long id) {
 		JedisUtilJson.getInstance().setAdd("j_id_" + tag, id);
 	}
 
-	public static void removeWaitImageIdSet(Integer tag, Long id) {
+	public static void removeWaitJigsawIdSet(Integer tag, Long id) {
 		JedisUtilJson.getInstance().setRemove("j_id_" + tag, id);
 	}
 

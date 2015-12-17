@@ -48,7 +48,7 @@ public class ReadJigsawAction extends AbstractAction {
 			PlayerStatistics pss = Root.playerSystem.getPlayerStatistics(player);
 
 			// 玩的挺多的了，80%给玩家上传的图片
-			if (pss.getCommentGood() + pss.getCommentBad() > 10) {
+			if (pss.getCommentGood() + pss.getCommentBad() > 100) {
 				if (Utils.successRate(8, 10)) {
 					jigsaw = Root.jigsawSystem.readJigsaw(player);
 				}

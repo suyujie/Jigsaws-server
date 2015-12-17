@@ -113,4 +113,8 @@ public class Jigsaw extends AbstractEntity {
 		}
 	}
 
+	public int getCacheTag() {
+		return new Long(id % JigsawSystem.imageIdCacheTagMaxNum).intValue();
+	}
+
 }

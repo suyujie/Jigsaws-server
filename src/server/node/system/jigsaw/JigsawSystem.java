@@ -30,8 +30,8 @@ public class JigsawSystem extends AbstractSystem {
 
 	private static final Logger logger = LogManager.getLogger(JigsawSystem.class.getName());
 
-	// 信息放入是个缓存key中
-	private static final int imageIdCacheTagMaxNum = 10;
+	// 信息放入10个缓存key中
+	public static final int imageIdCacheTagMaxNum = 10;
 
 	private static Queue<Long> deleteingJigsaws = new ArrayBlockingQueue<Long>(10000000);
 
@@ -75,25 +75,29 @@ public class JigsawSystem extends AbstractSystem {
 	}
 
 	private Jigsaw readFromDB(Long id) {
-		Jigsaw gameImage = null;
+		Jigsaw jigsaw = null;
 		JigsawDao dao = DaoFactory.getInstance().borrowJigsawDao();
 		Map<String, Object> map = dao.read(id);
 		DaoFactory.getInstance().returnJigsawDao(dao);
 		if (map != null) {
-			gameImage = encapsulateJigsaw(map);
+			jigsaw = encapsulateJigsaw(map);
 		}
-		return gameImage;
+
+		// 查看是否该删除了
+		checkAnddeleteJigsaw(jigsaw);
+
+		return jigsaw;
 	}
 
 	public Jigsaw readJigsaw(Player player) {
 
 		int index = 0;
-		Jigsaw gameImage = null;
+		Jigsaw jigsaw = null;
 
 		// 玩家玩过的最近的几个
 		PlayedJigsawBag playedJigsawBag = getPlayedJigsawBag(player);
 
-		while (gameImage == null) {
+		while (jigsaw == null) {
 
 			// 从缓存中一次读取20个
 			List<Long> ids = RedisHelperJson.getWaitJigsawIdSet(Utils.randomInt(0, imageIdCacheTagMaxNum), 20);
@@ -101,9 +105,9 @@ public class JigsawSystem extends AbstractSystem {
 				if (id != null) {
 					// 检查是否最近玩过这个
 					if (!playedJigsawBag.contains(id)) {// 不包含，最近玩过了
-						gameImage = RedisHelperJson.getJigsaw(id);
-						if (gameImage != null) {
-							return gameImage;
+						jigsaw = RedisHelperJson.getJigsaw(id);
+						if (jigsaw != null && !checkAnddeleteJigsaw(jigsaw)) {
+							return jigsaw;
 						}
 					}
 				}
@@ -114,7 +118,7 @@ public class JigsawSystem extends AbstractSystem {
 			}
 		}
 
-		return gameImage;
+		return jigsaw;
 
 	}
 
@@ -183,8 +187,8 @@ public class JigsawSystem extends AbstractSystem {
 
 	}
 
-	private void addWaitJigsawIdSet(Long id) {
-		RedisHelperJson.addWaitImageIdSet(Utils.randomInt(0, imageIdCacheTagMaxNum), id);
+	private void addWaitJigsawIdSet(Jigsaw jigsaw) {
+		RedisHelperJson.addWaitJigsawIdSet(jigsaw.getCacheTag(), jigsaw.getId());
 	}
 
 	private Jigsaw encapsulateJigsaw(Map<String, Object> map) {
@@ -215,8 +219,6 @@ public class JigsawSystem extends AbstractSystem {
 		// 腾讯云 上传
 		String result = CosCloudUtil.updateFile(bucketName, id.toString(), bytes);
 
-		logger.info("===================" + result);
-
 		if (result != null) {
 			JSONObject jsonObject = JSONObject.parseObject(result);
 
@@ -225,18 +227,24 @@ public class JigsawSystem extends AbstractSystem {
 				String access_url = jsonObject.getJSONObject("data").getString("access_url");
 				gi.setUrl(access_url);
 				gi.synchronize();
-				addWaitJigsawIdSet(id);
+				addWaitJigsawIdSet(gi);
 				saveDB(gi);
 			}
 		}
 
 	}
 
-	private void deleteJigsaw(Long jigsawId) {
-		synchronized (deleteingJigsaws) {
-			if (!deleteingJigsaws.contains(jigsawId)) {
-				deleteingJigsaws.add(jigsawId);
+	private boolean checkAnddeleteJigsaw(Jigsaw jigsaw) {
+		if (jigsaw.getGood() + jigsaw.getBad() > 10) {
+			synchronized (deleteingJigsaws) {
+				if (!deleteingJigsaws.contains(jigsaw.getId())) {
+					deleteingJigsaws.add(jigsaw.getId());
+					RedisHelperJson.removeWaitJigsawIdSet(jigsaw.getCacheTag(), jigsaw.getId());// 从可玩列表中删掉，放入即将删除列表里面去
+				}
 			}
+			return true;
+		} else {
+			return false;
 		}
 	}
 
@@ -356,9 +364,11 @@ public class JigsawSystem extends AbstractSystem {
 
 				if (list != null) {
 					for (Map<String, Object> map : list) {
-						Jigsaw gameImage = encapsulateJigsaw(map);
-						gameImage.synchronize();
-						addWaitJigsawIdSet(gameImage.getId());
+						Jigsaw jigsaw = encapsulateJigsaw(map);
+						jigsaw.synchronize();
+						if (!checkAnddeleteJigsaw(jigsaw)) {
+							addWaitJigsawIdSet(jigsaw);
+						}
 					}
 				}
 
@@ -413,7 +423,6 @@ public class JigsawSystem extends AbstractSystem {
 							String deleteResult = CosCloudUtil.deleteFile(jigsaw.getBucketName(),
 									jigsaw.getId().toString());
 
-							logger.info("======" + deleteResult);
 							// 更新jigsaw
 							jigsaw.setUrl(null);
 							jigsaw.setState(JigsawState.DELETE);
