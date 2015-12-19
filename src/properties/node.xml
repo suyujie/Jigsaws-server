@@ -3,7 +3,7 @@
 
 	<!-- 逻辑服务器基本配置 -->
 
-	<nodeDomain>http://herobot-test.chinacloudapp.cn</nodeDomain>
+	<nodeDomain>http://www.sui-wei.cn</nodeDomain>
 
 	<server>
 		<!-- 工作 -->
