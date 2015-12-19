@@ -38,20 +38,26 @@ public final class JigsawTrigger implements Trigger, TopicSubscriber {
 		// 评价系统发来的消息
 		if (publisher instanceof EvaluateSystem) {
 			if (message instanceof JigsawMessage) {
-				JigsawMessage msg = (JigsawMessage) message;
-				Player player = msg.getPlayer();
-				Jigsaw jigsaw = msg.getJigsaw();
-				Long jigsawId = msg.getJigsawId();
 
-				if (jigsaw != null) {
-					Root.jigsawSystem.playedJigsaw(player, jigsaw);
-				}
-				// 官方拼图，只给id
-				if (jigsawId != null) {
-					Root.jigsawSystem.playedJigsaw(player, jigsawId);
+				// 评价，通过评价，来确定玩过，加入已玩包，（好 坏 放弃 三种情况都有）
+				if (message.getName().equals(JigsawMessage.Evaluate)) {
+
+					JigsawMessage msg = (JigsawMessage) message;
+					Player player = msg.getPlayer();
+					Jigsaw jigsaw = msg.getJigsaw();
+					Long jigsawId = msg.getJigsawId();
+
+					if (jigsaw != null) {
+						Root.jigsawSystem.playedJigsaw(player, jigsaw);
+					}
+					// 官方拼图，只给id
+					if (jigsawId != null) {
+						Root.jigsawSystem.playedJigsaw(player, jigsawId);
+					}
+
+					player.synchronize();
 				}
 
-				player.synchronize();
 			}
 		}
 

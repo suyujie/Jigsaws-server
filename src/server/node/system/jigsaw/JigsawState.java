@@ -5,7 +5,11 @@ package server.node.system.jigsaw;
  */
 public enum JigsawState {
 
-	ENABLE(0, "enable"), DELETE(2, "delete");
+	ENABLE(0, "enable"), DELETE(2, "delete"),
+
+	REPORT(3, "被举报"), REPORT_OK(4, "举报反正"),
+
+	;
 
 	private int sc;
 	private String desc;

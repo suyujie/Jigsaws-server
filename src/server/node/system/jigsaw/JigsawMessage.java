@@ -11,6 +11,7 @@ public final class JigsawMessage extends TopicMessage {
 
 	// 评价
 	public static final String Evaluate = "evaluate";
+
 	private Player player;
 	private Jigsaw jigsaw;
 	private Long jigsawId;

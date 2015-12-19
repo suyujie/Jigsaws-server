@@ -34,12 +34,17 @@ public class EvaluateAction extends AbstractAction {
 
 		JSONObject reqBody = requestJson.getBody();
 
-		Long imageId = reqBody.getLong("imageId");
+		Long jigsawId = reqBody.getLong("imageId");
 		Integer comment = reqBody.getInteger("comment");
 
 		EvaluateType type = EvaluateType.asEnum(comment);
 
-		Root.evaluateSystem.EvaluateJigsaw(player, imageId, type);
+		// 举报
+		if (type == EvaluateType.REPORT) {
+			Root.jigsawSystem.reportJigsaw(player, jigsawId);
+		} else {// 普通评价
+			Root.evaluateSystem.evaluateJigsaw(player, jigsawId, type);
+		}
 
 		responseJson.setBody(resultJson);
 		return responseJson;

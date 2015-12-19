@@ -8,6 +8,7 @@ import gamecore.system.SystemResult;
 import server.node.system.Root;
 import server.node.system.jigsaw.Jigsaw;
 import server.node.system.jigsaw.JigsawMessage;
+import server.node.system.jigsaw.JigsawState;
 import server.node.system.player.Player;
 
 public class EvaluateSystem extends AbstractSystem {
@@ -27,7 +28,7 @@ public class EvaluateSystem extends AbstractSystem {
 	public void shutdown() {
 	}
 
-	public SystemResult EvaluateJigsaw(Player player, Long jigsawId, EvaluateType type) {
+	public SystemResult evaluateJigsaw(Player player, Long jigsawId, EvaluateType type) {
 
 		SystemResult result = new SystemResult();
 
@@ -46,6 +47,9 @@ public class EvaluateSystem extends AbstractSystem {
 				jigsaw.setGood(jigsaw.getGood() + 1);
 			}
 			if (type == EvaluateType.BAD) {
+				jigsaw.setBad(jigsaw.getBad() + 1);
+			}
+			if (type == EvaluateType.DROP) {
 				jigsaw.setBad(jigsaw.getBad() + 1);
 			}
 
